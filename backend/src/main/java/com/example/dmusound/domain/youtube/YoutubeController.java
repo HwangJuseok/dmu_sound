@@ -1,6 +1,6 @@
-package com.example.dmusound.controller;
+package com.example.dmusound.domain.youtube;
 
-import com.example.dmusound.service.YoutubeService;
+import com.example.dmusound.domain.youtube.YoutubeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
