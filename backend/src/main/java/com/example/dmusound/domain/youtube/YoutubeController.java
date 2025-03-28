@@ -17,4 +17,12 @@ public class YoutubeController {
         String response = youtubeService.searchVideos(keyword);
         return ResponseEntity.ok(response);
     }
+
+     // 🔥 유튜브 인기 차트 가져오기 (새로운 API 추가)
+    @GetMapping("/trending")
+    public ResponseEntity<String> getTrendingVideos() {
+         String response = youtubeService.getTrendingVideos();
+         return ResponseEntity.ok(response);
+    }
+    
 }

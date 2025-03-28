@@ -13,11 +13,25 @@ public class YoutubeService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    // 🔍 특정 키워드로 유튜브 검색
     public String searchVideos(String query) {
         String url = "https://www.googleapis.com/youtube/v3/search"
-                + "?part=snippet&type=video&q=" + query + "&key=" + apiKey;
+                + "?part=snippet&type=video&q=" + query + "&maxResults=5&key=" + apiKey;
 
-        // API 호출 및 응답 반환
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        return response.getBody();
+    }
+
+    // 🔥 유튜브 인기 음악 차트 가져오기
+    public String getTrendingVideos() {
+        String url = "https://www.googleapis.com/youtube/v3/videos"
+                + "?part=snippet,statistics" // 기본 정보 + 조회수 포함
+                + "&chart=mostPopular"       // 인기 영상 차트
+                + "&videoCategoryId=10"      // 카테고리 10: 음악 (Music)
+                + "&maxResults=10"           // 상위 10개 영상 가져오기
+                + "&regionCode=KR"           // 한국 인기 차트
+                + "&key=" + apiKey;
+
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         return response.getBody();
     }

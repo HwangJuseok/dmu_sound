@@ -1,98 +1,97 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "../styles/App.css"; // 스타일을 분리하여 가져오기
 
 const App = () => {
-    const [accessToken, setAccessToken] = useState(""); // Spotify Access Token 상태
-    const [videoTitle, setVideoTitle] = useState(""); // 영상 제목 상태
-    const [channelName, setChannelName] = useState(""); // 채널 이름 상태
-    const [errorMessage, setErrorMessage] = useState(""); // 오류 메시지 상태
+    const [trendingVideos, setTrendingVideos] = useState([]);
+    const [spotifyTrack, setSpotifyTrack] = useState(null);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    // Spotify Access Token 가져오기
-    const fetchSpotifyToken = async () => {
-        try {
-            const response = await axios.get("http://localhost:8080/spotify/token");
-            setAccessToken(response.data.access_token);
-        } catch (error) {
-            setErrorMessage("Spotify API 연동 실패: " + error.message);
-        }
-    };
-
-    // 유튜브 API 검색
-    const handleButtonClick = async () => {
-        try {
-            const randomKeywords = ["NMIXX HIGH HORSE", "NMIXX Live", "NMIXX Performance"];
-            const randomKeyword = randomKeywords[Math.floor(Math.random() * randomKeywords.length)];
-
-            const response = await axios.get(
-                `http://localhost:8080/api/youtube/search?keyword=${encodeURIComponent(randomKeyword)}`
-            );
-            const firstVideo = response.data.items[0];
-
-            if (firstVideo) {
-                setVideoTitle(firstVideo.snippet.title);
-                setChannelName(firstVideo.snippet.channelTitle);
-                setErrorMessage("");
-            } else {
-                setErrorMessage("검색 결과가 없습니다.");
+    // 유튜브 인기 차트 가져오기
+    useEffect(() => {
+        const fetchTrendingVideos = async () => {
+            try {
+                const response = await axios.get("http://localhost:8080/api/youtube/trending");
+                setTrendingVideos(response.data.items || []);
+            } catch (error) {
+                setErrorMessage("유튜브 API 연동 실패: " + error.message);
             }
-        } catch (error) {
-            setErrorMessage("API 연동 실패: " + error.message);
-        }
-    };
+        };
+        fetchTrendingVideos();
+    }, []);
+
+    // Spotify 곡 정보 가져오기
+    useEffect(() => {
+        const fetchSpotifyTrack = async () => {
+            try {
+                const response = await axios.get("http://localhost:8080/spotify/search?query=");
+                const track = response.data.tracks?.items?.[0]; // 서버에서 받은 첫 번째 곡 사용
+                
+                if (track) {
+                    setSpotifyTrack({
+                        name: track.name,
+                        artist: track.artists.map(artist => artist.name).join(", "),
+                        album: track.album.name,
+                        releaseDate: track.album.release_date,
+                        imageUrl: track.album.images[0]?.url,
+                        previewUrl: track.preview_url
+                    });
+                } else {
+                    setErrorMessage("Spotify에서 곡을 찾을 수 없습니다.");
+                }
+            } catch (error) {
+                setErrorMessage("Spotify API 연동 실패: " + error.message);
+            }
+        };
+        fetchSpotifyTrack();
+    }, []);
 
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <button
-                onClick={fetchSpotifyToken}
-                style={{
-                    padding: "10px 20px",
-                    fontSize: "16px",
-                    backgroundColor: "#1DB954",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    marginRight: "10px",
-                }}
-            >
-                Spotify Access Token 가져오기
-            </button>
+        <div className="container">
+            <h1>🎵 음악 정보 제공 페이지</h1>
 
-            <button
-                onClick={handleButtonClick}
-                style={{
-                    padding: "10px 20px",
-                    fontSize: "16px",
-                    backgroundColor: "#4CAF50",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                }}
-            >
-                유튜브 음악 정보 가져오기
-            </button>
+            {/* 유튜브 인기 차트 */}
+            <h2>🎶 유튜브 인기 차트</h2>
+            {trendingVideos.length > 0 ? (
+                <ul className="video-list">
+                    {trendingVideos.map((video, index) => (
+                        <li key={index}>
+                            <a
+                                href={`https://www.youtube.com/watch?v=${video.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {video.snippet.title} - {video.snippet.channelTitle}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>유튜브 인기 차트를 불러오는 중...</p>
+            )}
 
-            <div style={{ marginTop: "20px", fontSize: "16px", color: "#333" }}>
-                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-                {accessToken && (
-                    <div>
-                        <p>
-                            <strong>Spotify Access Token:</strong> {accessToken}
-                        </p>
-                    </div>
-                )}
-                {!errorMessage && videoTitle && channelName && (
-                    <div>
-                        <p>
-                            <strong>영상 제목:</strong> {videoTitle}
-                        </p>
-                        <p>
-                            <strong>채널 이름:</strong> {channelName}
-                        </p>
-                    </div>
-                )}
-            </div>
+            {/* Spotify 곡 정보 */}
+            <h2>🎧 Spotify 곡 정보</h2>
+            {spotifyTrack ? (
+                <div className="spotify-track">
+                    {spotifyTrack.imageUrl && <img src={spotifyTrack.imageUrl} alt="앨범 커버" className="album-cover" />}
+                    <p><strong>곡명:</strong> {spotifyTrack.name}</p>
+                    <p><strong>아티스트:</strong> {spotifyTrack.artist}</p>
+                    <p><strong>앨범:</strong> {spotifyTrack.album}</p>
+                    <p><strong>발매일:</strong> {spotifyTrack.releaseDate}</p>
+                    {spotifyTrack.previewUrl && (
+                        <audio controls>
+                            <source src={spotifyTrack.previewUrl} type="audio/mpeg" />
+                            브라우저가 오디오 태그를 지원하지 않습니다.
+                        </audio>
+                    )}
+                </div>
+            ) : (
+                <p>Spotify 곡 정보를 불러오는 중...</p>
+            )}
+
+            {/* 오류 메시지 표시 */}
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
     );
 };
