@@ -47,3 +47,14 @@
   font-weight: bold;
   margin-top: 20px;
 }
+
+.cover-section {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.cover-videos {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}

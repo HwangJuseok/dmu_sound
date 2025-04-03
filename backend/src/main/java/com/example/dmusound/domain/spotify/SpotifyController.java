@@ -1,27 +1,44 @@
 package com.example.dmusound.domain.spotify;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/spotify")
 public class SpotifyController {
 
     @Autowired
-    private SpotifyService spotifyService;
+    private SpotifySearchService spotifySearchService;
 
-    @GetMapping("/token")
-    public String getSpotifyToken() {
-        return spotifyService.getAccessToken();
+    @Autowired  // ✅ SpotifyTrackService도 주입해야 함!
+    private SpotifyTrackService spotifyTrackService;
+
+    // ✅ 트랙 검색 API
+    @GetMapping("/search")
+    public ResponseEntity<List<Map<String, Object>>> searchTrack(@RequestParam String query) {
+        try {
+            String decodedQuery = URLDecoder.decode(query, StandardCharsets.UTF_8);
+            List<Map<String, Object>> results = spotifySearchService.searchTracks(decodedQuery);
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    // 새로 추가된 엔드포인트: 곡 이름(query)을 받아서 Spotify에서 검색 후 곡 정보 반환
-    @GetMapping("/search")
-    public String searchTrack(@RequestParam String query) {
-        // 기본값 설정
-        if (query == null || query.trim().isEmpty()) {
-            query = "Kendrick Lamar Not Like Us";
-        }    
-        return spotifyService.searchTrack(query);
+    // ✅ 트랙 상세 정보 API
+    @GetMapping("/track/{id}")
+    public ResponseEntity<Map<String, Object>> getTrackDetails(@PathVariable String id) {
+        try {
+            Map<String, Object> trackDetails = spotifyTrackService.getTrackDetails(id);
+            return ResponseEntity.ok(trackDetails);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
