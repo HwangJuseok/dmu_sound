@@ -1,6 +1,5 @@
 package com.example.dmusound.domain.youtube;
 
-import com.example.dmusound.domain.youtube.YoutubeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +14,22 @@ public class YoutubeController {
     @GetMapping("/search")
     public ResponseEntity<String> searchVideos(@RequestParam String keyword) {
         String response = youtubeService.searchVideos(keyword);
+        
+        if (response.contains("error")) {
+            return ResponseEntity.status(500).body(response);
+        }
+
         return ResponseEntity.ok(response);
     }
 
-     // 🔥 유튜브 인기 차트 가져오기 (새로운 API 추가)
     @GetMapping("/trending")
     public ResponseEntity<String> getTrendingVideos() {
-         String response = youtubeService.getTrendingVideos();
-         return ResponseEntity.ok(response);
+        String response = youtubeService.getTrendingVideos();
+
+        if (response.contains("error")) {
+            return ResponseEntity.status(500).body(response);
+        }
+
+        return ResponseEntity.ok(response);
     }
-    
 }

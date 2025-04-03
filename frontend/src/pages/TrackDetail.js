@@ -10,7 +10,12 @@ const TrackDetail = () => {
     const [error, setError] = useState(null);
     const [youtubeVideoId, setYoutubeVideoId] = useState(null);
     const [coverVideos, setCoverVideos] = useState([]);
+    const [youtubeError, setYoutubeError] = useState(null);
+    const [coverError, setCoverError] = useState(null);
+    const [youtubeLoading, setYoutubeLoading] = useState(false);
+    const [coverLoading, setCoverLoading] = useState(false);
 
+    // 🚀 트랙 정보 가져오기 (Spotify API)
     useEffect(() => {
         const fetchTrackDetails = async () => {
             try {
@@ -26,47 +31,73 @@ const TrackDetail = () => {
         fetchTrackDetails();
     }, [id]);
 
+    // 🚀 YouTube API 요청을 일정 시간 후에 실행 (디바운싱)
     useEffect(() => {
-        if (track) {
-            const fetchYoutubeVideos = async () => {
-                try {
-                    const query = `${track.name} ${track.artists[0].name} Official Music Video`;
-                    const response = await axios.get(`http://localhost:8080/api/youtube/search?keyword=${encodeURIComponent(query)}`);
-                    const data = response.data;
+        if (!track) return;
 
-                    if (data.items?.length > 0) {
-                        // "official" 또는 "뮤직비디오" 포함된 영상 찾기
-                        const officialVideo = data.items.find(video =>
-                            video.snippet.title.toLowerCase().includes("official") ||
-                            video.snippet.title.toLowerCase().includes("뮤직비디오") ||
-                            video.snippet.title.toLowerCase().includes("mv")
-                        );
-
-                        setYoutubeVideoId(officialVideo ? officialVideo.id.videoId : data.items[0].id.videoId);
-                    }
-                } catch (error) {
-                    console.error("유튜브 검색 오류:", error);
-                }
-            };
-
-            const fetchCoverVideos = async () => {
-                try {
-                    const query = `${track.name} cover`;
-                    const response = await axios.get(`http://localhost:8080/api/youtube/search?keyword=${encodeURIComponent(query)}`);
-                    const data = response.data;
-
-                    if (data.items?.length > 0) {
-                        setCoverVideos(data.items.slice(0, 3)); // 상위 3개 커버 영상만 저장
-                    }
-                } catch (error) {
-                    console.error("유튜브 커버곡 검색 오류:", error);
-                }
-            };
-
+        let debounceTimer = setTimeout(() => {
             fetchYoutubeVideos();
             fetchCoverVideos();
-        }
+        }, 1000); // 1초 대기 후 실행
+
+        return () => clearTimeout(debounceTimer); // 이전 요청 취소
     }, [track]);
+
+    // 🔥 유튜브 공식 뮤직비디오 검색 (캐싱 적용)
+    const fetchYoutubeVideos = async () => {
+        try {
+            setYoutubeLoading(true);
+            setYoutubeError(null);
+
+            // 📌 캐싱 확인 (로컬 스토리지 활용)
+            const cacheKey = `youtube_${track.name}_${track.artists[0].name}`;
+            const cachedData = localStorage.getItem(cacheKey);
+
+            if (cachedData) {
+                setYoutubeVideoId(JSON.parse(cachedData));
+                setYoutubeLoading(false);
+                return;
+            }
+
+            const query = `${track.name} ${track.artists[0].name} Music Video`;
+            const response = await axios.get(`http://localhost:8080/api/youtube/search?keyword=${encodeURIComponent(query)}`);
+            const data = response.data;
+
+            if (data.items?.length > 0) {
+                const videoId = data.items[0].id.videoId;
+                setYoutubeVideoId(videoId);
+
+                // 캐싱 저장
+                localStorage.setItem(cacheKey, JSON.stringify(videoId));
+            }
+        } catch (error) {
+            console.error("유튜브 검색 오류:", error);
+            setYoutubeError("유튜브 영상을 불러오는 중 오류가 발생했습니다.");
+        } finally {
+            setYoutubeLoading(false);
+        }
+    };
+
+    // 🔥 유튜브 커버곡 검색 (최대 3개만 가져오기)
+    const fetchCoverVideos = async () => {
+        try {
+            setCoverLoading(true);
+            setCoverError(null);
+
+            const query = `${track.name} cover`;
+            const response = await axios.get(`http://localhost:8080/api/youtube/search?keyword=${encodeURIComponent(query)}&maxResults=3`);
+            const data = response.data;
+
+            if (data.items?.length > 0) {
+                setCoverVideos(data.items.slice(0, 3));
+            }
+        } catch (error) {
+            console.error("유튜브 커버곡 검색 오류:", error);
+            setCoverError("커버곡 영상을 불러오는 중 오류가 발생했습니다.");
+        } finally {
+            setCoverLoading(false);
+        }
+    };
 
     if (loading) return <p>로딩 중...</p>;
     if (error) return <p className="error">{error}</p>;
@@ -82,20 +113,14 @@ const TrackDetail = () => {
             <p><strong>앨범:</strong> {track.album.name}</p>
             <p><strong>발매일:</strong> {track.album.release_date}</p>
 
-            {/* Spotify 임베드 플레이어 */}
-            <iframe
-                src={`https://open.spotify.com/embed/track/${id}`}
-                width="60%"
-                height="300"
-                frameBorder="0"
-                allow="encrypted-media"
-                title="Spotify Player"
-            ></iframe>
-
             {/* 유튜브 공식 뮤직비디오 */}
-            {youtubeVideoId && (
-                <div className="youtube-video">
-                    <h2>🎬 공식 뮤직비디오</h2>
+            <div className="youtube-section">
+                <h2>🎬 공식 뮤직비디오</h2>
+                {youtubeLoading ? (
+                    <p>로딩 중...</p>
+                ) : youtubeError ? (
+                    <p className="error">{youtubeError}</p>
+                ) : youtubeVideoId ? (
                     <iframe
                         width="60%"
                         height="315"
@@ -105,13 +130,19 @@ const TrackDetail = () => {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                     ></iframe>
-                </div>
-            )}
+                ) : (
+                    <p>뮤직비디오를 찾을 수 없습니다.</p>
+                )}
+            </div>
 
             {/* 🎤 커버곡 섹션 */}
-            {coverVideos.length > 0 && (
-                <div className="cover-section">
-                    <h2>🎤 커버곡 추천</h2>
+            <div className="cover-section">
+                <h2>🎤 커버곡 추천</h2>
+                {coverLoading ? (
+                    <p>로딩 중...</p>
+                ) : coverError ? (
+                    <p className="error">{coverError}</p>
+                ) : coverVideos.length > 0 ? (
                     <div className="cover-videos">
                         {coverVideos.map((video, index) => (
                             <iframe
@@ -126,8 +157,10 @@ const TrackDetail = () => {
                             ></iframe>
                         ))}
                     </div>
-                </div>
-            )}
+                ) : (
+                    <p>커버곡을 찾을 수 없습니다.</p>
+                )}
+            </div>
         </div>
     );
 };

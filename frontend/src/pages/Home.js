@@ -11,12 +11,30 @@ const Home = () => {
     useEffect(() => {
         const fetchTrendingVideos = async () => {
             try {
+                // 🔥 캐싱된 데이터 확인
+                const cachedData = localStorage.getItem("youtube_trending");
+                const cachedTime = localStorage.getItem("youtube_trending_time");
+                
+                // 📌 1시간(3600초) 내에 요청된 데이터가 있으면 API 요청 안 함
+                if (cachedData && cachedTime && (Date.now() - cachedTime < 3600000)) {
+                    setTrendingVideos(JSON.parse(cachedData));
+                    return;
+                }
+
+                // ✅ API 요청 (캐싱 적용)
                 const response = await axios.get("http://localhost:8080/api/youtube/trending");
-                setTrendingVideos(response.data.items || []);
+                const videos = response.data.items || [];
+                
+                setTrendingVideos(videos);
+
+                // ✅ 로컬 스토리지에 데이터 & 저장 시간 기록
+                localStorage.setItem("youtube_trending", JSON.stringify(videos));
+                localStorage.setItem("youtube_trending_time", Date.now());
             } catch (error) {
                 console.error("유튜브 API 오류:", error);
             }
         };
+
         fetchTrendingVideos();
     }, []);
 
@@ -44,13 +62,17 @@ const Home = () => {
             {/* 유튜브 인기 차트 */}
             <h2>🎶 유튜브 인기 차트</h2>
             <ul className="video-list">
-                {trendingVideos.map((video, index) => (
-                    <li key={index} className="video-item">
-                        <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer">
-                            {video.snippet.title} - {video.snippet.channelTitle}
-                        </a>
-                    </li>
-                ))}
+                {trendingVideos.length > 0 ? (
+                    trendingVideos.map((video, index) => (
+                        <li key={index} className="video-item">
+                            <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank" rel="noopener noreferrer">
+                                {video.snippet.title} - {video.snippet.channelTitle}
+                            </a>
+                        </li>
+                    ))
+                ) : (
+                    <p>인기 차트를 불러올 수 없습니다.</p>
+                )}
             </ul>
         </div>
     );
