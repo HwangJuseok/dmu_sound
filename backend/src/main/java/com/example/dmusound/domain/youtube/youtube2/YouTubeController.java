@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.ResponseEntity;
 @CrossOrigin(origins = "http://localhost:3000")
-@RestController  // ✅ JSON 응답을 반환하도록 변경
-@RequestMapping("/api/youtube")  // ✅ API 엔드포인트 명시
+@RestController  // JSON 응답을 반환하도록 변경
+@RequestMapping("/api/youtube")  // API 엔드포인트 명시
 public class YouTubeController {
 
     @Autowired

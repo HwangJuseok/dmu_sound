@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-// 실행시 프론트엔드는 npm start node modules는 삭제해둠 실행하기 전 npm install
+import YouTube from "react-youtube";
+// 실행시 프론트엔드 node modules 없으면 실행하기 전 npm install
 // 백엔드는 mvn spring-boot:run
 const App = () => {
     const [videoTitle, setVideoTitle] = useState("");
@@ -39,24 +40,33 @@ const App = () => {
             const response = await fetch(`http://localhost:8080/api/youtube/music_search?keyword=${encodedQuery}`);
             if (!response.ok) throw new Error("검색 실패");
             const data = await response.json();
-            console.log(data);
-            setSearchResults(data.items); // 검색 결과를 상태에 저장
+
+            // 제목에 검색어가 포함된 것만 필터링 (대소문자 무시)
+            const filteredItems = data.items.filter(item => {
+                const normalizedTitle = item.snippet.title.toLowerCase().replace(/\s+/g, "");
+                const normalizedQuery = searchQuery.toLowerCase().replace(/\s+/g, "");
+                return normalizedTitle.includes(normalizedQuery) && normalizedTitle.includes("cover");
+            });
+            
+
+            setSearchResults(filteredItems);
+            setErrorMessage(filteredItems.length === 0 ? "검색어가 포함된 영상이 없습니다." : "");
         } catch (error) {
             console.error("API 요청 중 오류 발생:", error);
             setErrorMessage("검색 중 오류가 발생했습니다.");
         }
     };
     
+    
 
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
             <h1>YouTube 검색</h1>
 
-            {/* 검색 입력창 */}
             <form onSubmit={handleSearch}>
                 <input
                     type="text"
-                    placeholder="이곳에 텍스트 입력"
+                    placeholder="검색어 입력"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     required
@@ -64,51 +74,25 @@ const App = () => {
                 <button type="submit">검색</button>
             </form>
 
-            {/* 검색 결과 표시 */}
-            <div>
+            <div style={{ marginTop: "30px" }}>
                 <h2>검색 결과</h2>
-                <div>
-                    {searchResults.length > 0 ? (
-                        searchResults.map((item, index) => (
-                            <p key={index}>
-                                <a href={`https://www.youtube.com/watch?v=${item.id.videoId}`} target="_blank" rel="noopener noreferrer">
+                {searchResults.length > 0 ? (
+                    searchResults.map((item, index) => (
+                        <div key={index} style={{ marginBottom: "40px" }}>
+                            <YouTube videoId={item.id.videoId} opts={{ height: "315", width: "560" }} />
+                            <p>
+                                <a
+                                    href={`https://www.youtube.com/watch?v=${item.id.videoId}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
                                     {item.snippet.title}
                                 </a>
                             </p>
-                        ))
-                    ) : (
-                        <p>{errorMessage}</p>
-                    )}
-                </div>
-            </div>
-
-            <button
-                onClick={handleButtonClick}
-                style={{
-                    padding: "10px 20px",
-                    fontSize: "16px",
-                    backgroundColor: "#4CAF50",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    marginTop: "20px",
-                }}
-            >
-                유튜브 음악 정보 가져오기
-            </button>
-
-            <div style={{ marginTop: "20px", fontSize: "16px", color: "#333" }}>
-                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-                {!errorMessage && videoTitle && channelName && (
-                    <div>
-                        <p>
-                            <strong>영상 제목:</strong> {videoTitle}
-                        </p>
-                        <p>
-                            <strong>채널 이름:</strong> {channelName}
-                        </p>
-                    </div>
+                        </div>
+                    ))
+                ) : (
+                    <p style={{ color: "red" }}>{errorMessage}</p>
                 )}
             </div>
         </div>
