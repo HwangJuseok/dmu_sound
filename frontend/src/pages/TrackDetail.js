@@ -113,6 +113,20 @@ const TrackDetail = () => {
             <p><strong>앨범:</strong> {track.album.name}</p>
             <p><strong>발매일:</strong> {track.album.release_date}</p>
 
+            {/* 🎧 Spotify 플레이어 섹션 */}
+            <div className="spotify-section">
+                <h2>🎧 Spotify로 듣기</h2>
+                <iframe
+                    src={`https://open.spotify.com/embed/track/${track.id}`}
+                    width="100%"
+                    height="80"
+                    frameBorder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    title="Spotify Player"
+                ></iframe>
+            </div>
+            
             {/* 유튜브 공식 뮤직비디오 */}
             <div className="youtube-section">
                 <h2>🎬 공식 뮤직비디오</h2>
