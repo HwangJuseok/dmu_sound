@@ -16,7 +16,7 @@ const App = () => {
             const randomKeyword = randomKeywords[Math.floor(Math.random() * randomKeywords.length)];
 
             const response = await axios.get(
-                `http://localhost:8080/api/youtube/search?keyword=${encodeURIComponent(randomKeyword)}`
+                `http://localhost:8080/api/v1/youtube/search?keyword=${encodeURIComponent(randomKeyword)}`
             );
 
             const firstVideo = response.data.items[0];
@@ -37,7 +37,7 @@ const App = () => {
         e.preventDefault(); // 폼 제출 기본 동작 방지
         try {
             const encodedQuery = encodeURIComponent(searchQuery);
-            const response = await fetch(`http://localhost:8080/api/youtube/music_search?keyword=${encodedQuery}`);
+            const response = await fetch(`http://localhost:8080/api/v1/youtube/music_search?keyword=${encodedQuery}`);
             if (!response.ok) throw new Error("검색 실패");
             const data = await response.json();
 
