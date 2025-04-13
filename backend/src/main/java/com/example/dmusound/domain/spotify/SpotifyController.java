@@ -27,21 +27,13 @@ public class SpotifyController {
     // ✅ 트랙 검색 API
     @GetMapping("/search")
     @Operation(
-        summary = "트랙 검색",
-        description = "입력한 쿼리(query)로 Spotify에서 관련 트랙(곡)을 검색합니다.\n" +
-                      "예: /spotify/search?query=Coldplay"
+        summary = "트랙 및 아티스트 검색",
+        description = "입력한 쿼리로 아티스트와 트랙을 모두 검색하여 분리된 리스트로 제공합니다."
     )
-    public ResponseEntity<List<Map<String, Object>>> searchTrack(
-        @Parameter(
-            name = "query",
-            description = "검색할 곡 제목 또는 아티스트 이름 (예: BTS, Coldplay)",
-            required = true
-        )
-        @RequestParam String query
-    ) {
+    public ResponseEntity<Map<String, List<Map<String, Object>>>> searchTrackSeparated(@RequestParam String query) {
         try {
             String decodedQuery = URLDecoder.decode(query, StandardCharsets.UTF_8);
-            List<Map<String, Object>> results = spotifySearchService.searchTracks(decodedQuery);
+            Map<String, List<Map<String, Object>>> results = spotifySearchService.searchTracksSeparated(decodedQuery);
             return ResponseEntity.ok(results);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();

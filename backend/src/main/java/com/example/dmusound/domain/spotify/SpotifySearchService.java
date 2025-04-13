@@ -1,90 +1,137 @@
 package com.example.dmusound.domain.spotify;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.http.*;
-import org.springframework.web.util.UriComponentsBuilder;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SpotifySearchService {
 
     @Autowired
-    private SpotifyService spotifyService; // 기존 토큰 서비스 사용
+    private SpotifyService spotifyService;
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // ✅ 트랙 검색 및 필터링
-    public List<Map<String, Object>> searchTracks(String query) {
-        String accessToken = spotifyService.getAccessToken();
-        String url = UriComponentsBuilder.fromUriString("https://api.spotify.com/v1/search")
-                .queryParam("q", query)
-                .queryParam("type", "track")
-                .queryParam("market", "KR")
-                .queryParam("limit", "50")
-                .toUriString();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-        HttpEntity<String> request = new HttpEntity<>(headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
-
-        return filterAndSortResults(response.getBody(), query);
+    public Map<String, List<Map<String, Object>>> searchTracksSeparated(String query) {
+        Map<String, List<Map<String, Object>>> resultMap = new HashMap<>();
+        resultMap.put("tracks", searchByField(query));    // 트랙 검색
+        resultMap.put("artists", searchByArtistId(query));  // 아티스트 검색
+        return resultMap;
     }
 
-    // ✅ 검색 결과 필터링 (유사도 60% 이상 + 인기도 순 정렬)
-    private List<Map<String, Object>> filterAndSortResults(String responseBody, String userQuery) {
+    private List<Map<String, Object>> searchByArtistId(String query) {
         try {
-            JsonNode root = objectMapper.readTree(responseBody);
-            JsonNode tracks = root.path("tracks").path("items");
-            
-            List<Map<String, Object>> results = new ArrayList<>();
-            for (JsonNode track : tracks) {
-                String trackName = track.path("name").asText();
-                String trackId = track.path("id").asText();
-                String artistName = track.path("artists").get(0).path("name").asText();
-                int popularity = track.path("popularity").asInt();
-                
-                if (calculateSimilarity(userQuery, trackName) >= 0.6) { // 유사도 60% 이상 필터링
-                    Map<String, Object> trackInfo = new HashMap<>();
-                    trackInfo.put("id", trackId);
-                    trackInfo.put("name", trackName);
-                    trackInfo.put("artist", artistName);
-                    trackInfo.put("popularity", popularity);
-                    results.add(trackInfo);
+            String accessToken = spotifyService.getAccessToken();
+            // market=KR 추가 (한국 기준으로 검색)
+            String artistSearchUrl = "https://api.spotify.com/v1/search?q=" + query + "&type=artist&market=KR&limit=50";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + accessToken);
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+            HttpEntity<String> request = new HttpEntity<>(headers);
+            ResponseEntity<String> artistResponse = restTemplate.exchange(artistSearchUrl, HttpMethod.GET, request, String.class);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode artistItems = objectMapper.readTree(artistResponse.getBody()).path("artists").path("items");
+
+            // 아티스트 정확히 일치하는 것만 필터링
+            String lowerQuery = query.toLowerCase();
+            JsonNode exactArtist = null;
+            for (JsonNode artistItem : artistItems) {
+                String artistName = artistItem.path("name").asText();
+                if (artistName.toLowerCase().equals(lowerQuery)) {
+                    exactArtist = artistItem;
+                    break;
                 }
             }
-            
-            // 🔥 인기도 기준 정렬 & 최대 10개 제한
-            results.sort((a, b) -> Integer.compare((int) b.get("popularity"), (int) a.get("popularity")));
-            return results.size() > 10 ? results.subList(0, 10) : results;
-        } catch (Exception e) {
-            throw new RuntimeException("검색 결과 필터링 실패", e);
-        }
-    }
 
-    // ✅ 유사도 계산 (Levenshtein 거리 기반)
-    private double calculateSimilarity(String input, String target) {
-        int distance = levenshteinDistance(input.toLowerCase(), target.toLowerCase());
-        int maxLength = Math.max(input.length(), target.length());
-        return 1.0 - (double) distance / maxLength;
-    }
+            if (exactArtist == null) return Collections.emptyList();
 
-    private int levenshteinDistance(String a, String b) {
-        int[][] dp = new int[a.length() + 1][b.length() + 1];
-        for (int i = 0; i <= a.length(); i++) dp[i][0] = i;
-        for (int j = 0; j <= b.length(); j++) dp[0][j] = j;
+            String artistId = exactArtist.path("id").asText();
+            String artistName = exactArtist.path("name").asText();
+            // market=KR 추가 (한국 기준으로 아티스트의 top tracks 검색)
+            String topTracksUrl = "https://api.spotify.com/v1/artists/" + artistId + "/top-tracks?market=KR";
 
-        for (int i = 1; i <= a.length(); i++) {
-            for (int j = 1; j <= b.length(); j++) {
-                int cost = (a.charAt(i - 1) == b.charAt(j - 1)) ? 0 : 1;
-                dp[i][j] = Math.min(dp[i - 1][j] + 1, Math.min(dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost));
+            ResponseEntity<String> trackResponse = restTemplate.exchange(topTracksUrl, HttpMethod.GET, request, String.class);
+            JsonNode trackItems = objectMapper.readTree(trackResponse.getBody()).path("tracks");
+
+            List<Map<String, Object>> results = new ArrayList<>();
+            for (JsonNode item : trackItems) {
+                Map<String, Object> trackInfo = new HashMap<>();
+                trackInfo.put("id", item.path("id").asText());
+                trackInfo.put("name", item.path("name").asText());
+                trackInfo.put("artist", artistName);
+                trackInfo.put("popularity", item.path("popularity").asInt());
+                results.add(trackInfo);
             }
+
+            return results.stream().limit(15).collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException("아티스트 검색 실패", e);
         }
-        return dp[a.length()][b.length()];
+    }
+
+    private List<Map<String, Object>> searchByField(String query) {
+        try {
+            String accessToken = spotifyService.getAccessToken();
+            
+            // 쿼리 파라미터에 직접 한글을 넣고, 이를 그대로 사용합니다.
+            String url = "https://api.spotify.com/v1/search?q=" + query + "&type=track&market=KR&limit=50"; // limit 50으로 확장
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + accessToken);
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            HttpEntity<String> request = new HttpEntity<>(headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode items = objectMapper.readTree(response.getBody()).path("tracks").path("items");
+
+            String lowerQuery = query.toLowerCase();
+            List<Map<String, Object>> exactMatches = new ArrayList<>();
+            List<Map<String, Object>> partialMatches = new ArrayList<>();
+
+            for (JsonNode item : items) {
+                String trackName = item.path("name").asText();
+                String lowerName = trackName.toLowerCase();
+
+                Map<String, Object> trackInfo = new HashMap<>();
+                trackInfo.put("id", item.path("id").asText());
+                trackInfo.put("name", trackName);
+                trackInfo.put("artist", item.path("artists").get(0).path("name").asText());
+                trackInfo.put("popularity", item.path("popularity").asInt());
+
+                if (lowerName.equals(lowerQuery)) {
+                    exactMatches.add(trackInfo);
+                } else if (lowerName.contains(lowerQuery)) {
+                    partialMatches.add(trackInfo);
+                }
+            }
+
+            // 정확도 그룹별 popularity 순 정렬
+            Comparator<Map<String, Object>> byPopularity = 
+                Comparator.comparingInt(track -> -(int) track.get("popularity"));
+
+            exactMatches.sort(byPopularity);
+            partialMatches.sort(byPopularity);
+
+            // 정확도 높은 항목을 먼저
+            List<Map<String, Object>> results = new ArrayList<>();
+            results.addAll(exactMatches);
+            results.addAll(partialMatches);
+
+            return results.stream().limit(15).collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException("Spotify 제목 검색 실패", e);
+        }
     }
 }
