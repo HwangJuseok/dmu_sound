@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>DMU Sound - Home</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- 필요시 추가 -->
+</head>
+<body>
+    <h1>🎵 DMU Sound</h1>
+
+    <!-- Spotify 신곡 섹션 -->
+    <section>
+        <h2>📀 신곡 추천 (Spotify)</h2>
+        <div class="release-list">
+            {{#newReleases}}
+            <div class="release-item">
+                <img src="{{imageUrl}}" alt="{{albumName}}" width="150">
+                <p><strong>{{albumName}}</strong></p>
+                <p>{{artistName}}</p>
+            </div>
+            {{/newReleases}}
+            {{^newReleases}}
+            <p>불러올 신곡이 없습니다.</p>
+            {{/newReleases}}
+        </div>
+    </section>
+
+    <!-- YouTube 인기 음악 섹션 -->
+    <section>
+        <h2>🔥 인기 음악 (YouTube)</h2>
+        <div class="video-list">
+            {{#trendingVideos}}
+            <div class="video-item">
+                <img src="{{thumbnailUrl}}" alt="{{title}}" width="150">
+                <p><strong>{{title}}</strong></p>
+                <p>{{channel}}</p>
+            </div>
+            {{/trendingVideos}}
+            {{^trendingVideos}}
+            <p>인기 음악 정보를 불러올 수 없습니다.</p>
+            {{/trendingVideos}}
+        </div>
+    </section>
+</body>
+</html>
