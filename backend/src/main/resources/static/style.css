@@ -1,0 +1,10 @@
+.release-list, .video-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.release-item, .video-item {
+    width: 160px;
+    text-align: center;
+}
