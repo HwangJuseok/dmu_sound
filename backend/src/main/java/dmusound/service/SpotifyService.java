@@ -5,8 +5,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.util.LinkedMultiValueMap;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -28,14 +32,19 @@ public class SpotifyService {
 
     // Spotify Access Token 발급
     private Mono<String> getAccessToken() {
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("grant_type", "client_credentials");
+
         return webClient.post()
                 .uri("https://accounts.spotify.com/api/token")
                 .headers(headers -> headers.setBasicAuth(clientId, clientSecret))
-                .bodyValue("grant_type=client_credentials")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(formData))
                 .retrieve()
                 .bodyToMono(JsonNode.class)
                 .map(json -> json.get("access_token").asText());
     }
+
 
     // 신곡 정보 가져오기
     public Mono<List<NewReleaseDto>> getNewReleases() {
@@ -59,4 +68,5 @@ public class SpotifyService {
                         })
         );
     }
+
 }
