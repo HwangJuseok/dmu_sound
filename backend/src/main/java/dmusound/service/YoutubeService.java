@@ -3,6 +3,7 @@ package dmusound.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dmusound.dto.youtube.TrendingVideoDto;
+import dmusound.dto.youtube.VideoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,4 +55,64 @@ public class YoutubeService {
                     return trendingVideos;
                 });
     }
+
+    public Mono<String> searchMusicVideo(String query) {
+        String url = "https://www.googleapis.com/youtube/v3/search" +
+                "?part=snippet&type=video&maxResults=1&q=" + query +
+                "&key=" + apiKey;
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .map(json -> {
+                    JsonNode item = json.get("items").get(0);
+                    return "https://www.youtube.com/embed/" + item.get("id").get("videoId").asText();
+                });
+    }
+
+    public Mono<List<String>> getCoverVideos(String query) {
+        String url = "https://www.googleapis.com/youtube/v3/search" +
+                "?part=snippet&type=video&maxResults=3&q=" + query + " cover" +
+                "&key=" + apiKey;
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .map(json -> {
+                    List<String> videoUrls = new ArrayList<>();
+                    for (JsonNode item : json.get("items")) {
+                        videoUrls.add("https://www.youtube.com/embed/" + item.get("id").get("videoId").asText());
+                    }
+                    return videoUrls;
+                });
+    }
+
+    public Mono<List<VideoDto>> getTrackVideos(String track, String artist) {
+        String query = artist + " " + track;
+        return searchVideos(query);
+    }
+
+    public Mono<List<VideoDto>> searchVideos(String query) {
+        String url = "https://www.googleapis.com/youtube/v3/search" +
+                "?part=snippet&type=video&maxResults=4&q=" + query +
+                "&key=" + apiKey;
+
+        return webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .map(json -> {
+                    List<VideoDto> videoList = new ArrayList<>();
+                    for (JsonNode item : json.get("items")) {
+                        JsonNode snippet = item.get("snippet");
+                        String videoId = item.get("id").get("videoId").asText();
+                        String title = snippet.get("title").asText();
+                        String thumbnailUrl = snippet.get("thumbnails").get("medium").get("url").asText();
+
+                        videoList.add(new VideoDto(videoId, title, thumbnailUrl));
+                    }
+                    return videoList;
+                });
+    }
+
 }

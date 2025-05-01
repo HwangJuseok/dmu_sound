@@ -1,0 +1,15 @@
+<h2>{{track.title}} - {{track.artist}}</h2>
+<img src="{{track.imageUrl}}" width="300"/>
+<p>Album: <a href="/album?albumId={{track.albumId}}">{{track.album}}</a></p>
+<p>Artist: <a href="/artist?artistId={{track.artistId}}">{{track.artist}}</a></p>
+
+<h3>🎧 Spotify</h3>
+<iframe src="https://open.spotify.com/embed/track/{{track.id}}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+<h3>📺 Official MV</h3>
+<iframe width="560" height="315" src="{{youtubeVideo}}" frameborder="0" allowfullscreen></iframe>
+
+<h3>🎤 Cover Videos</h3>
+{{#coverVideos}}
+    <iframe width="280" height="157" src="{{.}}" frameborder="0" allowfullscreen></iframe>
+{{/coverVideos}}

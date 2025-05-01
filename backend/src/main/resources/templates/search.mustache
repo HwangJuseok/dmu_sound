@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>검색 결과</title>
+    <!-- 위 CSS 복사해서 여기에 붙여넣기 -->
+</head>
+<body>
+<h2>{{query}}에 대한 검색 결과</h2>
+<ul>
+    {{#results}}
+        <li>
+            <img src="{{imageUrl}}" alt="{{name}}">
+            <div>
+                <strong>{{name}}</strong><br>
+                {{#subInfo}}{{subInfo}}<br>{{/subInfo}}
+
+                {{#type}}
+                    {{#isTrack}}
+                        <a href="/track/{{id}}">트랙 상세보기</a>
+                    {{/isTrack}}
+                    {{#isArtist}}
+                        <a href="/artist/{{id}}">아티스트 상세보기</a>
+                    {{/isArtist}}
+                {{/type}}
+            </div>
+        </li>
+    {{/results}}
+</ul>
+</body>
+</html>
