@@ -2,30 +2,41 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>검색 결과</title>
-    <!-- 위 CSS 복사해서 여기에 붙여넣기 -->
+    <link rel="stylesheet" href="/css/style.css"> <!-- CSS 파일 추가 -->
 </head>
 <body>
-<h2>{{query}}에 대한 검색 결과</h2>
-<ul>
-    {{#results}}
-        <li>
-            <img src="{{imageUrl}}" alt="{{name}}">
-            <div>
-                <strong>{{name}}</strong><br>
-                {{#subInfo}}{{subInfo}}<br>{{/subInfo}}
+<header>
+    <h1>DMU Sound 검색 결과</h1>
+</header>
 
-                {{#type}}
-                    {{#isTrack}}
-                        <a href="/track/{{id}}">트랙 상세보기</a>
-                    {{/isTrack}}
-                    {{#isArtist}}
-                        <a href="/artist/{{id}}">아티스트 상세보기</a>
-                    {{/isArtist}}
-                {{/type}}
-            </div>
-        </li>
-    {{/results}}
-</ul>
+<main>
+    <h2>"{{query}}"에 대한 검색 결과</h2>
+    <ul class="result-list">
+        {{#results}}
+            <li class="result-item">
+                <img src="{{imageUrl}}" alt="{{name}}" class="result-image">
+                <div class="result-details">
+                    <strong class="result-name">{{name}}</strong><br>
+                    {{#subInfo}}<span class="result-subinfo">{{subInfo}}</span><br>{{/subInfo}}
+
+                    <!-- 트랙 또는 아티스트 상세 보기 링크 -->
+                    {{#type}}
+                        {{#isTrack}}
+                            <a href="/track/{{id}}" class="detail-link">트랙 상세보기</a>
+                        {{/isTrack}}
+                        {{#isArtist}}
+                            <a href="/artist/{{id}}" class="detail-link">아티스트 상세보기</a>
+                        {{/isArtist}}
+                    {{/type}}
+                </div>
+            </li>
+        {{/results}}
+        {{^results}}
+            <li class="no-results">검색 결과가 없습니다.</li>
+        {{/results}}
+    </ul>
+</main>
 </body>
 </html>

@@ -1,15 +1,73 @@
-<h2>{{track.title}} - {{track.artist}}</h2>
-<img src="{{track.imageUrl}}" width="300"/>
-<p>Album: <a href="/album?albumId={{track.albumId}}">{{track.album}}</a></p>
-<p>Artist: <a href="/artist?artistId={{track.artistId}}">{{track.artist}}</a></p>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{track.trackName}} - {{track.artistName}}</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- 스타일 파일 추가 -->
+</head>
+<body>
+<header>
+    <h1>DMU Sound - 트랙 상세</h1>
+</header>
 
-<h3>🎧 Spotify</h3>
-<iframe src="https://open.spotify.com/embed/track/{{track.id}}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+<main>
+    <section class="track-info">
+        <h2>{{track.trackName}} - {{track.artistName}}</h2>
+        <img src="{{track.imageUrl}}" alt="{{track.trackName}}" class="track-image" width="300">
+        <p>Album: <a href="/album?albumId={{track.albumId}}" class="album-link">{{track.albumName}}</a></p>
+        <p>Artist: <a href="/artist?artistId={{track.artistId}}" class="artist-link">{{track.artistName}}</a></p>
+    </section>
 
-<h3>📺 Official MV</h3>
-<iframe width="560" height="315" src="{{youtubeVideo}}" frameborder="0" allowfullscreen></iframe>
+    <section class="spotify-section">
+        <h3>🎧 Spotify</h3>
+        <iframe
+                src="https://open.spotify.com/embed/track/{{track.id}}"
+                width="300"
+                height="80"
+                frameborder="0"
+                allowtransparency="true"
+                allow="encrypted-media"
+                class="spotify-frame">
+        </iframe>
+    </section>
 
-<h3>🎤 Cover Videos</h3>
-{{#coverVideos}}
-    <iframe width="280" height="157" src="{{.}}" frameborder="0" allowfullscreen></iframe>
-{{/coverVideos}}
+    <section class="youtube-section">
+        <h3>📺 Official MV</h3>
+        {{#musicVideo}}
+            <iframe
+                    width="560"
+                    height="315"
+                    src="{{musicVideo}}"
+                    frameborder="0"
+                    allowfullscreen
+                    class="youtube-frame">
+            </iframe>
+        {{/musicVideo}}
+        {{^musicVideo}}
+            <p>대표 음악 비디오를 찾을 수 없습니다.</p>
+        {{/musicVideo}}
+    </section>
+
+    <section class="cover-videos-section">
+        <h3>🎤 Cover Videos</h3>
+        <div class="cover-videos">
+            {{#coverVideos}}
+                <iframe
+                        width="280"
+                        height="157"
+                        src="https://www.youtube.com/embed/{{videoId}}" <!-- URL 생성 -->
+                frameborder="0"
+                allowfullscreen
+                class="cover-video-frame">
+                </iframe>
+            {{/coverVideos}}
+            {{^coverVideos}}
+                <p>커버 비디오를 찾을 수 없습니다.</p>
+            {{/coverVideos}}
+        </div>
+    </section>
+
+</main>
+</body>
+</html>
