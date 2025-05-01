@@ -20,16 +20,10 @@
                 <div class="result-details">
                     <strong class="result-name">{{name}}</strong><br>
                     {{#subInfo}}<span class="result-subinfo">{{subInfo}}</span><br>{{/subInfo}}
-
-                    <!-- 트랙 또는 아티스트 상세 보기 링크 -->
-                    {{#type}}
-                        {{#isTrack}}
-                            <a href="/track/{{id}}" class="detail-link">트랙 상세보기</a>
-                        {{/isTrack}}
-                        {{#isArtist}}
-                            <a href="/artist/{{id}}" class="detail-link">아티스트 상세보기</a>
-                        {{/isArtist}}
-                    {{/type}}
+                    <!-- 트랙  상세 보기 링크 -->
+                    {{#isTrack}}
+                        <a href="/track/{{id}}" class="detail-link">트랙 상세보기</a>
+                    {{/isTrack}}
                 </div>
             </li>
         {{/results}}

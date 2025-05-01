@@ -15,8 +15,8 @@
     <section class="track-info">
         <h2>{{track.trackName}} - {{track.artistName}}</h2>
         <img src="{{track.imageUrl}}" alt="{{track.trackName}}" class="track-image" width="300">
-        <p>Album: <a href="/album?albumId={{track.albumId}}" class="album-link">{{track.albumName}}</a></p>
-        <p>Artist: <a href="/artist?artistId={{track.artistId}}" class="artist-link">{{track.artistName}}</a></p>
+        <p>Album: {{track.albumName}}</p>
+        <p>Artist: <a href="/artist/{{track.artistId}}" class="artist-link">{{track.artistName}}</a></p>
     </section>
 
     <section class="spotify-section">
@@ -56,10 +56,10 @@
                 <iframe
                         width="280"
                         height="157"
-                        src="https://www.youtube.com/embed/{{videoId}}" <!-- URL 생성 -->
-                frameborder="0"
-                allowfullscreen
-                class="cover-video-frame">
+                        src="https://www.youtube.com/embed/{{videoId}}"
+                        frameborder="0"
+                        allowfullscreen
+                        class="cover-video-frame">
                 </iframe>
             {{/coverVideos}}
             {{^coverVideos}}
@@ -67,6 +67,7 @@
             {{/coverVideos}}
         </div>
     </section>
+
 
 </main>
 </body>

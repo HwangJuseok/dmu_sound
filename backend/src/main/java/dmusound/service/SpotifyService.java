@@ -191,40 +191,4 @@ public class SpotifyService {
         );
     }
 
-    /**
-     * 특정 앨범 세부 정보 가져오기.
-     * @param albumId 앨범 ID
-     * @return 앨범 세부 정보를 포함하는 Mono<AlbumDetailDto>
-     */
-    public Mono<AlbumDetailDto> getAlbumDetail(String albumId) {
-        return getAccessToken().flatMap(token ->
-                webClient.get()
-                        .uri("https://api.spotify.com/v1/albums/" + albumId)
-                        .headers(headers -> headers.setBearerAuth(token))
-                        .retrieve()
-                        .bodyToMono(JsonNode.class)
-                        .map(albumJson -> {
-                            List<TrackDetailDto> trackList = new ArrayList<>();
-                            albumJson.get("tracks").get("items").forEach(track -> trackList.add(new TrackDetailDto(
-                                    track.get("id").asText(),
-                                    track.get("name").asText(),
-                                    albumJson.get("artists").get(0).get("id").asText(),
-                                    albumJson.get("artists").get(0).get("name").asText(),
-                                    albumJson.get("id").asText(),
-                                    albumJson.get("name").asText(),
-                                    albumJson.get("images").get(0).get("url").asText(),
-                                    track.get("preview_url").asText("")
-                            )));
-
-                            return new AlbumDetailDto(
-                                    albumJson.get("id").asText(),
-                                    albumJson.get("name").asText(),
-                                    albumJson.get("artists").get(0).get("id").asText(),
-                                    albumJson.get("artists").get(0).get("name").asText(),
-                                    albumJson.get("images").get(0).get("url").asText(),
-                                    trackList
-                            );
-                        })
-        );
-    }
 }
