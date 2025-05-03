@@ -1,0 +1,123 @@
+/* 기본 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fafafa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* 헤더 스타일 */
+header {
+    background-color: #1db954;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+main {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* 검색 결과 리스트 */
+.result-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.result-item {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.result-item:hover {
+    transform: translateY(-5px);
+}
+
+.result-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.result-details {
+    flex: 1;
+}
+
+.result-name {
+    font-size: 18px;
+    color: #222;
+}
+
+.result-subinfo {
+    font-size: 14px;
+    color: #777;
+}
+
+.detail-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #1db954;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.detail-link:hover {
+    text-decoration: underline;
+}
+
+/* 검색 결과 없음 */
+.no-results {
+    text-align: center;
+    font-size: 16px;
+    color: #777;
+    padding: 40px 0;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .result-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .result-image {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+    }
+
+    .result-details {
+        width: 100%;
+    }
+}

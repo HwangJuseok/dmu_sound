@@ -1,0 +1,159 @@
+/* 기본 리셋 및 테마 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #fafafa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* 헤더 */
+header {
+    background-color: #1db954;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+main {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* 트랙 정보 섹션 */
+.track-info {
+    text-align: center;
+    background-color: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 40px;
+}
+
+.track-info h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #1db954;
+}
+
+.track-image {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.track-info p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.artist-link {
+    color: #1db954;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.artist-link:hover {
+    text-decoration: underline;
+}
+
+/* Spotify iframe */
+.spotify-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.spotify-section h3 {
+    font-size: 22px;
+    margin-bottom: 16px;
+}
+
+.spotify-frame {
+    width: 100%;
+    max-width: 500px;
+    height: 80px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* 유튜브 MV 섹션 */
+.youtube-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.youtube-section h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.youtube-frame {
+    width: 100%;
+    max-width: 640px;
+    height: 360px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* 커버 영상 섹션 */
+.cover-videos-section {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.cover-videos-section h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.cover-videos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.cover-video-frame {
+    width: 280px;
+    height: 157px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 데이터 없음 */
+p {
+    font-size: 16px;
+    color: #777;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .track-image,
+    .spotify-frame,
+    .youtube-frame,
+    .cover-video-frame {
+        width: 100%;
+        height: auto;
+    }
+
+    .cover-videos {
+        flex-direction: column;
+        align-items: center;
+    }
+}
