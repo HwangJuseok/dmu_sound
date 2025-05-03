@@ -5,17 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="560f0f4c-75ba-456f-a794-eeea81db9180" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/artiststyle.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/homestyle.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/trackstyle.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/client/SupabaseClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/config/SupabaseConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/SupabaseController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/service/SupabaseService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/service/YoutubeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/service/YoutubeService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/static/css/searchstyle.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/templates/artistDetail.mustache" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/artistDetail.mustache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/templates/home.mustache" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/home.mustache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/templates/search.mustache" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/search.mustache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/templates/trackDetail.mustache" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/templates/trackDetail.mustache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +95,7 @@
       <workItem from="1746095414068" duration="6889000" />
       <workItem from="1746103512784" duration="625000" />
       <workItem from="1746104487232" duration="2173000" />
-      <workItem from="1746283199013" duration="2615000" />
+      <workItem from="1746283199013" duration="5388000" />
     </task>
     <servers />
   </component>
