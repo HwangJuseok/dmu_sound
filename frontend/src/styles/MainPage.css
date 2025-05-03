@@ -1,0 +1,14 @@
+.app {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  /* MainPage 전체를 감싸는 컨테이너에 스타일 지정 */
+  .main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    padding: 20px; /* 여백 */
+    background-color: #fff;
+  }
+  
