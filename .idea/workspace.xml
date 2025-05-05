@@ -5,11 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="560f0f4c-75ba-456f-a794-eeea81db9180" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/client/SupabaseClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/config/SupabaseConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/SupabaseController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/service/SupabaseService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/ArtistController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/ArtistController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/MusicController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/MusicController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/SearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/SearchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/spotify/ArtistDetailDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/spotify/ArtistDetailDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/spotify/NewReleaseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/spotify/NewReleaseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/spotify/SearchResultDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/spotify/SearchResultDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/spotify/TrackDetailDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/spotify/TrackDetailDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/youtube/TrendingVideoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/youtube/TrendingVideoDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/youtube/VideoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/youtube/VideoDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -95,7 +102,10 @@
       <workItem from="1746095414068" duration="6889000" />
       <workItem from="1746103512784" duration="625000" />
       <workItem from="1746104487232" duration="2173000" />
-      <workItem from="1746283199013" duration="5388000" />
+      <workItem from="1746283199013" duration="6505000" />
+      <workItem from="1746424256451" duration="289000" />
+      <workItem from="1746424555317" duration="2481000" />
+      <workItem from="1746438713889" duration="4152000" />
     </task>
     <servers />
   </component>
