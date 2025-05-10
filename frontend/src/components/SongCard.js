@@ -1,14 +1,14 @@
 import React from "react";
 import '../styles/components/SongCard.css';
-
-function SongCard({ title, artist }) {
+import { Link } from "react-router-dom";
+function SongCard({ song }) {
   return (
     <div className="song-card">
-      <div className="cover" />
-      <p className="title">{title}</p>
-      <p className="artist">{artist}</p>
+      <Link to={`/detail/${song.id}`}>
+        <h2>{song.title}</h2>
+        <p>{song.artist}</p>
+      </Link>
     </div>
   );
 }
-
 export default SongCard;

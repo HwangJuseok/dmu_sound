@@ -1,0 +1,19 @@
+.music-info {
+    margin-top: 20px;
+    padding: 16px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .music-info h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+  
+  .music-info p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.4;
+  }
+  
