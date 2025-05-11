@@ -6,7 +6,7 @@ import MainPage from './pages/MainPage';
 import Chart from './pages/Chart';
 import Playlist from './pages/Playlist';
 import DetailPage from "./pages/DetailPage";
-import Lyrics from "./pages/Lyrics";
+import LyricsPage from "./pages/LyricsPage";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -29,7 +29,7 @@ function App() {
 
           {/* 추가된 부분 */}
           <Route path="/detail/:id" element={<DetailPage />} />
-          <Route path="/lyrics/:id" element={<Lyrics />} />
+          <Route path="/lyrics/:id" element={<LyricsPage />} />
         </Routes>
       </main>
     </div>

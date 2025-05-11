@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { dummyChart } from "../utils/dummyData";
-import "../styles/Lyrics.css"
+import "../styles/LyricsPage.css"
 function LyricsPage() {
   const { id } = useParams();
   const song = dummyChart.find((s) => s.id === parseInt(id));
@@ -11,7 +11,9 @@ function LyricsPage() {
   return (
     <div className="lyrics-page">
       <h1>{song.title} - {song.artist}</h1>
-      <pre>{song.lyrics}</pre>
+       <div style={{ whiteSpace: "pre-line" }}>
+        <pre>{song.lyrics}</pre>
+      </div>
     </div>
   );
 }
