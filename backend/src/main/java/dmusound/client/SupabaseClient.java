@@ -29,4 +29,20 @@ public class SupabaseClient {
                 String.class
         );
     }
+
+    public ResponseEntity<String> insertData(String tableName, String jsonData) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("apikey", config.apiKey);
+        headers.set("Authorization", "Bearer " + config.apiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<>(jsonData, headers);
+
+        return restTemplate.exchange(
+                config.baseUrl + "/" + tableName,
+                HttpMethod.POST,
+                entity,
+                String.class
+        );
+    }
 }
