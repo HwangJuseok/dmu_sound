@@ -7,6 +7,7 @@ import Chart from './pages/Chart';
 import Playlist from './pages/Playlist';
 import DetailPage from "./pages/DetailPage";
 import LyricsPage from "./pages/LyricsPage";
+import MusicInfo from './pages/MusicInfo';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -28,6 +29,7 @@ function App() {
           <Route path="/playlist" element={<Playlist />} />
 
           {/* 추가된 부분 */}
+          <Route path="/music/:id" element={<MusicInfo />} />
           <Route path="/detail/:id" element={<DetailPage />} />
           <Route path="/lyrics/:id" element={<LyricsPage />} />
         </Routes>
