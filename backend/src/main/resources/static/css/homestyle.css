@@ -26,6 +26,29 @@ h1 {
     letter-spacing: 1px;
 }
 
+/* 헤더 컨테이너 스타일 (로고 + 메뉴 좌우 배치) */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 로그인/회원가입 링크 스타일 */
+.header-nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.header-nav a:hover {
+    text-decoration: underline;
+}
+
+
 /* 검색 폼 스타일 */
 .search-form {
     max-width: 600px;

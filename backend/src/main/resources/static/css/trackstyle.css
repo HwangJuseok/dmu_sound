@@ -123,18 +123,17 @@ main {
 
 .cover-videos {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+    gap: 16px; /* 아이프레임 사이 간격 */
+    flex-wrap: wrap; /* 화면이 작으면 줄바꿈 되도록 */
+    justify-content: center; /* 왼쪽 정렬 (필요시 center로 변경 가능) */
+    margin-top: 10px;
 }
 
 .cover-video-frame {
-    width: 280px;
-    height: 157px;
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+
 
 /* 데이터 없음 */
 p {
