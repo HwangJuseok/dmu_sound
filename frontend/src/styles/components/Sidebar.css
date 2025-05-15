@@ -1,0 +1,18 @@
+.sidebar {
+  position: relative; /* ✖ 버튼 위치 기준 */
+  width: 240px;
+  height: 100vh;
+  background-color: #f4f4f4;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}

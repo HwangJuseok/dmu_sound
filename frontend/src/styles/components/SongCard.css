@@ -1,0 +1,59 @@
+.song-grid {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  justify-content: space-between; /* 항목 간의 간격을 균등하게 */
+}
+
+.song-grid > .song-item {
+  flex: 1 1 calc(33.333% - 16px); /* 기본적으로 3개의 항목을 가짐 */
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .song-grid > .song-item {
+    flex: 1 1 calc(50% - 16px); /* 1024px 이하에서는 2개씩 표시 */
+  }
+}
+
+@media (max-width: 768px) {
+  .song-grid > .song-item {
+    flex: 1 1 calc(100% - 16px); /* 768px 이하에서는 1개씩 표시 */
+  }
+}
+
+.song-card {
+  width: 120px;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.3s ease; /* 변형(transform) 속성이 0.3초 동안 부드럽게 변하도록 설정합니다. */
+  position: relative; /* z-index가 작동하도록 position 값을 설정합니다. */
+  z-index: 1; /* 평소에는 z-index 값을 낮게 설정합니다. */
+  
+}
+
+.song-card:hover {
+  
+  transform: scale(1.1); /* 마우스를 올렸을 때 원래 크기의 1.1배로 확대합니다. */
+  z-index: 10; /* 마우스를 올린 카드를 다른 카드 위로 표시하기 위해 z-index 값을 높입니다. */
+  
+}
+
+.cover {
+  width: 100%;
+  height: 100px;
+  background-color: #ccc;
+  margin-bottom: 8px;
+}
+.song-card h3 {
+  font-size: 16px;
+  margin: 8px 0 4px;
+}
+
+.song-card p {
+  font-size: 14px;
+  color: #666;
+}

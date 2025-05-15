@@ -1,0 +1,43 @@
+.playlist-page {
+  padding: 24px;
+  background-color: #f9f9f9;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.playlist-page h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* ✅ 그리드 사용 */
+.playlist-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.playlist-card {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.playlist-card:hover {
+  transform: translateY(-4px);
+}
+
+.playlist-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.playlist-description {
+  font-size: 14px;
+  color: #666;
+}
