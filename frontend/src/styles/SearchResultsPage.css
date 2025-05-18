@@ -1,0 +1,67 @@
+.search-results-container {
+  padding: 20px;
+}
+
+.search-title {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.loading-text {
+  color: #555;
+}
+
+.error-text {
+  color: red;
+  margin-bottom: 12px;
+}
+
+.no-results-text {
+  color: #888;
+  margin-top: 12px;
+}
+
+.result-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.result-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 16px;
+  border-radius: 8px;
+}
+
+.result-details {
+  flex: 1;
+}
+
+.result-name {
+  font-weight: 700;
+}
+
+.result-subinfo {
+  color: #666;
+}
+.result-name-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.result-name-link:hover {
+  text-decoration: underline;
+  color: #0070f3; /* 원하는 하이라이트 색상 */
+  cursor: pointer;
+}
