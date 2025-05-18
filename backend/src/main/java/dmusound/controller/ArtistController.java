@@ -11,14 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/artist")
+@RequestMapping("/api/artist")
 @Tag(name = "ArtistController", description = "웹 브라우저에서 아티스트 정보를 조회하고 HTML로 렌더링하는 컨트롤러입니다.")
 public class ArtistController {
 
@@ -59,16 +57,7 @@ public class ArtistController {
             )
     })
     @GetMapping("/{id}")
-    public Mono<String> artistDetail(@PathVariable String id, Model model) {
-        return spotifyService.getArtistDetail(id)
-                .map(artist -> {
-                    model.addAttribute("artist", artist); // ArtistDetailDto
-                    model.addAttribute("topTracks", artist.getSafeTopTracks()); // Top tracks
-                    return "artistDetail";
-                })
-                .onErrorResume(e -> {
-                    model.addAttribute("error", "데이터를 가져오는 데 문제가 발생했습니다.");
-                    return Mono.just("errorPage");
-                });
+    public Mono<ArtistDetailDto> getArtistDetail(@PathVariable String id) {
+        return spotifyService.getArtistDetail(id);
     }
 }
