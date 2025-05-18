@@ -79,49 +79,48 @@ public class SpotifyService {
      * @param query 검색어
      * @return 검색 결과를 포함하는 Mono<List<SearchResultDto>>
      */
-    public Mono<List<SearchResultDto>> search(String query) {
-        return getAccessToken().flatMap(token ->
-                webClient.get()
-                        .uri(uriBuilder -> uriBuilder
-                                .scheme("https")
-                                .host("api.spotify.com")
-                                .path("/v1/search")
-                                .queryParam("q", query)
-                                .queryParam("type", "track,artist")
-                                .queryParam("limit", 10)
-                                .build())
-                        .headers(headers -> headers.setBearerAuth(token))
-                        .retrieve()
-                        .bodyToMono(JsonNode.class)
-                        .map(json -> {
-                            List<SearchResultDto> resultList = new ArrayList<>();
+    public List<SearchResultDto> search(String query) {
+        String token = getAccessToken().block(); // 동기 방식 호출
+        List<SearchResultDto> results = new ArrayList<>();
 
-                            // 트랙 결과 처리
-                            json.path("tracks").path("items").forEach(track -> resultList.add(
-                                    new SearchResultDto(
-                                            track.get("id").asText(),
-                                            "track",
-                                            track.get("name").asText(),
-                                            track.get("artists").get(0).get("name").asText(),
-                                            track.get("album").get("images").get(0).get("url").asText()
-                                    )
-                            ));
+        // Track 검색
+        JsonNode trackResponse = webClient.get()
+                .uri("https://api.spotify.com/v1/search?q=" + query + "&type=track&limit=5")
+                .headers(headers -> headers.setBearerAuth(token))
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .block();
 
-                            // 아티스트 결과 처리
-                            json.path("artists").path("items").forEach(artist -> resultList.add(
-                                    new SearchResultDto(
-                                            artist.get("id").asText(),
-                                            "artist",
-                                            artist.get("name").asText(),
-                                            "", // 아티스트는 부가 정보 없음
-                                            artist.has("images") && artist.get("images").size() > 0 ?
-                                                    artist.get("images").get(0).get("url").asText() : ""
-                                    )
-                            ));
+        if (trackResponse != null && trackResponse.has("tracks")) {
+            for (JsonNode item : trackResponse.get("tracks").get("items")) {
+                String id = item.get("id").asText();
+                String name = item.get("name").asText();
+                String artist = item.get("artists").get(0).get("name").asText();
+                String imageUrl = item.get("album").get("images").get(0).get("url").asText();
 
-                            return resultList;
-                        })
-        );
+                results.add(new SearchResultDto(id, "track", name, artist, imageUrl));
+            }
+        }
+
+        // Artist 검색
+        JsonNode artistResponse = webClient.get()
+                .uri("https://api.spotify.com/v1/search?q=" + query + "&type=artist&limit=5")
+                .headers(headers -> headers.setBearerAuth(token))
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .block();
+
+        if (artistResponse != null && artistResponse.has("artists")) {
+            for (JsonNode item : artistResponse.get("artists").get("items")) {
+                String id = item.get("id").asText();
+                String name = item.get("name").asText();
+                String imageUrl = item.get("images").size() > 0 ? item.get("images").get(0).get("url").asText() : "";
+
+                results.add(new SearchResultDto(id, "artist", name, "Artist", imageUrl));
+            }
+        }
+
+        return results;
     }
 
     /**
