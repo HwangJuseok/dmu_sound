@@ -5,7 +5,7 @@ export const dummySongs = [
     {id: 4, title: "Get a Guitar", artist: "RIIZE" },
     {id: 5, title: "Spicy", artist: "aespa" },
   ];
-
+  
 export const dummyChart = [
   { id: 1, 
     title: "ETA", 

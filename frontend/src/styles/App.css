@@ -65,3 +65,23 @@
   font-size: 20px;
   cursor: pointer;
 }
+/* App.css */
+.app-container {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.search-bar-wrapper {
+  position: fixed;     /* 또는 fixed */
+  top: 0;
+  background-color: white;
+  z-index: 1000;
+  padding: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 아래 콘텐츠가 겹치지 않도록 위쪽에 여백 줌 */
+.main-content {
+  padding: 24px;
+}

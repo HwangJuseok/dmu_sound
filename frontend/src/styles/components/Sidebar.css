@@ -1,5 +1,5 @@
 .sidebar {
-  position: relative; /* ✖ 버튼 위치 기준 */
+  position: relative;
   width: 240px;
   height: 100vh;
   background-color: #f4f4f4;
