@@ -7,6 +7,7 @@ import dmusound.dto.auth.RegisterRequest;
 import dmusound.dto.auth.RegisterResponse;
 import dmusound.dto.login.LoginRequest;
 import dmusound.dto.login.LoginResponse;
+import dmusound.dto.user.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,13 +36,12 @@ public class AuthService {
                 return new LoginResponse(false, "존재하지 않는 사용자입니다.", null);
             }
 
-            String dbPassword = users.get(0).get("user_pw").asText();
+            // ✅ UserDto로 매핑
+            UserDto user = mapper.readValue(users.get(0).toString(), UserDto.class);
 
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            if (!passwordEncoder.matches(request.getUserPw(), dbPassword)) {
+            if (!passwordEncoder.matches(request.getUserPw(), user.getUserPw())) {
                 return new LoginResponse(false, "비밀번호가 일치하지 않습니다.", null);
             }
-
 
             String dummyToken = Base64.getEncoder().encodeToString(
                     (request.getUserId() + ":login_success").getBytes(StandardCharsets.UTF_8)
