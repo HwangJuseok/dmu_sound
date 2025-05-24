@@ -36,8 +36,9 @@ public class FormAuthController {
         return "login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login/process")
     public String login(@ModelAttribute LoginRequest request, HttpSession session, Model model) {
+        System.out.println("✅ 로그인 컨트롤러 진입");
         LoginResponse response = authService.login(request);
         if (!response.isSuccess()) {
             model.addAttribute("error", response.getMessage());

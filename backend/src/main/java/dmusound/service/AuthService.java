@@ -39,6 +39,11 @@ public class AuthService {
             // ✅ UserDto로 매핑
             UserDto user = mapper.readValue(users.get(0).toString(), UserDto.class);
 
+            // ✅ 디버깅용 출력
+            System.out.println("입력한 비밀번호: " + request.getUserPw());
+            System.out.println("DB에 저장된 암호화 비밀번호: " + user.getUserPw());
+            System.out.println("비교 결과: " + passwordEncoder.matches(request.getUserPw(), user.getUserPw()));
+
             if (!passwordEncoder.matches(request.getUserPw(), user.getUserPw())) {
                 return new LoginResponse(false, "비밀번호가 일치하지 않습니다.", null);
             }
@@ -53,6 +58,7 @@ public class AuthService {
             return new LoginResponse(false, "서버 오류: " + e.getMessage(), null);
         }
     }
+
 
     public RegisterResponse register(RegisterRequest request) {
         try {
