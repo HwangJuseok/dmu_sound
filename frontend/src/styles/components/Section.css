@@ -1,0 +1,72 @@
+/* Section 컴포넌트 스타일 */
+.section {
+    margin-bottom: 48px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+.section-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    color: #8b5cf6;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.section-loading {
+    text-align: center;
+    padding: 48px 0;
+    background-color: #f9fafb;
+    border-radius: 12px;
+    border: 2px dashed #d1d5db;
+}
+
+.section-loading p {
+    color: #6b7280;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Spotify 섹션 특별 스타일 */
+.section.spotify-section {
+    border-left: 4px solid #1db954;
+}
+
+.section.spotify-section .section-title {
+    color: #1db954;
+}
+
+/* YouTube 섹션 특별 스타일 */
+.section.youtube-section {
+    border-left: 4px solid #ff0000;
+}
+
+.section.youtube-section .section-title {
+    color: #ff0000;
+}
+
+/* 검색 결과 섹션 스타일 */
+.section.search-section {
+    border-left: 4px solid #8b5cf6;
+}
+
+.section.search-section .section-title {
+    color: #8b5cf6;
+}

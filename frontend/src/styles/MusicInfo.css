@@ -1,20 +1,115 @@
-.music-info {
-    margin-top: 20px;
-    padding: 16px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    padding-top: 20px;
-  }
-  
-  .music-info h2 {
-    font-size: 20px;
-    margin-bottom: 12px;
-  }
-  
-  .music-info p {
-    font-size: 14px;
+.music-container {
+    display: flex;
+    font-family: sans-serif;
+    height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    background-color: #f0f4fb;
+    overflow-y: auto;
+}
+
+.search-section {
+    margin-bottom: 30px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.album-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.album-cover {
+    width: 250px;
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+.album-info h2 {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.album-info p {
+    font-size: 16px;
+    margin-bottom: 4px;
     color: #555;
-    line-height: 1.4;
-  }
-  
+}
+
+.video-section {
+    margin-top: 50px;
+}
+
+.video-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.video-thumbnail {
+    flex: 1 1 300px;
+    min-width: 250px;
+    aspect-ratio: 16 / 9;
+    background-color: #888;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 18px;
+    position: relative;
+    overflow: hidden;
+}
+
+.play-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.related-section {
+    margin-top: 40px;
+}
+
+.related-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+.related-section ul {
+    padding-left: 20px;
+}
+
+.related-section li {
+    margin-bottom: 8px;
+}

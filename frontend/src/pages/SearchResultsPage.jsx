@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/SearchResultsPage.css";  // CSS 분리해서 import
@@ -52,16 +52,16 @@ const SearchResultsPage = () => {
               <img src={item.imageUrl} alt={item.name} className="result-image" />
               <div className="result-details">
                 {/* 제목에 링크 걸기 */}
-                <a href={`/track/${item.id}`} className="result-name-link">
+                <Link to={`/music/${item.id}`} className="result-name-link">
                   <strong className="result-name">{item.name}</strong>
-                </a>
+                </Link>
                 <br />
                 {item.subInfo && <span className="result-subinfo">{item.subInfo}</span>}
                 <br />
                 {item.isTrack && (
-                  <a href={`/track/${item.id}`} className="detail-link">
-                    트랙 상세보기
-                  </a>
+                    <Link to={`/detail/${item.id}`} className="detail-link">
+                      트랙 상세보기
+                    </Link>
                 )}
               </div>
             </li>

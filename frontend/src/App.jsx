@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import './styles/App.css';
 import Sidebar from './components/Sidebar';
 import MainPage from './pages/MainPage';
@@ -12,6 +12,7 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import SearchBar from './components/SearchBar';
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const location = useLocation(); // 현재 경로 가져오기
 
   return (
     <div className="App">
@@ -24,9 +25,13 @@ function App() {
       )}
 
       <main className="main-page">
-        <header className="search-bar-wrapper">
-          <SearchBar />
-        </header>
+        {/* 현재 페이지가 '/'가 아닐 때만 SearchBar 렌더링 */}
+        {location.pathname !== '/' && (
+            <header className="search-bar-wrapper">
+              <SearchBar />
+            </header>
+        )}
+
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/chart" element={<Chart />} />

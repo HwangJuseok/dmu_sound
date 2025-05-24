@@ -1,7 +1,30 @@
+/* SongGrid 스타일 */
 .song-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 16px;
-    padding: 16px;
-  }
-  
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+    margin-bottom: 40px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .song-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .song-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .song-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
