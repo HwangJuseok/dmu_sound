@@ -9,9 +9,17 @@ const API_BASE_URL = 'http://localhost:8080';
 const apiService = {
     getNewReleases: async () => {
         try {
+            console.log('Fetching new releases from:', `${API_BASE_URL}/api/spotify/new-releases`);
             const response = await fetch(`${API_BASE_URL}/api/spotify/new-releases`);
-            if (!response.ok) throw new Error('Failed to fetch new releases');
-            return await response.json();
+            console.log('New releases response status:', response.status);
+
+            if (!response.ok) throw new Error(`Failed to fetch new releases: ${response.status}`);
+
+            const data = await response.json();
+            console.log('New releases data:', data);
+            console.log('New releases data length:', data?.length || 0);
+
+            return data || [];
         } catch (error) {
             console.error('Error fetching new releases:', error);
             return [];
@@ -20,9 +28,17 @@ const apiService = {
 
     getTrendingVideos: async () => {
         try {
+            console.log('Fetching trending videos from:', `${API_BASE_URL}/api/youtube/trending`);
             const response = await fetch(`${API_BASE_URL}/api/youtube/trending`);
-            if (!response.ok) throw new Error('Failed to fetch trending videos');
-            return await response.json();
+            console.log('Trending videos response status:', response.status);
+
+            if (!response.ok) throw new Error(`Failed to fetch trending videos: ${response.status}`);
+
+            const data = await response.json();
+            console.log('Trending videos data:', data);
+            console.log('Trending videos data length:', data?.length || 0);
+
+            return data || [];
         } catch (error) {
             console.error('Error fetching trending videos:', error);
             return [];
@@ -57,7 +73,7 @@ const Header = ({ onSearch }) => {
                             <span>👤</span>
                             <span>로그인</span>
                         </button>
-                        <button className="flex items-center space-x-1 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all">
+                        <button className="flex items-center space-x-1 px-4 py-2 rounded-lg bg-white bg-opacity-30 transition-all">
                             <span>➕</span>
                             <span>회원가입</span>
                         </button>
@@ -85,91 +101,24 @@ const MainPage = () => {
     const [searchResults, setSearchResults] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-
-    // 더미 데이터 (개발/테스트용)
-    const dummySpotifyData = [
-        {
-            albumName: "IU 5th Album 'LILAC'",
-            artistName: "아이유(IU)",
-            imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop"
-        },
-        {
-            albumName: "Map of the Soul: 7",
-            artistName: "BTS",
-            imageUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=300&fit=crop"
-        },
-        {
-            albumName: "The Album",
-            artistName: "BLACKPINK",
-            imageUrl: "https://images.unsplash.com/photo-1571974599782-87624638275c?w=300&h=300&fit=crop"
-        },
-        {
-            albumName: "NewJeans Get Up",
-            artistName: "NewJeans",
-            imageUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop"
-        },
-        {
-            albumName: "MY WORLD",
-            artistName: "aespa",
-            imageUrl: "https://images.unsplash.com/photo-1571974599782-87624638275c?w=300&h=300&fit=crop"
-        }
-    ];
-
-    const dummyYouTubeData = [
-        {
-            title: "NewJeans (뉴진스) 'Get Up' Official MV",
-            channel: "HYBE LABELS",
-            thumbnailUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300&h=300&fit=crop"
-        },
-        {
-            title: "(G)I-DLE - 'Queencard' Official Music Video",
-            channel: "(G)I-DLE (여자)아이들",
-            thumbnailUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop"
-        },
-        {
-            title: "aespa 'Spicy' MV",
-            channel: "SMTOWN",
-            thumbnailUrl: "https://images.unsplash.com/photo-1571974599782-87624638275c?w=300&h=300&fit=crop"
-        },
-        {
-            title: "IVE 'I AM' Official MV",
-            channel: "IVE",
-            thumbnailUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=300&h=300&fit=crop"
-        },
-        {
-            title: "LE SSERAFIM 'UNFORGIVEN' MV",
-            channel: "HYBE LABELS",
-            thumbnailUrl: "https://images.unsplash.com/photo-1571974599782-87624638275c?w=300&h=300&fit=crop"
-        }
-    ];
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const loadData = async () => {
             setIsLoading(true);
+            setError(null);
 
             try {
-                // 실제 API 호출 시도, 실패하면 더미 데이터 사용
-                const [spotifyData, youtubeData] = await Promise.allSettled([
+                const [spotifyResponse, youtubeResponse] = await Promise.all([
                     apiService.getNewReleases(),
                     apiService.getTrendingVideos()
                 ]);
 
-                setNewReleases(
-                    spotifyData.status === 'fulfilled' && spotifyData.value.length > 0
-                        ? spotifyData.value
-                        : dummySpotifyData
-                );
-
-                setTrendingVideos(
-                    youtubeData.status === 'fulfilled' && youtubeData.value.length > 0
-                        ? youtubeData.value
-                        : dummyYouTubeData
-                );
+                setNewReleases(spotifyResponse || []);
+                setTrendingVideos(youtubeResponse || []);
             } catch (err) {
-                // 에러 시 더미 데이터 사용
-                setNewReleases(dummySpotifyData);
-                setTrendingVideos(dummyYouTubeData);
-                console.error('Error loading data, using dummy data:', err);
+                console.error('Error loading data:', err);
+                setError('데이터를 불러오는 중 오류가 발생했습니다.');
             } finally {
                 setIsLoading(false);
             }
@@ -202,6 +151,26 @@ const MainPage = () => {
         );
     }
 
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-100">
+                <Header onSearch={handleSearch} />
+                <main className="container mx-auto px-4 py-8">
+                    <div className="text-center py-12">
+                        <div className="text-red-500 text-6xl mb-4">⚠️</div>
+                        <p className="text-gray-600 text-lg mb-4">{error}</p>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                        >
+                            다시 시도
+                        </button>
+                    </div>
+                </main>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gray-100">
             <Header onSearch={handleSearch} />
@@ -225,16 +194,26 @@ const MainPage = () => {
                     </div>
                 ) : (
                     <div>
-                        <Section
-                            title="📀 신곡 추천 (Spotify)"
-                            songs={newReleases}
-                            icon={null}
-                        />
-                        <Section
-                            title="🔥 인기 음악 (YouTube)"
-                            songs={trendingVideos}
-                            icon={null}
-                        />
+                        {newReleases.length > 0 && (
+                            <Section
+                                title="📀 신곡 추천 (Spotify)"
+                                songs={newReleases}
+                                icon={null}
+                            />
+                        )}
+                        {trendingVideos.length > 0 && (
+                            <Section
+                                title="🔥 인기 음악 (YouTube)"
+                                songs={trendingVideos}
+                                icon={null}
+                            />
+                        )}
+                        {newReleases.length === 0 && trendingVideos.length === 0 && (
+                            <div className="text-center py-12">
+                                <div className="text-gray-400 text-6xl mb-4">🎵</div>
+                                <p className="text-gray-600 text-lg">데이터가 없습니다.</p>
+                            </div>
+                        )}
                     </div>
                 )}
             </main>
