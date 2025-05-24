@@ -13,55 +13,66 @@ import { Link } from "react-router-dom";
 // }
 
 const SongCard = ({ song }) => {
-    // 데이터 구조 통일화 (백엔드 DTO -> 프론트엔드 song 객체)
+    // song 데이터에서 필요한 정보(id, 제목, 아티스트, 이미지)를 추출하는 함수
+    // Spotify 데이터와 YouTube 데이터 구조가 다르기 때문에 구분해서 처리
     const getSongData = () => {
         if (song.albumName) {
-            // Spotify 데이터
+            // Spotify 형식 데이터 처리
             return {
+                // id가 없으면 랜덤 문자열 생성 (임시 id)
                 id: song.id || Math.random().toString(36).substr(2, 9),
                 title: song.albumName,
                 artist: song.artistName,
                 imageUrl: song.imageUrl
             };
         } else if (song.title) {
-            // YouTube 데이터
+            // YouTube 형식 데이터 처리
             return {
+                // videoId가 있으면 사용, 없으면 랜덤 문자열 생성
                 id: song.videoId || Math.random().toString(36).substr(2, 9),
                 title: song.title,
                 artist: song.channel,
                 imageUrl: song.thumbnailUrl
             };
         } else {
-            // 기본 구조
+            // 위 두 조건에 모두 해당하지 않는 경우는 원본 song 객체 그대로 반환
             return song;
         }
     };
 
+    // song 객체에서 필요한 정보만 추출해서 사용
     const songData = getSongData();
 
     return (
-        <div className="song-card">
-            <div className="cover">
-                <img
-                    src={songData.imageUrl}
-                    alt={songData.title}
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        borderRadius: '4px'
-                    }}
-                    onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.parentElement.style.backgroundColor = '#ddd';
-                    }}
-                />
+        // 노래 상세 페이지로 이동하는 링크, id를 URL 파라미터로 전달
+        <Link to={`/music/${songData.id}`} className="song-card-link">
+            <div className="song-card">
+                <div className="cover">
+                    {/* 노래 앨범 커버 또는 썸네일 이미지 */}
+                    <img
+                        src={songData.imageUrl}
+                        alt={songData.title}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            borderRadius: '4px'
+                        }}
+                        // 이미지 로딩 실패 시 이미지 숨기고 배경색 변경 (빈 공간 표시용)
+                        onError={(e) => {
+                            e.target.style.display = 'none';
+                            e.target.parentElement.style.backgroundColor = '#ddd';
+                        }}
+                    />
+                </div>
+                <div className="song-info">
+                    {/* 노래 제목 */}
+                    <h3>{songData.title}</h3>
+                    {/* 아티스트 또는 채널명 */}
+                    <p>{songData.artist}</p>
+                </div>
             </div>
-            <div className="song-info">
-                <h3>{songData.title}</h3>
-                <p>{songData.artist}</p>
-            </div>
-        </div>
+        </Link>
     );
 };
 
