@@ -32,12 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/auth/**", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginPage("/auth/login")
-                        .loginProcessingUrl("/auth/login/process")
-                        .defaultSuccessUrl("/", true)
-                        .permitAll()
-                )
+
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/auth/login")
                         .successHandler(googleLoginSuccessHandler()) // ✅ 이거 추가
