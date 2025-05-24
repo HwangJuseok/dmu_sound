@@ -6,6 +6,12 @@
 </head>
 <body>
 <h1>로그인</h1>
+
+<!-- ✅ 로그인 실패 시 에러 메시지 출력 -->
+{{#error}}
+    <p style="color: red;">⚠ {{error}}</p>
+{{/error}}
+
 <form action="/auth/login" method="post">
     <label for="userId">아이디:</label><br>
     <input type="text" id="userId" name="userId" required><br><br>
@@ -15,6 +21,7 @@
 
     <button type="submit">로그인</button>
 </form>
-<p><a href="/register">회원가입 하기</a></p>
+
+<p><a href="/auth/register">회원가입 하기</a></p>
 </body>
 </html>
