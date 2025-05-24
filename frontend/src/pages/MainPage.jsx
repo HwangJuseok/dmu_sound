@@ -141,9 +141,10 @@ const MainPage = () => {
         return (
             <div className="min-h-screen bg-gray-100">
                 <Header onSearch={handleSearch} />
-                <main className="container mx-auto px-4 py-8">
+                <main className="mx-auto px-4 py-8 max-w-7xl w-full">
                     <div className="text-center py-12">
-                        <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
+                        <div
+                            className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
                         <p className="text-gray-600 text-lg">데이터를 불러오는 중...</p>
                     </div>
                 </main>
@@ -155,7 +156,7 @@ const MainPage = () => {
         return (
             <div className="min-h-screen bg-gray-100">
                 <Header onSearch={handleSearch} />
-                <main className="container mx-auto px-4 py-8">
+                <main className="mx-auto px-4 py-8 max-w-7xl w-full">
                     <div className="text-center py-12">
                         <div className="text-red-500 text-6xl mb-4">⚠️</div>
                         <p className="text-gray-600 text-lg mb-4">{error}</p>
@@ -175,7 +176,7 @@ const MainPage = () => {
         <div className="min-h-screen bg-gray-100">
             <Header onSearch={handleSearch} />
 
-            <main className="container mx-auto px-4 py-8">
+            <main className="mx-auto px-4 py-8 max-w-7xl w-full">
                 {searchResults ? (
                     <div>
                         <div className="mb-6">

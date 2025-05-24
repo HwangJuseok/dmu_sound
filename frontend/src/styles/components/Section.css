@@ -6,7 +6,13 @@
     padding: 24px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     border: 1px solid #e5e7eb;
+    /* ✅ 여기에 너비 추가 */
+    width: 100%;
+    max-width: 1200px; /* 또는 1000~1400px 적당히 조절 가능 */
+    margin-left: auto;
+    margin-right: auto;
 }
+
 
 .section-header {
     display: flex;

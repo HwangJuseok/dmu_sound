@@ -1,5 +1,8 @@
 /* SongCard 스타일 */
 .song-card {
+  width: 100%;
+   max-width: 300px;
+  /* margin: 0 auto; ← ❌ 삭제 */
   background-color: white;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
@@ -12,6 +15,7 @@
   cursor: pointer;
 }
 
+
 .song-card:hover {
   transform: translateY(-4px) scale(1.02);
   z-index: 10;
@@ -21,7 +25,7 @@
 
 .cover {
   width: 100%;
-  height: 180px;
+  height: 100%;
   background-color: #f3f4f6;
   margin-bottom: 12px;
   border-radius: 8px;

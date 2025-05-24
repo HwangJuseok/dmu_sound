@@ -1,6 +1,8 @@
 import React from "react";
 import SongCard from "./SongCard";
 import { dummySongs } from "../utils/dummyData";
+import "../styles/components/SongGrid.css";
+
 
 // function SongGrid() {
 //   return (
