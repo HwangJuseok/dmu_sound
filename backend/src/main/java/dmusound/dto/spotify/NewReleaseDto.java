@@ -21,4 +21,7 @@ public class NewReleaseDto {
 
     @Schema(description = "앨범 이미지 URL", example = "https://i.scdn.co/image/ab67616d0000b273ac3bbf9c278d4a7f6725e4b6")
     private String imageUrl; // 앨범 이미지 URL
+
+    @Schema(description = "트랙 id")
+    private String trackId;
 }

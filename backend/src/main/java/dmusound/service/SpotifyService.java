@@ -10,6 +10,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -59,22 +60,38 @@ public class SpotifyService {
                         .headers(headers -> headers.setBearerAuth(token))
                         .retrieve()
                         .bodyToMono(JsonNode.class)
-                        .map(json -> {
-                            List<NewReleaseDto> releases = new ArrayList<>();
+                        .flatMapMany((JsonNode json) -> {
                             JsonNode items = json.get("albums").get("items");
+                            List<Mono<NewReleaseDto>> monoList = new ArrayList<>();
+
                             for (JsonNode item : items) {
-                                NewReleaseDto dto = new NewReleaseDto(
-                                        item.get("name").asText(),
-                                        item.get("artists").get(0).get("name").asText(),
-                                        item.get("images").get(0).get("url").asText()
-                                );
-                                releases.add(dto);
+                                String albumId = item.get("id").asText();
+                                String albumName = item.get("name").asText();
+                                String artistName = item.get("artists").get(0).get("name").asText();
+                                String imageUrl = item.get("images").get(0).get("url").asText();
+
+                                Mono<NewReleaseDto> dtoMono = webClient.get()
+                                        .uri("https://api.spotify.com/v1/albums/" + albumId + "/tracks?limit=1")
+                                        .headers(headers -> headers.setBearerAuth(token)) // token 스코프 문제 해결됨
+                                        .retrieve()
+                                        .bodyToMono(JsonNode.class)
+                                        .map(trackJson -> {
+                                            JsonNode track = trackJson.get("items").get(0);
+                                            String trackId = track.get("id").asText();
+                                            return new NewReleaseDto(albumName, artistName, imageUrl, trackId);
+                                        });
+
+                                monoList.add(dtoMono);
                             }
-                            return releases;
+
+                            return Flux.merge(monoList); // Flux<NewReleaseDto>
                         })
+                        .collectList() // Mono<List<NewReleaseDto>>
         );
     }
-/**
+
+
+    /**
      * 검색 결과 가져오기 (트랙 및 아티스트).
      * @param query 검색어
      * @return 검색 결과를 포함하는 Mono<List<SearchResultDto>>
