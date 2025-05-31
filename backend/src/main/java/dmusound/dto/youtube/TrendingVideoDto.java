@@ -21,4 +21,7 @@ public class TrendingVideoDto {
 
     @Schema(description = "썸네일 이미지 URL", example = "https://i.ytimg.com/vi/abc123/0.jpg")
     private String thumbnailUrl; // 썸네일 이미지 URL
+
+    @Schema
+    private String videoUrl;
 }

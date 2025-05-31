@@ -84,10 +84,13 @@ public class YoutubeService {
                     if (json != null && json.has("items")) {
                         json.get("items").forEach(item -> {
                             JsonNode snippet = item.get("snippet");
+                            String videoId = item.get("id").asText(); // 영상 ID
+                            String videoUrl = "https://www.youtube.com/watch?v=" + videoId; // 영상 URL 생성
                             list.add(new TrendingVideoDto(
                                     snippet.get("title").asText(),
                                     snippet.get("channelTitle").asText(),
-                                    snippet.get("thumbnails").get("medium").get("url").asText()
+                                    snippet.get("thumbnails").get("medium").get("url").asText(),
+                                    videoUrl
                             ));
                         });
                         trendingCache.put(cacheKey, new CachedResult<>(list, CACHE_TTL_SECONDS));
