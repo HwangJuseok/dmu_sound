@@ -1,33 +1,64 @@
 package dmusound.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // 1. 비밀번호 암호화용 빈
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 2. 보안 필터 체인 설정
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // CSRF 보호 비활성화 (필요한 경우)
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // 모든 요청을 인증 없이 허용
+                        .requestMatchers("/", "/auth/**", "/css/**", "/js/**","/search", "/search/**" ).permitAll()
+                        .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults()); // 기본 로그인 설정
 
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/auth/login")
+                        .successHandler(googleLoginSuccessHandler()) // ✅ 이거 추가
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .logoutSuccessUrl("/auth/login")
+                );
         return http.build();
+    }
+
+
+
+    // ✅ 로그인 성공 후 이메일을 세션에 저장
+    public AuthenticationSuccessHandler googleLoginSuccessHandler() {
+        return (HttpServletRequest request, HttpServletResponse response,
+                Authentication authentication) -> {
+
+            OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+            String email = oAuth2User.getAttribute("email");
+
+            HttpSession session = request.getSession();
+            session.setAttribute("userId", email); // ✅ 세션에 이메일 저장
+
+            // 기본 페이지로 리다이렉트
+            response.sendRedirect("/");
+        };
     }
 }
