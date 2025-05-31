@@ -3,15 +3,24 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/components/Sidebar.css";
 
-function Sidebar({ onToggle, user }) {
+function Sidebar({ onToggle, user, logout, loading }) {
     const [playlists, setPlaylists] = useState([]);
 
     useEffect(() => {
         if (user) {
+            // 사용자가 로그인했을 때 플레이리스트 불러오기
             const stored = localStorage.getItem("myPlaylists");
             if (stored) {
-                setPlaylists(JSON.parse(stored));
+                try {
+                    setPlaylists(JSON.parse(stored));
+                } catch (error) {
+                    console.error("플레이리스트 로드 오류:", error);
+                    setPlaylists([]);
+                }
             }
+        } else {
+            // 사용자가 로그아웃했을 때 플레이리스트 초기화
+            setPlaylists([]);
         }
     }, [user]);
 
@@ -28,7 +37,11 @@ function Sidebar({ onToggle, user }) {
 
             <hr />
 
-            {user ? (
+            {loading ? (
+                <div className="loading-section">
+                    <p>로딩 중...</p>
+                </div>
+            ) : user ? (
                 <div className="user-playlists">
                     <h4>내 플레이리스트</h4>
                     {playlists.length > 0 ? (
@@ -42,7 +55,13 @@ function Sidebar({ onToggle, user }) {
                     )}
                 </div>
             ) : (
-                <p className="login-required">로그인 시 플레이리스트가 표시됩니다.</p>
+                <div className="login-required">
+                    <p>로그인 시 플레이리스트가 표시됩니다.</p>
+                    <div className="sidebar-auth-buttons">
+                        <Link to="/auth/login" className="sidebar-login-btn">로그인</Link>
+                        <Link to="/auth/register" className="sidebar-register-btn">회원가입</Link>
+                    </div>
+                </div>
             )}
         </aside>
     );

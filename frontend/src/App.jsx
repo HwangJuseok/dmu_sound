@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import './styles/App.css';
 import { AuthProvider } from './contexts/AuthContext';
@@ -14,62 +14,77 @@ import SearchBar from './components/SearchBar';
 import PlaylistDetailPage from './pages/PlaylistDetailPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
-
+import { useAuth } from './contexts/AuthContext';
 
 function AppContent() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const location = useLocation();
-  const [user, setUser] = useState(null);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const location = useLocation();
+    const { user, logout, loading } = useAuth();
 
-  useEffect(() => {
-    const stored = localStorage.getItem("user");
-    if (stored) {
-      setUser(JSON.parse(stored));
-    }
-  }, []);
+    // 인증 페이지 경로들
+    const authPaths = ['/login', '/auth/login', '/register', '/auth/register'];
+    const isAuthPage = authPaths.includes(location.pathname);
 
-  return (
-      <div className="App">
-        {sidebarOpen && <Sidebar onToggle={() => setSidebarOpen(false)} user={user} />}
+    return (
+        <div className="App">
+            {/* 인증 페이지가 아닐 때만 사이드바 표시 */}
+            {!isAuthPage && (
+                <>
+                    {sidebarOpen && (
+                        <Sidebar
+                            onToggle={() => setSidebarOpen(false)}
+                            user={user}
+                            logout={logout}
+                            loading={loading}
+                        />
+                    )}
 
-        {!sidebarOpen && (
-            <button className="sidebar-toggle-button" onClick={() => setSidebarOpen(true)}>
-              ☰
-            </button>
-        )}
+                    {!sidebarOpen && (
+                        <button
+                            className="sidebar-toggle-button"
+                            onClick={() => setSidebarOpen(true)}
+                        >
+                            ☰
+                        </button>
+                    )}
+                </>
+            )}
 
-        <main className="main-page">
-          {location.pathname !== '/' && (
-              <header className="search-bar-wrapper">
-                <SearchBar />
-              </header>
-          )}
+            <main className={`main-page ${isAuthPage ? 'auth-page' : ''}`}>
+                {/* 메인 페이지가 아니고 인증 페이지가 아닐 때만 검색바 표시 */}
+                {location.pathname !== '/' && !isAuthPage && (
+                    <header className="search-bar-wrapper">
+                        <SearchBar />
+                    </header>
+                )}
 
-          <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/chart" element={<Chart />} />
-            <Route path="/playlist" element={<Playlist />} />
-            <Route path="/search" element={<SearchResultsPage />} />
-            <Route path="/music/:id" element={<MusicInfo />} />
-            <Route path="/detail/:id" element={<DetailPage />} />
-            <Route path="/lyrics/:id" element={<LyricsPage />} />
-            <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/auth/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/auth/register" element={<Register />} />
-          </Routes>
-        </main>
-      </div>
-  );
+                <Routes>
+                    <Route path="/" element={
+                        <MainPage user={user} logout={logout} loading={loading} />
+                    } />
+                    <Route path="/chart" element={<Chart />} />
+                    <Route path="/playlist" element={<Playlist />} />
+                    <Route path="/search" element={<SearchResultsPage />} />
+                    <Route path="/music/:id" element={<MusicInfo />} />
+                    <Route path="/detail/:id" element={<DetailPage />} />
+                    <Route path="/lyrics/:id" element={<LyricsPage />} />
+                    <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/auth/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/auth/register" element={<Register />} />
+                </Routes>
+            </main>
+        </div>
+    );
 }
 
 function App() {
-  return (
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-  );
+    return (
+        <AuthProvider>
+            <AppContent />
+        </AuthProvider>
+    );
 }
 
 export default App;

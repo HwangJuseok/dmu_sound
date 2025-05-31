@@ -1,33 +1,74 @@
+/*!* SongGrid 스타일 *!*/
+/*.song-grid {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(3, 1fr);*/
+/*    gap: 20px;*/
+/*    padding: 20px 0;*/
+/*    margin-bottom: 40px;*/
+/*}*/
+
+
+/*.song-item {*/
+/*    width: 100%;*/
+/*    !* ❌ 이거 전부 삭제하거나 주석처리 *!*/
+/*    !* display: flex;*/
+/*       justify-content: center; *!*/
+/*}*/
+
+
+/*!* 반응형 디자인 *!*/
+/*@media (max-width: 1200px) {*/
+/*    .song-grid {*/
+/*        grid-template-columns: repeat(3, 1fr);*/
+/*        gap: 16px;*/
+/*    }*/
+/*}*/
+
+/*@media (max-width: 768px) {*/
+/*    .song-grid {*/
+/*        grid-template-columns: repeat(3, 1fr);*/
+/*        gap: 12px;*/
+/*    }*/
+/*}*/
+
+/*@media (max-width: 480px) {*/
+/*    .song-grid {*/
+/*        grid-template-columns: repeat(2, 1fr);*/
+/*        gap: 10px;*/
+/*    }*/
+/*} 기존 css
+ */
+
 /* SongGrid 스타일 */
 .song-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     padding: 20px 0;
     margin-bottom: 40px;
+    justify-items: center;
 }
-
 
 .song-item {
     width: 100%;
-    /* ❌ 이거 전부 삭제하거나 주석처리 */
-    /* display: flex;
-       justify-content: center; */
+    max-width: 250px;
+    /* 중앙 정렬 제거 - 카드가 자연스럽게 배치되도록 */
 }
-
 
 /* 반응형 디자인 */
 @media (max-width: 1200px) {
     .song-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: 16px;
+        padding: 16px 0;
     }
 }
 
 @media (max-width: 768px) {
     .song-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 12px;
+        padding: 12px 0;
     }
 }
 
@@ -35,5 +76,10 @@
     .song-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
+        padding: 10px 0;
+    }
+
+    .song-item {
+        max-width: none;
     }
 }

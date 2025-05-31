@@ -15,22 +15,54 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // 디버깅용 콘솔 로그 추가
+    useEffect(() => {
+        console.log('AuthContext - User state changed:', user);
+        console.log('AuthContext - Loading state:', loading);
+    }, [user, loading]);
+
     // 로그인 상태 확인
     const checkAuthStatus = async () => {
+        console.log('AuthContext - Checking auth status...');
         try {
+            // 먼저 localStorage 확인
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                try {
+                    const userData = JSON.parse(storedUser);
+                    console.log('AuthContext - Found stored user:', userData);
+                    setUser(userData);
+                } catch (e) {
+                    console.error('AuthContext - Invalid stored user data');
+                    localStorage.removeItem('user');
+                }
+            }
+
+            // 서버 상태도 확인
             const response = await fetch('/api/auth/status', {
                 credentials: 'include'
             });
             const data = await response.json();
+            console.log('AuthContext - Auth status response:', data);
 
             if (data.success) {
-                setUser({ userId: data.token || data.message }); // 실제 사용자 정보로 설정
+                const userData = { userId: data.token || data.message };
+                console.log('AuthContext - Setting user from server:', userData);
+                setUser(userData);
+                // localStorage에도 저장
+                localStorage.setItem('user', JSON.stringify(userData));
             } else {
+                console.log('AuthContext - Auth check failed, clearing user');
                 setUser(null);
+                localStorage.removeItem('user');
             }
         } catch (error) {
             console.error('Auth status check failed:', error);
-            setUser(null);
+            // 네트워크 오류시 localStorage 데이터 유지
+            const storedUser = localStorage.getItem('user');
+            if (!storedUser) {
+                setUser(null);
+            }
         } finally {
             setLoading(false);
         }
@@ -38,6 +70,7 @@ export const AuthProvider = ({ children }) => {
 
     // 로그인 함수
     const login = async (userId, userPw) => {
+        console.log('AuthContext - Login attempt for:', userId);
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
@@ -50,11 +83,19 @@ export const AuthProvider = ({ children }) => {
             });
 
             const data = await response.json();
+            console.log('AuthContext - Login response:', data);
 
             if (data.success) {
-                setUser({ userId: userId });
+                const userData = { userId: userId };
+                console.log('AuthContext - Login successful, setting user:', userData);
+                setUser(userData);
+
+                // localStorage에도 저장
+                localStorage.setItem('user', JSON.stringify(userData));
+
                 return { success: true };
             } else {
+                console.log('AuthContext - Login failed:', data.message);
                 return { success: false, message: data.message };
             }
         } catch (error) {
@@ -65,22 +106,27 @@ export const AuthProvider = ({ children }) => {
 
     // 로그아웃 함수
     const logout = async () => {
+        console.log('AuthContext - Logout attempt');
         try {
             await fetch('/api/auth/logout', {
                 method: 'POST',
                 credentials: 'include'
             });
+            console.log('AuthContext - Logout API call successful');
         } catch (error) {
             console.error('Logout error:', error);
         } finally {
+            console.log('AuthContext - Clearing user state');
             setUser(null);
             // 로컬스토리지 정리
+            localStorage.removeItem('user');
             localStorage.removeItem('myPlaylists');
         }
     };
 
     // 회원가입 함수
     const register = async (userId, userPw, userName) => {
+        console.log('AuthContext - Register attempt for:', userId);
         try {
             const response = await fetch('/api/auth/register', {
                 method: 'POST',
@@ -93,6 +139,7 @@ export const AuthProvider = ({ children }) => {
             });
 
             const result = await response.json();
+            console.log('AuthContext - Register response:', result);
             return result;
         } catch (error) {
             console.error('Register error:', error);
