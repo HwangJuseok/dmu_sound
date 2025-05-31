@@ -154,7 +154,7 @@ const MainPage = ({ user, logout, loading }) => {
         };
 
         loadData();
-    }, [user]);
+    }, [user, loading]);
 
     // 이벤트 핸들러
     const handleSearch = (results, query) => {
@@ -176,7 +176,7 @@ const MainPage = ({ user, logout, loading }) => {
     };
 
     // 로딩 상태
-    if (loading) {
+    if (loading || isLoadingData) {
         return (
             <div className="main-page-loading">
                 <h2>로딩 중...</h2>
