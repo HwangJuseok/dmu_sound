@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="560f0f4c-75ba-456f-a794-eeea81db9180" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/MyPageController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/youtube/TrendingVideoDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/youtube/TrendingVideoDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/service/YoutubeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/service/YoutubeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/service/SpotifyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/service/SpotifyService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,6 +101,7 @@
       <workItem from="1747178412507" duration="1951000" />
       <workItem from="1747180380163" duration="4725000" />
       <workItem from="1748677305957" duration="422000" />
+      <workItem from="1748677857423" duration="1148000" />
     </task>
     <servers />
   </component>

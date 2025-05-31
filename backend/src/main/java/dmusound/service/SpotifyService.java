@@ -4,7 +4,10 @@ import dmusound.dto.spotify.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -13,6 +16,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,5 +211,39 @@ public class SpotifyService {
                         )
         );
     }
+
+    public Mono<TrackDetailDto> fetchTrack(String title, String artist) {
+        String query = title + " " + artist;
+
+        return getAccessToken().flatMap(token ->
+                webClient.get()
+                        .uri("https://api.spotify.com/v1/search?q=" + query + "&type=track&limit=1")
+                        .headers(headers -> headers.setBearerAuth(token))
+                        .retrieve()
+                        .bodyToMono(JsonNode.class)
+                        .flatMap(json -> {
+                            JsonNode items = json.get("tracks").get("items");
+                            if (items.isArray() && items.size() > 0) {
+                                JsonNode track = items.get(0);
+                                TrackDetailDto dto = new TrackDetailDto(
+                                        track.get("id").asText(),
+                                        track.get("name").asText(),
+                                        track.get("artists").get(0).get("id").asText(),
+                                        track.get("artists").get(0).get("name").asText(),
+                                        track.get("album").get("id").asText(),
+                                        track.get("album").get("name").asText(),
+                                        track.get("album").get("images").get(0).get("url").asText(),
+                                        track.has("preview_url") && !track.get("preview_url").isNull()
+                                                ? track.get("preview_url").asText() : null
+                                );
+                                return Mono.just(dto);
+                            } else {
+                                return Mono.empty(); // 검색 결과 없음
+                            }
+                        })
+        );
+    }
+
+
 
 }
