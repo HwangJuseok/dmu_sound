@@ -39,22 +39,7 @@ public class SecurityConfig {
                 // 인증 및 인가 설정
                 .authorizeHttpRequests(auth -> auth
                         // 인증 없이 접근 가능한 경로들
-                        .requestMatchers(
-                                "/",                    // 메인 페이지
-                                "/auth/**",             // 인증 관련
-                                "/css/**",              // 정적 리소스
-                                "/js/**",               // 정적 리소스
-                                "/images/**",           // 이미지
-                                "/favicon.ico",         // 파비콘
-                                "/search",              // 검색 페이지
-                                "/search/**",           // 검색 관련 페이지
-                                "/api/search/**",       // 검색 API ✅ 추가
-                                "/api/spotify/**",      // Spotify API
-                                "/api/youtube/**"       // YouTube API
-                        ).permitAll()
-
-                        // 나머지 모든 요청은 인증 필요
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
 
                 // OAuth2 로그인 설정
