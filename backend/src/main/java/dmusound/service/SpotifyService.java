@@ -238,11 +238,12 @@ public class SpotifyService {
                                 );
                                 return Mono.just(dto);
                             } else {
-                                return Mono.empty(); // 검색 결과 없음
+                                return Mono.empty();
                             }
                         })
         );
     }
+
 
 
 
