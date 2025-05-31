@@ -52,3 +52,22 @@ export const dummyChart = [
     info: "앨범: MY WORLD | 발매일: 2023년 | 아티스트: aespa | 장르: 한국 댄스/일렉트로닉, K팝",
   },
 ]
+export const samplePlaylists = [
+  {
+    id: 1,
+    name: "플레이리스트 1",
+    description: "설명 1",
+    tracks: [
+      { id: 101, trackName: "좋은날", artistName: "아이유", albumName: "Real", imageUrl: "URL1", previewUrl: "PREVIEW1" },
+      { id: 102, trackName: "Ditto", artistName: "NewJeans", albumName: "OMG", imageUrl: "URL2", previewUrl: "PREVIEW2" },
+    ],
+  },
+  {
+    id: 2,
+    name: "플레이리스트 2",
+    description: "설명 2",
+    tracks: [
+      { id: 201, trackName: "Dynamite", artistName: "BTS", albumName: "BE", imageUrl: "URL3", previewUrl: "PREVIEW3" },
+    ],
+  },
+];

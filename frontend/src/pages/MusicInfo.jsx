@@ -54,6 +54,30 @@ function MusicInfo() {
     const track = trackData?.track;
     const musicVideo = trackData?.musicVideo;
     const coverVideos = trackData?.coverVideos || [];
+    const handleAddToPlaylist = async () => {
+    try {                             
+        const response = await fetch("/api/playlist/add", { // 이 부분은 백엔드 라우터
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            trackId: track?.trackId,
+            trackName: track?.trackName,
+            artistName: track?.artistName,
+            albumName: track?.albumName,
+            imageUrl: track?.imageUrl,
+            previewUrl: track?.previewUrl,
+        }),
+        });
+
+        if (!response.ok) throw new Error("플레이리스트 추가 실패");
+
+        alert("✅ 플레이리스트에 추가되었습니다!");
+    } catch (err) {
+        alert("❌ 추가 중 오류 발생: " + err.message);
+    }
+    };
 
     return (
         <div className="music-container">
@@ -61,6 +85,12 @@ function MusicInfo() {
                 {/* 앨범 커버 + 정보 */}
                 <div className="album-section">
                     <section className="track-info">
+                        <button className="add-to-playlist-button" onClick={handleAddToPlaylist}>
+                        ➕ 플레이리스트에 추가
+                        </button>
+
+
+                        
                         <h2>
                             {track?.trackName || title || "노래제목"} - {track?.artistName || artist || "가수"}
                         </h2>

@@ -16,29 +16,26 @@ const SongCard = ({ song }) => {
     // song 데이터에서 필요한 정보(id, 제목, 아티스트, 이미지)를 추출하는 함수
     // Spotify 데이터와 YouTube 데이터 구조가 다르기 때문에 구분해서 처리
     const getSongData = () => {
-        if (song.albumName) {
-            // Spotify 형식 데이터 처리
-            return {
-                // id가 없으면 랜덤 문자열 생성 (임시 id)
-                id: song.id || Math.random().toString(36).substr(2, 9),
-                title: song.albumName,
-                artist: song.artistName,
-                imageUrl: song.imageUrl
-            };
-        } else if (song.title) {
-            // YouTube 형식 데이터 처리
-            return {
-                // videoId가 있으면 사용, 없으면 랜덤 문자열 생성
-                id: song.videoId || Math.random().toString(36).substr(2, 9),
-                title: song.title,
-                artist: song.channel,
-                imageUrl: song.thumbnailUrl
-            };
-        } else {
-            // 위 두 조건에 모두 해당하지 않는 경우는 원본 song 객체 그대로 반환
-            return song;
-        }
-    };
+    if (song.albumName) {
+        // ✅ trackId가 있는 경우 우선 사용
+        return {
+            id: song.trackId || Math.random().toString(36).substr(2, 9),
+            title: song.albumName,
+            artist: song.artistName,
+            imageUrl: song.imageUrl
+        };
+    } else if (song.title) {
+        // YouTube 형식 데이터
+        return {
+            id: song.videoId || Math.random().toString(36).substr(2, 9),
+            title: song.title,
+            artist: song.channel,
+            imageUrl: song.thumbnailUrl
+        };
+    } else {
+        return song;
+    }
+};
 
     // song 객체에서 필요한 정보만 추출해서 사용
     const songData = getSongData();
