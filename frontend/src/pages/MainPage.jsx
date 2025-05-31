@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from "../components/SearchBar";
 import Section from "../components/Section";
+import { useAuth } from "../contexts/AuthContext";
 import "../styles/MainPage.css";
 
 // API 서비스
@@ -43,7 +44,7 @@ const apiService = {
 };
 
 // Header 컴포넌트
-const Header = ({ onSearch }) => {
+const Header = ({ onSearch, user, logout, loading }) => {
     const navigate = useNavigate();
 
     return (
@@ -55,20 +56,38 @@ const Header = ({ onSearch }) => {
                         <h1 className="text-2xl font-bold">DMU Sound</h1>
                     </div>
                     <nav className="flex items-center space-x-4">
-                        <button
-                            className="flex items-center space-x-1 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all"
-                            onClick={() => navigate('/auth/login')}
-                        >
-                            <span>👤</span>
-                            <span>로그인</span>
-                        </button>
-                        <button
-                            className="flex items-center space-x-1 px-4 py-2 rounded-lg bg-white bg-opacity-30 transition-all"
-                            onClick={() => navigate('/auth/register')}
-                        >
-                            <span>➕</span>
-                            <span>회원가입</span>
-                        </button>
+                        {loading ? (
+                            // 로딩 중일 땐 아무것도 안 보여줌
+                            null
+                        ) : user ? (
+                            <>
+                                <span className="text-white font-semibold">👋 {user.userId}</span>
+                                <button
+                                    onClick={logout}
+                                    className="px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all"
+                                >
+                                    로그아웃
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button
+                                    className="flex items-center space-x-1 px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all"
+                                    onClick={() => navigate('/auth/login')}
+                                >
+                                    <span>👤</span>
+                                    <span>로그인</span>
+                                </button>
+                                <button
+                                    className="flex items-center space-x-1 px-4 py-2 rounded-lg bg-white bg-opacity-30 transition-all"
+                                    onClick={() => navigate('/auth/register')}
+                                >
+                                    <span>➕</span>
+                                    <span>회원가입</span>
+                                </button>
+                            </>
+                        )}
+
                     </nav>
                 </div>
 
@@ -78,7 +97,7 @@ const Header = ({ onSearch }) => {
                 </div>
 
                 <div className="flex justify-center">
-                    <SearchBar onSearch={onSearch} />
+                    <SearchBar onSearch={onSearch}/>
                 </div>
             </div>
         </header>
@@ -92,6 +111,9 @@ const MainPage = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { user, logout, loading } = useAuth(); // ✅ 여기에 추가
+
+
 
     useEffect(() => {
         const loadData = async () => {
@@ -129,7 +151,7 @@ const MainPage = () => {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-100">
-                <Header onSearch={handleSearch} />
+                <Header onSearch={handleSearch} user={user} logout={logout} loading={loading} />
                 <main className="mx-auto px-4 py-8 max-w-7xl w-full">
                     <div className="text-center py-12">
                         <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
@@ -143,7 +165,7 @@ const MainPage = () => {
     if (error) {
         return (
             <div className="min-h-screen bg-gray-100">
-                <Header onSearch={handleSearch} />
+                <Header onSearch={handleSearch} user={user} logout={logout} loading={loading} />
                 <main className="mx-auto px-4 py-8 max-w-7xl w-full">
                     <div className="text-center py-12">
                         <div className="text-red-500 text-6xl mb-4">⚠️</div>
@@ -162,7 +184,7 @@ const MainPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-100">
-            <Header onSearch={handleSearch} />
+            <Header onSearch={handleSearch} user={user} logout={logout} loading={loading} />
             <main className="mx-auto px-4 py-8 max-w-7xl w-full">
                 {searchResults ? (
                     <div>
