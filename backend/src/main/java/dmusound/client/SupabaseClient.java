@@ -45,20 +45,4 @@ public class SupabaseClient {
                 String.class
         );
     }
-
-    public void deleteData(String path) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("apikey", config.apiKey);
-        headers.set("Authorization", "Bearer " + config.apiKey);
-
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        restTemplate.exchange(
-                config.baseUrl + "/" + path,
-                HttpMethod.DELETE,
-                entity,
-                Void.class
-        );
-    }
-
 }

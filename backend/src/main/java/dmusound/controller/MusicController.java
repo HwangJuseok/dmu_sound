@@ -4,13 +4,11 @@ import dmusound.dto.spotify.TrackDetailDto;
 import dmusound.dto.youtube.VideoDto;
 import dmusound.service.SpotifyService;
 import dmusound.service.YoutubeService;
-import dmusound.service.FavoriteService;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -27,7 +25,6 @@ public class MusicController {
 
     private final SpotifyService spotifyService;
     private final YoutubeService youtubeService;
-    private final FavoriteService favoriteService;
 
     @Operation(
             summary = "트랙 상세 정보 보기",
@@ -56,7 +53,7 @@ public class MusicController {
             )
     })
     @GetMapping("/{id}")
-    public Mono<Map<String, Object>> getTrackDetailJson(@PathVariable String id, @RequestParam(required = false) Integer userCode) {
+    public Mono<Map<String, Object>> getTrackDetailJson(@PathVariable String id) {
         return spotifyService.getTrackDetail(id)
                 .flatMap(track -> {
                     String trackName = track.getTrackName() != null ? track.getTrackName() : "Unknown Track";
@@ -93,30 +90,13 @@ public class MusicController {
                                     .collect(Collectors.toList());
                         }
 
-
-
                         Map<String, Object> response = new HashMap<>();
                         response.put("track", track);
                         response.put("musicVideo", musicVideo);
                         response.put("coverVideos", coverVideos);
 
-                        boolean isFavorited = userCode != null && favoriteService.isFavorited(userCode, id);
-                        response.put("isFavorited", isFavorited);
-
                         return response;
                     });
                 });
-    }
-
-    @PostMapping("/{id}/favorite")
-    public ResponseEntity<?> toggleFavorite(@PathVariable String id,
-                                            @RequestParam int userCode,
-                                            @RequestParam boolean favorite) {
-        if (favorite) {
-            favoriteService.addFavorite(userCode, id);
-        } else {
-            favoriteService.removeFavorite(userCode, id);
-        }
-        return ResponseEntity.ok().build();
     }
 }
