@@ -103,7 +103,7 @@
 기존 css
 */
 
-/* SongCard 스타일 */
+/* SongCard 스타일 개선 */
 .song-card {
   width: 100%;
   background-color: white;
@@ -116,10 +116,10 @@
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  /* 카드 높이를 일정하게 유지 */
   display: flex;
   flex-direction: column;
   height: 280px;
+  overflow: hidden; /* 카드 영역을 벗어나는 요소 숨김 */
 }
 
 .song-card:hover {
@@ -138,8 +138,12 @@
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* 이미지 로딩 실패 시 기본 아이콘 표시 */
 .cover::before {
   content: "🎵";
   position: absolute;
@@ -157,6 +161,20 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+/* 이미지 로딩 실패 시 처리 */
+.cover img:not([src]),
+.cover img[src=""],
+.cover img[src*="data:image/svg"],
+.cover img:broken {
+  opacity: 0;
+}
+
+/* 이미지 로딩 상태 개선 */
+.cover img[src]:not([src=""]) {
+  opacity: 1;
 }
 
 .song-info {
@@ -166,6 +184,7 @@
   flex-direction: column;
   justify-content: flex-start;
   gap: 4px;
+  min-height: 0; /* flexbox에서 overflow 처리를 위해 필요 */
 }
 
 .song-card h3 {
@@ -181,6 +200,7 @@
   text-overflow: ellipsis;
   min-height: 36px;
   max-height: 36px;
+  word-wrap: break-word;
 }
 
 .song-card p {
@@ -192,6 +212,33 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+/* 로딩 상태 표시 */
+.song-card.loading .cover::after {
+  content: "로딩 중...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  color: #6b7280;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* 에러 상태 표시 */
+.song-card.error .cover {
+  background-color: #fef2f2;
+  border: 1px dashed #fca5a5;
+}
+
+.song-card.error .cover::before {
+  content: "❌";
+  color: #ef4444;
 }
 
 /* 반응형 조정 */
@@ -224,5 +271,11 @@
 
   .cover {
     height: 130px;
+  }
+
+  .song-card h3 {
+    font-size: 12px;
+    min-height: 30px;
+    max-height: 30px;
   }
 }
