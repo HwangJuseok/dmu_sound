@@ -11,6 +11,8 @@ import MusicInfo from './pages/MusicInfo';
 import SearchResultsPage from './pages/SearchResultsPage';
 import SearchBar from './components/SearchBar';
 import PlaylistDetailPage from './pages/PlaylistDetailPage';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -59,6 +61,10 @@ function App() {
           <Route path="/detail/:id" element={<DetailPage />} />
           <Route path="/lyrics/:id" element={<LyricsPage />} />
           <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/auth/register" element={<Register />} />
         </Routes>
       </main>
     </div>
