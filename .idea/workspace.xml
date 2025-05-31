@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="560f0f4c-75ba-456f-a794-eeea81db9180" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/controller/PlaylistController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/playlist/PlaylistDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/dto/playlist/PlaylistTrackDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/service/PlaylistService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/dmusound/client/SupabaseClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/dmusound/client/SupabaseClient.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
