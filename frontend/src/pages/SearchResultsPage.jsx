@@ -18,7 +18,17 @@ const SearchResultsPage = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(`/api/search?query=${encodeURIComponent(searchQuery)}`);
+
+        const response = await axios.get(
+            `http://localhost:8080/api/search?query=${encodeURIComponent(searchQuery)}`,
+            {
+              withCredentials: true,
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              }
+            }
+        );
 
         if (Array.isArray(response.data)) {
           setResults(response.data);
