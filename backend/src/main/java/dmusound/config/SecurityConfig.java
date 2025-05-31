@@ -48,6 +48,7 @@ public class SecurityConfig {
                                 "/favicon.ico",         // 파비콘
                                 "/search",              // 검색 페이지
                                 "/search/**",           // 검색 관련 페이지
+                                "/api/music/**",        // 곡 상세 관련 페이지
                                 "/api/search/**",       // 검색 API ✅ 추가
                                 "/api/spotify/**",      // Spotify API
                                 "/api/youtube/**"       // YouTube API
