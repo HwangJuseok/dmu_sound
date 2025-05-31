@@ -35,6 +35,7 @@ public class SupabaseClient {
         headers.set("apikey", config.apiKey);
         headers.set("Authorization", "Bearer " + config.apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Prefer", "resolution=merge-duplicates"); // 중복 시 업데이트
 
         HttpEntity<String> entity = new HttpEntity<>(jsonData, headers);
 
@@ -45,4 +46,5 @@ public class SupabaseClient {
                 String.class
         );
     }
+
 }

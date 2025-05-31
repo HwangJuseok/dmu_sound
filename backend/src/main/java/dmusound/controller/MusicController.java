@@ -3,6 +3,7 @@ package dmusound.controller;
 import dmusound.dto.spotify.TrackDetailDto;
 import dmusound.dto.youtube.VideoDto;
 import dmusound.service.SpotifyService;
+import dmusound.service.SupabaseService;
 import dmusound.service.YoutubeService;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.media.*;
@@ -25,6 +26,7 @@ public class MusicController {
 
     private final SpotifyService spotifyService;
     private final YoutubeService youtubeService;
+    private final SupabaseService supabaseService;
 
     @Operation(
             summary = "트랙 상세 정보 보기",
@@ -58,6 +60,8 @@ public class MusicController {
                 .flatMap(track -> {
                     String trackName = track.getTrackName() != null ? track.getTrackName() : "Unknown Track";
                     String artistName = track.getArtistName() != null ? track.getArtistName() : "Unknown Artist";
+
+                    supabaseService.saveTrackDetail(track);
 
                     Mono<List<VideoDto>> mvSearch = youtubeService.searchVideos(trackName + " " + artistName + " official");
                     Mono<List<VideoDto>> coverSearch = youtubeService.searchVideos(trackName + " " + artistName + " cover");
