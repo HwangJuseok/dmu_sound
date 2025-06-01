@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class SearchController {
             )
     })
     @GetMapping
-    public List<SearchResultDto> search(
+    public Mono<List<SearchResultDto>> search(
             @Parameter(
                     name = "query",
                     description = "Spotify에서 검색할 쿼리 문자열 (예: 'pop', 'BTS', 'IU')",
@@ -59,13 +60,8 @@ public class SearchController {
 
         log.info("🔍 검색 요청 받음: query = {}", query); // 로그 추가
 
-        try {
-            List<SearchResultDto> results = spotifyService.search(query);
-            log.info("✅ 검색 결과 개수: {}", results.size()); // 로그 추가
-            return results;
-        } catch (Exception e) {
-            log.error("❌ 검색 중 오류 발생: ", e); // 에러 로그 추가
-            throw e;
-        }
+        return spotifyService.search(query)
+                .doOnNext(results -> log.info("✅ 검색 결과 개수: {}", results.size()))
+                .doOnError(e -> log.error("❌ 검색 중 오류 발생: ", e));
     }
 }
