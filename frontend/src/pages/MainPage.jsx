@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
-
+import "../styles/MainPage.css";
 // API 서비스 통합
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -339,7 +339,7 @@ const MainPage = ({ user, logout, loading }) => {
                                                     <div className="music-rank">{index + 1}</div>
                                                     <div className="music-info">
                                                         <img
-                                                            src={music.thumbnail || '/default-album.jpg'}
+                                                            src={music.thumbnailUrl || '/default-album.jpg'}
                                                             alt={music.title}
                                                             className="album-art"
                                                         />
