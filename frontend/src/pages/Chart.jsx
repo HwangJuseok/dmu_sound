@@ -1,19 +1,60 @@
-import React from "react";
-import { dummyChart } from "../utils/dummyData";
+import React, { useEffect, useState } from "react";
 import "../styles/Chart.css";
 
 function Chart() {
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const API_BASE_URL = "http://localhost:8080";
+
+  useEffect(() => {
+    const fetchTrendingVideos = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/youtube/trending`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        setVideos(data);
+      } catch (err) {
+        console.error("Error fetching trending videos:", err);
+        setError("인기 차트를 불러오는 데 실패했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTrendingVideos();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="chart-page">
+        <p>📡 차트를 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="chart-page">
+        <p className="error-message">⚠️ {error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="chart-page">
       <h1>📊 실시간 차트</h1>
       <ul className="chart-list">
-        {dummyChart.map((track, index) => (
-          <li key={track.id} className="chart-item">
+        {videos.map((video, index) => (
+          <li key={index} className="chart-item">
             <span className="rank">{index + 1}</span>
-            <img src={track.image} alt={track.title} />
+            <a href={video.videoUrl} target="_blank" rel="noopener noreferrer">
+              <img src={video.thumbnailUrl} alt={video.title} />
+            </a>
             <div className="info">
-              <span className="title">{track.title}</span>
-              <span className="artist">{track.artist}</span>
+              <span className="title">{video.title}</span>
+              <span className="artist">{video.channel}</span>
             </div>
           </li>
         ))}

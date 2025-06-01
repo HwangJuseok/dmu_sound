@@ -1,8 +1,111 @@
-/* SongCard 스타일 */
+/*!* SongCard 스타일 *!*/
+/*.song-card {*/
+/*  width: 100%;*/
+/*   max-width: 300px;*/
+/*  !* margin: 0 auto; ← ❌ 삭제 *!*/
+/*  background-color: white;*/
+/*  border: 1px solid #e2e8f0;*/
+/*  border-radius: 12px;*/
+/*  padding: 12px;*/
+/*  text-align: center;*/
+/*  transition: all 0.3s ease;*/
+/*  position: relative;*/
+/*  z-index: 1;*/
+/*  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+/*  cursor: pointer;*/
+/*}*/
+
+
+/*.song-card:hover {*/
+/*  transform: translateY(-4px) scale(1.02);*/
+/*  z-index: 10;*/
+/*  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);*/
+/*  border-color: #8b5cf6;*/
+/*}*/
+
+/*.cover {*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  background-color: #f3f4f6;*/
+/*  margin-bottom: 12px;*/
+/*  border-radius: 8px;*/
+/*  overflow: hidden;*/
+/*  position: relative;*/
+/*}*/
+
+/*.cover::before {*/
+/*  content: "🎵";*/
+/*  position: absolute;*/
+/*  top: 50%;*/
+/*  left: 50%;*/
+/*  transform: translate(-50%, -50%);*/
+/*  font-size: 24px;*/
+/*  color: #9ca3af;*/
+/*  z-index: 1;*/
+/*}*/
+
+/*.cover img {*/
+/*  position: relative;*/
+/*  z-index: 2;*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  object-fit: cover; !* 이미지 비율 유지하면서 영역 채우기 *!*/
+/*}*/
+
+/*.song-info {*/
+/*  text-align: left;*/
+/*}*/
+
+/*.song-card h3 {*/
+/*  font-size: 14px;*/
+/*  font-weight: 600;*/
+/*  margin: 0 0 4px 0;*/
+/*  color: #1f2937;*/
+/*  line-height: 1.3;*/
+/*  display: -webkit-box;*/
+/*  -webkit-line-clamp: 2;*/
+/*  -webkit-box-orient: vertical;*/
+/*  overflow: hidden;*/
+/*  text-overflow: ellipsis;*/
+/*  min-height: 2.6em;*/
+/*}*/
+
+/*.song-card p {*/
+/*  font-size: 12px;*/
+/*  color: #6b7280;*/
+/*  margin: 0;*/
+/*  display: -webkit-box;*/
+/*  -webkit-line-clamp: 1;*/
+/*  -webkit-box-orient: vertical;*/
+/*  overflow: hidden;*/
+/*  text-overflow: ellipsis;*/
+/*}*/
+
+/*!* 반응형 조정 *!*/
+/*@media (max-width: 768px) {*/
+/*  .song-card {*/
+/*    padding: 10px;*/
+/*  }*/
+
+/*  .cover {*/
+/*    height: 100px;*/
+/*    margin-bottom: 10px;*/
+/*  }*/
+
+/*  .song-card h3 {*/
+/*    font-size: 13px;*/
+/*  }*/
+
+/*  .song-card p {*/
+/*    font-size: 11px;*/
+/*  }*/
+/*}
+기존 css
+*/
+
+/* SongCard 스타일 개선 */
 .song-card {
   width: 100%;
-   max-width: 300px;
-  /* margin: 0 auto; ← ❌ 삭제 */
   background-color: white;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
@@ -13,8 +116,11 @@
   z-index: 1;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 280px;
+  overflow: hidden; /* 카드 영역을 벗어나는 요소 숨김 */
 }
-
 
 .song-card:hover {
   transform: translateY(-4px) scale(1.02);
@@ -25,14 +131,19 @@
 
 .cover {
   width: 100%;
-  height: 100%;
+  height: 180px;
   background-color: #f3f4f6;
   margin-bottom: 12px;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* 이미지 로딩 실패 시 기본 아이콘 표시 */
 .cover::before {
   content: "🎵";
   position: absolute;
@@ -49,17 +160,37 @@
   z-index: 2;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 이미지 비율 유지하면서 영역 채우기 */
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+/* 이미지 로딩 실패 시 처리 */
+.cover img:not([src]),
+.cover img[src=""],
+.cover img[src*="data:image/svg"],
+.cover img:broken {
+  opacity: 0;
+}
+
+/* 이미지 로딩 상태 개선 */
+.cover img[src]:not([src=""]) {
+  opacity: 1;
 }
 
 .song-info {
   text-align: left;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 4px;
+  min-height: 0; /* flexbox에서 overflow 처리를 위해 필요 */
 }
 
 .song-card h3 {
   font-size: 14px;
   font-weight: 600;
-  margin: 0 0 4px 0;
+  margin: 0;
   color: #1f2937;
   line-height: 1.3;
   display: -webkit-box;
@@ -67,7 +198,9 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 2.6em;
+  min-height: 36px;
+  max-height: 36px;
+  word-wrap: break-word;
 }
 
 .song-card p {
@@ -79,24 +212,70 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+/* 로딩 상태 표시 */
+.song-card.loading .cover::after {
+  content: "로딩 중...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  color: #6b7280;
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* 에러 상태 표시 */
+.song-card.error .cover {
+  background-color: #fef2f2;
+  border: 1px dashed #fca5a5;
+}
+
+.song-card.error .cover::before {
+  content: "❌";
+  color: #ef4444;
 }
 
 /* 반응형 조정 */
 @media (max-width: 768px) {
   .song-card {
     padding: 10px;
+    height: 250px;
   }
 
   .cover {
-    height: 100px;
+    height: 150px;
     margin-bottom: 10px;
   }
 
   .song-card h3 {
     font-size: 13px;
+    min-height: 32px;
+    max-height: 32px;
   }
 
   .song-card p {
     font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .song-card {
+    height: 220px;
+  }
+
+  .cover {
+    height: 130px;
+  }
+
+  .song-card h3 {
+    font-size: 12px;
+    min-height: 30px;
+    max-height: 30px;
   }
 }

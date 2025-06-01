@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import './styles/App.css';
+import { AuthProvider } from './contexts/AuthContext';
 import Sidebar from './components/Sidebar';
 import MainPage from './pages/MainPage';
 import Chart from './pages/Chart';
@@ -11,58 +12,79 @@ import MusicInfo from './pages/MusicInfo';
 import SearchResultsPage from './pages/SearchResultsPage';
 import SearchBar from './components/SearchBar';
 import PlaylistDetailPage from './pages/PlaylistDetailPage';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import { useAuth } from './contexts/AuthContext';
+
+function AppContent() {
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const location = useLocation();
+    const { user, logout, loading } = useAuth();
+
+    // 인증 페이지 경로들
+    const authPaths = ['/login', '/auth/login', '/register', '/auth/register'];
+    const isAuthPage = authPaths.includes(location.pathname);
+
+    return (
+        <div className="App">
+            {/* 인증 페이지가 아닐 때만 사이드바 표시 */}
+            {!isAuthPage && (
+                <>
+                    {sidebarOpen && (
+                        <Sidebar
+                            onToggle={() => setSidebarOpen(false)}
+                            user={user}
+                            logout={logout}
+                            loading={loading}
+                        />
+                    )}
+
+                    {!sidebarOpen && (
+                        <button
+                            className="sidebar-toggle-button"
+                            onClick={() => setSidebarOpen(true)}
+                        >
+                            ☰
+                        </button>
+                    )}
+                </>
+            )}
+
+            <main className={`main-page ${isAuthPage ? 'auth-page' : ''}`}>
+                {/* 메인 페이지가 아니고 인증 페이지가 아닐 때만 검색바 표시 */}
+                {location.pathname !== '/' && !isAuthPage && (
+                    <header className="search-bar-wrapper">
+                        <SearchBar />
+                    </header>
+                )}
+
+                <Routes>
+                    <Route path="/" element={
+                        <MainPage user={user} logout={logout} loading={loading} />
+                    } />
+                    <Route path="/chart" element={<Chart />} />
+                    <Route path="/playlist" element={<Playlist />} />
+                    <Route path="/search" element={<SearchResultsPage />} />
+                    <Route path="/music/:id" element={<MusicInfo />} />
+                    <Route path="/detail/:id" element={<DetailPage />} />
+                    <Route path="/lyrics/:id" element={<LyricsPage />} />
+                    <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/auth/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/auth/register" element={<Register />} />
+                </Routes>
+            </main>
+        </div>
+    );
+}
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [user, setUser] = useState(null);
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    navigate('/');
-  };
-
-  return (
-    <div className="App">
-      {sidebarOpen && <Sidebar onToggle={() => setSidebarOpen(false)} user={user} />}
-
-      {!sidebarOpen && (
-        <button className="sidebar-toggle-button" onClick={() => setSidebarOpen(true)}>
-          ☰
-        </button>
-      )}
-
-      <main className="main-page">
-
-        {/* 현재 페이지가 '/'가 아닐 때만 SearchBar 렌더링 */}
-        {location.pathname !== '/' && (
-          <header className="search-bar-wrapper">
-            <SearchBar />
-          </header>
-        )}
-
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/chart" element={<Chart />} />
-          <Route path="/playlist" element={<Playlist />} />
-          <Route path="/search" element={<SearchResultsPage />} />
-          <Route path="/music/:id" element={<MusicInfo />} />
-          <Route path="/detail/:id" element={<DetailPage />} />
-          <Route path="/lyrics/:id" element={<LyricsPage />} />
-          <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
-        </Routes>
-      </main>
-    </div>
-  );
+    return (
+        <AuthProvider>
+            <AppContent />
+        </AuthProvider>
+    );
 }
 
 export default App;
