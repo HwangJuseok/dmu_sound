@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import "../styles/MusicInfo.css";
+import { useAuth } from "../contexts/AuthContext";
 
 function MusicInfo() {
     const { id } = useParams();
+    const { user } = useAuth();
+    const userCode = user?.usercode || "guest";
     const location = useLocation();
     const [trackData, setTrackData] = useState(null);
     const [playlists, setPlaylists] = useState([]);
@@ -13,7 +16,7 @@ function MusicInfo() {
     const [showPlaylistModal, setShowPlaylistModal] = useState(false);
 
     // 임시 userCode - 실제로는 로그인 시스템에서 가져와야 함
-    const userCode = "user123";
+    // const userCode = "user123";
 
     // URL 파라미터에서 전달받은 데이터
     const { title, artist, album, cover } = location.state || {};

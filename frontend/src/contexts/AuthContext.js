@@ -43,12 +43,14 @@ export const AuthProvider = ({ children }) => {
                 console.log('AuthContext - Login successful, response:', data);
 
                 if (data.success) {
-                    const userData = { userId: userId };
+                    const responseData = data;
+                    const userData = { userId: userId, usercode: responseData.usercode };
                     setUser(userData);
 
                     // 메모리에 사용자 정보 저장 (세션 유지용)
                     const userInfo = {
                         userId: userId,
+                        usercode: responseData.usercode,
                         loginTime: new Date().toISOString()
                     };
 
@@ -143,6 +145,7 @@ export const AuthProvider = ({ children }) => {
                         console.log('AuthContext - Restoring user session:', sessionUser);
                         setUser({
                             userId: sessionUser.userId,
+                            usercode: sessionUser.usercode,
                             loginTime: sessionUser.loginTime
                         });
                     } else {

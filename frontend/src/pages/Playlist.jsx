@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Playlist.css";
+import { useAuth } from "../contexts/AuthContext";
 
 function Playlist() {
+  const { user } = useAuth();
+  const userCode = user?.usercode || "guest";
   const [playlists, setPlaylists] = useState([]);
   const [newName, setNewName] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // 임시 userCode - 실제로는 로그인 시스템에서 가져와야 함
-  const userCode = "user123"; // 또는 localStorage, context 등에서 가져오기
+  // const userCode = "user123"; // 또는 localStorage, context 등에서 가져오기
 
   // 컴포넌트 마운트 시 플레이리스트 목록 로드
   useEffect(() => {

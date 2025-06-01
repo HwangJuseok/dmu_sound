@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import '../styles/MainPage.css';
 
+
 // API 서비스 (존재하는 API만 남김)
 const API_BASE_URL = 'http://localhost:8080';
 

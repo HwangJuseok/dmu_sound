@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import "../styles/PlaylistDetailPage.css";
+import { useAuth } from "../contexts/AuthContext";
 
 function PlaylistDetailPage() {
     const { id } = useParams();
+    const { user } = useAuth();
+    const userCode = user?.usercode || "guest";
     const [playlist, setPlaylist] = useState(null);
     const [tracks, setTracks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     // 임시 userCode - 실제로는 로그인 시스템에서 가져와야 함
-    const userCode = "user123";
+    // const userCode = "user123";
 
     useEffect(() => {
         if (id) {
