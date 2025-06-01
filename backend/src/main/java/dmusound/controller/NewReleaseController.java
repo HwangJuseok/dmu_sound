@@ -32,7 +32,7 @@ public class NewReleaseController {
                             [
                               {
                                 "id": "123",
-                                "name": "New Album",
+                                "albumName": "New Album",
                                 "imageUrl": "https://...",
                                 "artistName": "IU"
                               }

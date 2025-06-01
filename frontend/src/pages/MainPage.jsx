@@ -7,42 +7,42 @@ import '../styles/MainPage.css';
 const API_BASE_URL = 'http://localhost:8080';
 
 const apiService = {
-    // 존재하는 API들만 유지
-    // getNewReleases: async () => {
-    //     try {
-    //         const response = await fetch(`${API_BASE_URL}/api/spotify/new-releases`);
-    //         if (!response.ok) throw new Error(`Failed to fetch new releases: ${response.status}`);
-    //         const data = await response.json();
-    //         return data || [];
-    //     } catch (error) {
-    //         console.error('Error fetching new releases:', error);
-    //         return [];
-    //     }
-    // }, //스포티파이 api
-
+    //존재하는 API들만 유지
     getNewReleases: async () => {
-        console.log("🎧 Dummy getNewReleases called");
-        return [
-            {
-                id: '1',
-                title: 'DUMMY Song A',
-                artist: 'Artist X',
-                image: '/default-album.jpg'
-            },
-            {
-                id: '2',
-                title: 'DUMMY Song B',
-                artist: 'Artist Y',
-                image: '/default-album.jpg'
-            },
-            {
-                id: '3',
-                title: 'DUMMY Song C',
-                artist: 'Artist Z',
-                image: '/default-album.jpg'
-            }
-        ];
-    }, //스포티 더미 데이터
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/spotify/new-releases`);
+            if (!response.ok) throw new Error(`Failed to fetch new releases: ${response.status}`);
+            const data = await response.json();
+            return data || [];
+        } catch (error) {
+            console.error('Error fetching new releases:', error);
+            return [];
+        }
+    }, //스포티파이 api
+
+    // getNewReleases: async () => {
+    //     console.log("🎧 Dummy getNewReleases called");
+    //     return [
+    //         {
+    //             id: '1',
+    //             title: 'DUMMY Song A',
+    //             artist: 'Artist X',
+    //             image: '/default-album.jpg'
+    //         },
+    //         {
+    //             id: '2',
+    //             title: 'DUMMY Song B',
+    //             artist: 'Artist Y',
+    //             image: '/default-album.jpg'
+    //         },
+    //         {
+    //             id: '3',
+    //             title: 'DUMMY Song C',
+    //             artist: 'Artist Z',
+    //             image: '/default-album.jpg'
+    //         }
+    //     ];
+    // }, //스포티 더미 데이터
 
     getTrendingVideos: async () => {
         try {
@@ -253,17 +253,17 @@ const MainPage = ({ user, logout, loading }) => {
                                                 <div
                                                     key={music.id || index}
                                                     className="music-card"
-                                                    onClick={() => handleMusicClick(music.id)}
+                                                    onClick={() => handleMusicClick(music.trackId)}
                                                 >
                                                     <div className="music-info">
                                                         <img
-                                                            src={music.image || '/default-album.jpg'}
+                                                            src={music.imageUrl || '/default-album.jpg'}
                                                             alt={music.title}
                                                             className="album-art"
                                                         />
                                                         <div className="music-details">
-                                                            <h4>{music.title}</h4>
-                                                            <p>{music.artist}</p>
+                                                            <h4>{music.albumName}</h4>
+                                                            <p>{music.artistName}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -280,10 +280,12 @@ const MainPage = ({ user, logout, loading }) => {
                                         </div>
                                         <div className="music-grid">
                                             {trendingVideos.slice(0, 10).map((music, index) => (
-                                                <div
+                                                <a
                                                     key={music.id || index}
+                                                    href={music.videoUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
                                                     className="music-card"
-                                                    onClick={() => handleMusicClick(music.id)}
                                                 >
                                                     <div className="music-rank">{index + 1}</div>
                                                     <div className="music-info">
@@ -297,10 +299,11 @@ const MainPage = ({ user, logout, loading }) => {
                                                             <p>{music.artist}</p>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </a>
                                             ))}
                                         </div>
                                     </section>
+
                                 )}
 
                                 {/* 로그인한 사용자 전용 메시지 (데이터는 없지만 향후 확장 가능) */}
@@ -313,7 +316,7 @@ const MainPage = ({ user, logout, loading }) => {
                                             <p>개인화된 기능들이 곧 추가될 예정입니다!</p>
                                             <div className="coming-soon-features">
                                                 <div className="feature-preview">
-                                                    <span className="feature-icon">🎵</span>
+                                                <span className="feature-icon">🎵</span>
                                                     <span>개인 플레이리스트 (준비중)</span>
                                                 </div>
                                                 <div className="feature-preview">
