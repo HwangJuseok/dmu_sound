@@ -8,16 +8,40 @@ const API_BASE_URL = 'http://localhost:8080';
 
 const apiService = {
     // 존재하는 API들만 유지
+    // getNewReleases: async () => {
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/api/spotify/new-releases`);
+    //         if (!response.ok) throw new Error(`Failed to fetch new releases: ${response.status}`);
+    //         const data = await response.json();
+    //         return data || [];
+    //     } catch (error) {
+    //         console.error('Error fetching new releases:', error);
+    //         return [];
+    //     }
+    // },
+
     getNewReleases: async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/spotify/new-releases`);
-            if (!response.ok) throw new Error(`Failed to fetch new releases: ${response.status}`);
-            const data = await response.json();
-            return data || [];
-        } catch (error) {
-            console.error('Error fetching new releases:', error);
-            return [];
-        }
+        console.log("🎧 Dummy getNewReleases called");
+        return [
+            {
+                id: '1',
+                title: 'DUMMY Song A',
+                artist: 'Artist X',
+                image: '/default-album.jpg'
+            },
+            {
+                id: '2',
+                title: 'DUMMY Song B',
+                artist: 'Artist Y',
+                image: '/default-album.jpg'
+            },
+            {
+                id: '3',
+                title: 'DUMMY Song C',
+                artist: 'Artist Z',
+                image: '/default-album.jpg'
+            }
+        ];
     },
 
     getTrendingVideos: async () => {
