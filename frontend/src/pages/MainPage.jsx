@@ -18,7 +18,7 @@ const apiService = {
     //         console.error('Error fetching new releases:', error);
     //         return [];
     //     }
-    // },
+    // }, //스포티파이 api
 
     getNewReleases: async () => {
         console.log("🎧 Dummy getNewReleases called");
@@ -42,7 +42,7 @@ const apiService = {
                 image: '/default-album.jpg'
             }
         ];
-    },
+    }, //스포티 더미 데이터
 
     getTrendingVideos: async () => {
         try {
@@ -54,7 +54,7 @@ const apiService = {
             console.error('Error fetching trending videos:', error);
             return [];
         }
-    },
+    }, //유튜브 api
 
     searchMusic: async (query) => {
         try {
@@ -66,7 +66,7 @@ const apiService = {
             return [];
         }
     }
-};
+}; //검색 api
 
 const MainPage = ({ user, logout, loading }) => {
     // 존재하는 API 관련 상태만 유지
