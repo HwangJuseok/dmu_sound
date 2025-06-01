@@ -33,7 +33,7 @@ public class AuthService {
             JsonNode users = mapper.readTree(responseBody);
 
             if (users.isEmpty()) {
-                return new LoginResponse(false, "존재하지 않는 사용자입니다.", null);
+                return new LoginResponse(false, "존재하지 않는 사용자입니다.", null, null);
             }
 
             // ✅ UserDto로 매핑
@@ -45,19 +45,20 @@ public class AuthService {
             System.out.println("비교 결과: " + passwordEncoder.matches(request.getUserPw(), user.getUserPw()));
 
             if (!passwordEncoder.matches(request.getUserPw(), user.getUserPw())) {
-                return new LoginResponse(false, "비밀번호가 일치하지 않습니다.", null);
+                return new LoginResponse(false, "비밀번호가 일치하지 않습니다.", null, null);
             }
 
             String dummyToken = Base64.getEncoder().encodeToString(
                     (request.getUserId() + ":login_success").getBytes(StandardCharsets.UTF_8)
             );
 
-            return new LoginResponse(true, "로그인 성공", dummyToken);
+            return new LoginResponse(true, "로그인 성공", dummyToken, user.getUserCode());
+
 
         } catch (Exception e) {
-            return new LoginResponse(false, "서버 오류: " + e.getMessage(), null);
+            return new LoginResponse(false, "서버 오류: " + e.getMessage(), null, null);
         }
-    }
+    } //end 로그인
 
 
     public RegisterResponse register(RegisterRequest request) {
@@ -83,5 +84,5 @@ public class AuthService {
         } catch (Exception e) {
             return new RegisterResponse(false, "서버 오류: " + e.getMessage());
         }
-    }
+    }// end 가입
 }

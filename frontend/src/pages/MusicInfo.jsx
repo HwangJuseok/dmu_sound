@@ -6,8 +6,14 @@ function MusicInfo() {
     const { id } = useParams();
     const location = useLocation();
     const [trackData, setTrackData] = useState(null);
+    const [playlists, setPlaylists] = useState([]);
+    const [selectedPlaylistId, setSelectedPlaylistId] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showPlaylistModal, setShowPlaylistModal] = useState(false);
+
+    // 임시 userCode - 실제로는 로그인 시스템에서 가져와야 함
+    const userCode = "user123";
 
     // URL 파라미터에서 전달받은 데이터
     const { title, artist, album, cover } = location.state || {};
@@ -16,6 +22,7 @@ function MusicInfo() {
         if (id) {
             fetchTrackDetail(id);
         }
+        fetchUserPlaylists();
     }, [id]);
 
     const fetchTrackDetail = async (trackId) => {
@@ -32,6 +39,68 @@ function MusicInfo() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const fetchUserPlaylists = async () => {
+        try {
+            const response = await fetch(`/api/playlists/user/${userCode}`);
+            if (!response.ok) {
+                throw new Error('플레이리스트 조회 실패');
+            }
+            const data = await response.json();
+            setPlaylists(data);
+        } catch (err) {
+            console.error('플레이리스트 조회 실패:', err);
+        }
+    };
+
+    const handleAddToPlaylist = async () => {
+        if (!selectedPlaylistId) {
+            alert("플레이리스트를 선택해주세요.");
+            return;
+        }
+
+        try {
+            const track = trackData?.track;
+            const trackToAdd = {
+                user_code: userCode,
+                spotify_id: track?.trackId || id,
+                track_name: track?.trackName || title || "노래제목",
+                artist_name: track?.artistName || artist || "가수",
+                image_url: track?.imageUrl || cover || ""
+            };
+
+            const response = await fetch(`/api/playlists/${selectedPlaylistId}/tracks`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(trackToAdd),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+
+            alert("✅ 플레이리스트에 추가되었습니다!");
+            setShowPlaylistModal(false);
+            setSelectedPlaylistId("");
+        } catch (err) {
+            if (err.message.includes("이미 추가된 곡")) {
+                alert("❌ 이미 해당 플레이리스트에 추가된 곡입니다.");
+            } else {
+                alert("❌ 추가 중 오류 발생: " + err.message);
+            }
+        }
+    };
+
+    const openPlaylistModal = () => {
+        if (playlists.length === 0) {
+            alert("플레이리스트가 없습니다. 먼저 플레이리스트를 생성해주세요.");
+            return;
+        }
+        setShowPlaylistModal(true);
     };
 
     if (loading) {
@@ -54,30 +123,6 @@ function MusicInfo() {
     const track = trackData?.track;
     const musicVideo = trackData?.musicVideo;
     const coverVideos = trackData?.coverVideos || [];
-    const handleAddToPlaylist = async () => {
-    try {                             
-        const response = await fetch("/api/playlist/add", { // 이 부분은 백엔드 라우터
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            trackId: track?.trackId,
-            trackName: track?.trackName,
-            artistName: track?.artistName,
-            albumName: track?.albumName,
-            imageUrl: track?.imageUrl,
-            previewUrl: track?.previewUrl,
-        }),
-        });
-
-        if (!response.ok) throw new Error("플레이리스트 추가 실패");
-
-        alert("✅ 플레이리스트에 추가되었습니다!");
-    } catch (err) {
-        alert("❌ 추가 중 오류 발생: " + err.message);
-    }
-    };
 
     return (
         <div className="music-container">
@@ -85,12 +130,10 @@ function MusicInfo() {
                 {/* 앨범 커버 + 정보 */}
                 <div className="album-section">
                     <section className="track-info">
-                        <button className="add-to-playlist-button" onClick={handleAddToPlaylist}>
-                        ➕ 플레이리스트에 추가
+                        <button className="add-to-playlist-button" onClick={openPlaylistModal}>
+                            ➕ 플레이리스트에 추가
                         </button>
 
-
-                        
                         <h2>
                             {track?.trackName || title || "노래제목"} - {track?.artistName || artist || "가수"}
                         </h2>
@@ -185,6 +228,42 @@ function MusicInfo() {
                     </ul>
                 </div>
             </div>
+
+            {/* 플레이리스트 선택 모달 */}
+            {showPlaylistModal && (
+                <div className="modal-overlay" onClick={() => setShowPlaylistModal(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h3>플레이리스트 선택</h3>
+                        <div className="playlist-selection">
+                            <select
+                                value={selectedPlaylistId}
+                                onChange={(e) => setSelectedPlaylistId(e.target.value)}
+                                className="playlist-select"
+                            >
+                                <option value="">플레이리스트를 선택하세요</option>
+                                {playlists.map((playlist) => (
+                                    <option key={playlist.playlist_id} value={playlist.playlist_id}>
+                                        {playlist.playlist_name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="modal-buttons">
+                            <button onClick={handleAddToPlaylist} disabled={!selectedPlaylistId}>
+                                추가
+                            </button>
+                            <button onClick={() => setShowPlaylistModal(false)}>
+                                취소
+                            </button>
+                        </div>
+                        <div className="create-playlist-link">
+                            <Link to="/playlist" onClick={() => setShowPlaylistModal(false)}>
+                                새 플레이리스트 만들기
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
