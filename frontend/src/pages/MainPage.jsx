@@ -1,23 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
-import "../styles/MainPage.css";
-// API 서비스 통합
+import '../styles/MainPage.css';
+
+// API 서비스 (존재하는 API만 남김)
 const API_BASE_URL = 'http://localhost:8080';
 
 const apiService = {
-    // 기존 컨트롤러와 연결된 API들
+    // 존재하는 API들만 유지
+    // getNewReleases: async () => {
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/api/spotify/new-releases`);
+    //         if (!response.ok) throw new Error(`Failed to fetch new releases: ${response.status}`);
+    //         const data = await response.json();
+    //         return data || [];
+    //     } catch (error) {
+    //         console.error('Error fetching new releases:', error);
+    //         return [];
+    //     }
+    // }, //스포티파이 api
+
     getNewReleases: async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/spotify/new-releases`);
-            if (!response.ok) throw new Error(`Failed to fetch new releases: ${response.status}`);
-            const data = await response.json();
-            return data || [];
-        } catch (error) {
-            console.error('Error fetching new releases:', error);
-            return [];
-        }
-    },
+        console.log("🎧 Dummy getNewReleases called");
+        return [
+            {
+                id: '1',
+                title: 'DUMMY Song A',
+                artist: 'Artist X',
+                image: '/default-album.jpg'
+            },
+            {
+                id: '2',
+                title: 'DUMMY Song B',
+                artist: 'Artist Y',
+                image: '/default-album.jpg'
+            },
+            {
+                id: '3',
+                title: 'DUMMY Song C',
+                artist: 'Artist Z',
+                image: '/default-album.jpg'
+            }
+        ];
+    }, //스포티 더미 데이터
 
     getTrendingVideos: async () => {
         try {
@@ -29,67 +54,7 @@ const apiService = {
             console.error('Error fetching trending videos:', error);
             return [];
         }
-    },
-
-    // 사용자별 데이터 API들 (로그인한 경우에만 사용)
-    getRecentMusic: async () => {
-        try {
-            const response = await fetch('/api/music/recent', {
-                credentials: 'include'
-            });
-            if (response.ok) {
-                const data = await response.json();
-                return data.slice(0, 6);
-            }
-            return [];
-        } catch (error) {
-            console.error('최근 음악 로딩 실패:', error);
-            return [];
-        }
-    },
-
-    getUserPlaylists: async () => {
-        try {
-            // localStorage 먼저 확인
-            const stored = localStorage.getItem('myPlaylists');
-            let playlists = [];
-
-            if (stored) {
-                playlists = JSON.parse(stored).slice(0, 4);
-            }
-
-            // 서버에서도 가져오기
-            const response = await fetch('/api/playlists/my', {
-                credentials: 'include'
-            });
-            if (response.ok) {
-                const data = await response.json();
-                playlists = data.slice(0, 4);
-                localStorage.setItem('myPlaylists', JSON.stringify(data));
-            }
-
-            return playlists;
-        } catch (error) {
-            console.error('플레이리스트 로딩 실패:', error);
-            return [];
-        }
-    },
-
-    getRecommendations: async () => {
-        try {
-            const response = await fetch('/api/music/recommendations', {
-                credentials: 'include'
-            });
-            if (response.ok) {
-                const data = await response.json();
-                return data.slice(0, 8);
-            }
-            return [];
-        } catch (error) {
-            console.error('추천 음악 로딩 실패:', error);
-            return [];
-        }
-    },
+    }, //유튜브 api
 
     searchMusic: async (query) => {
         try {
@@ -101,15 +66,12 @@ const apiService = {
             return [];
         }
     }
-};
+}; //검색 api
 
 const MainPage = ({ user, logout, loading }) => {
-    // 상태 관리
+    // 존재하는 API 관련 상태만 유지
     const [newReleases, setNewReleases] = useState([]);
     const [trendingVideos, setTrendingVideos] = useState([]);
-    const [recentMusic, setRecentMusic] = useState([]);
-    const [userPlaylists, setUserPlaylists] = useState([]);
-    const [recommendations, setRecommendations] = useState([]);
     const [searchResults, setSearchResults] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoadingData, setIsLoadingData] = useState(true);
@@ -117,14 +79,14 @@ const MainPage = ({ user, logout, loading }) => {
 
     const navigate = useNavigate();
 
-    // 데이터 로딩
+    // 데이터 로딩 (존재하는 API만 사용)
     useEffect(() => {
         const loadData = async () => {
             setIsLoadingData(true);
             setError(null);
 
             try {
-                // 공통 데이터 (로그인 여부와 상관없이)
+                // 존재하는 API만 호출
                 const [spotifyData, youtubeData] = await Promise.all([
                     apiService.getNewReleases(),
                     apiService.getTrendingVideos()
@@ -132,19 +94,6 @@ const MainPage = ({ user, logout, loading }) => {
 
                 setNewReleases(spotifyData);
                 setTrendingVideos(youtubeData);
-
-                // 로그인한 사용자만의 데이터
-                if (user) {
-                    const [recentData, playlistData, recommendationData] = await Promise.all([
-                        apiService.getRecentMusic(),
-                        apiService.getUserPlaylists(),
-                        apiService.getRecommendations()
-                    ]);
-
-                    setRecentMusic(recentData);
-                    setUserPlaylists(playlistData);
-                    setRecommendations(recommendationData);
-                }
             } catch (err) {
                 console.error('Error loading data:', err);
                 setError('데이터를 불러오는 중 오류가 발생했습니다.');
@@ -354,94 +303,30 @@ const MainPage = ({ user, logout, loading }) => {
                                     </section>
                                 )}
 
-                                {/* 로그인한 사용자 전용 섹션들 */}
+                                {/* 로그인한 사용자 전용 메시지 (데이터는 없지만 향후 확장 가능) */}
                                 {user && (
-                                    <>
-                                        {/* 최근 들은 음악 */}
-                                        {recentMusic.length > 0 && (
-                                            <section className="music-section">
-                                                <div className="section-header">
-                                                    <h2>🕒 최근 들은 음악</h2>
+                                    <section className="user-welcome-section">
+                                        <div className="section-header">
+                                            <h2>✨ {user.userId}님을 위한 개인화 서비스</h2>
+                                        </div>
+                                        <div className="welcome-content">
+                                            <p>개인화된 기능들이 곧 추가될 예정입니다!</p>
+                                            <div className="coming-soon-features">
+                                                <div className="feature-preview">
+                                                    <span className="feature-icon">🎵</span>
+                                                    <span>개인 플레이리스트 (준비중)</span>
                                                 </div>
-                                                <div className="music-horizontal-list">
-                                                    {recentMusic.map((music, index) => (
-                                                        <div
-                                                            key={music.id || index}
-                                                            className="music-item"
-                                                            onClick={() => handleMusicClick(music.id)}
-                                                        >
-                                                            <img
-                                                                src={music.albumArt || '/default-album.jpg'}
-                                                                alt={music.title}
-                                                                className="album-art-small"
-                                                            />
-                                                            <div className="music-info-small">
-                                                                <h5>{music.title || `최근곡 ${index + 1}`}</h5>
-                                                                <p>{music.artist || '아티스트'}</p>
-                                                            </div>
-                                                        </div>
-                                                    ))}
+                                                <div className="feature-preview">
+                                                    <span className="feature-icon">🕒</span>
+                                                    <span>최근 들은 음악 (준비중)</span>
                                                 </div>
-                                            </section>
-                                        )}
-
-                                        {/* 내 플레이리스트 */}
-                                        {userPlaylists.length > 0 && (
-                                            <section className="playlist-section">
-                                                <div className="section-header">
-                                                    <h2>🎵 내 플레이리스트</h2>
-                                                    <Link to="/playlist" className="see-more-btn">전체보기</Link>
+                                                <div className="feature-preview">
+                                                    <span className="feature-icon">🎯</span>
+                                                    <span>맞춤 추천 (준비중)</span>
                                                 </div>
-                                                <div className="playlist-grid">
-                                                    {userPlaylists.map((playlist, index) => (
-                                                        <div
-                                                            key={playlist.id || index}
-                                                            className="playlist-card"
-                                                            onClick={() => handlePlaylistClick(playlist.id)}
-                                                        >
-                                                            <div className="playlist-cover">
-                                                                <span className="playlist-icon">🎵</span>
-                                                            </div>
-                                                            <div className="playlist-info">
-                                                                <h4>{playlist.name || `플레이리스트 ${index + 1}`}</h4>
-                                                                <p>{playlist.songCount || 0}곡</p>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </section>
-                                        )}
-
-                                        {/* 추천 음악 */}
-                                        {recommendations.length > 0 && (
-                                            <section className="music-section">
-                                                <div className="section-header">
-                                                    <h2>✨ {user.userId}님을 위한 추천</h2>
-                                                </div>
-                                                <div className="music-grid">
-                                                    {recommendations.map((music, index) => (
-                                                        <div
-                                                            key={music.id || index}
-                                                            className="music-card recommendation"
-                                                            onClick={() => handleMusicClick(music.id)}
-                                                        >
-                                                            <div className="music-info">
-                                                                <img
-                                                                    src={music.albumArt || '/default-album.jpg'}
-                                                                    alt={music.title}
-                                                                    className="album-art"
-                                                                />
-                                                                <div className="music-details">
-                                                                    <h4>{music.title || `추천곡 ${index + 1}`}</h4>
-                                                                    <p>{music.artist || '아티스트'}</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </section>
-                                        )}
-                                    </>
+                                            </div>
+                                        </div>
+                                    </section>
                                 )}
 
                                 {/* 비로그인 사용자용 환영 섹션 */}
