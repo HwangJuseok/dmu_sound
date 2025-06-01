@@ -264,7 +264,7 @@ const MainPage = ({ user, logout, loading }) => {
                                                     <div className="music-rank">{index + 1}</div>
                                                     <div className="music-info">
                                                         <img
-                                                            src={music.thumbnail || '/default-album.jpg'}
+                                                            src={music.thumbnailUrl || '/default-album.jpg'}
                                                             alt={music.title}
                                                             className="album-art"
                                                         />
