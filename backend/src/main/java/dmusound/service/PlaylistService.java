@@ -48,6 +48,18 @@ public class PlaylistService {
         }
     }
 
+    // 플레이리스트에서 곡 삭제
+    public void removeTrackFromPlaylist(String playlistId, String spotifyId, String userCode) {
+        if (spotifyId == null || spotifyId.isEmpty()) {
+            throw new IllegalArgumentException("곡 ID(spotifyId)는 필수입니다.");
+        }
+
+        boolean success = supabaseClient.deleteTrackFromPlaylist(userCode, playlistId, spotifyId);
+        if (!success) {
+            throw new RuntimeException("곡 삭제 실패");
+        }
+    }
+
     // 유저의 플레이리스트 목록 조회
     public List<PlaylistDto> getPlaylistsByUser(String userCode) {
         try {

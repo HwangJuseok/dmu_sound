@@ -88,6 +88,24 @@ public class SupabaseClient {
         return response.getStatusCode() == HttpStatus.CREATED;
     }
 
+    // 특정 곡 삭제
+    public boolean deleteTrackFromPlaylist(String userCode, String playlistId, String spotifyId) {
+        String url = String.format(
+                "%s/playlist_track?user_code=eq.%s&playlist_id=eq.%s&spotify_id=eq.%s",
+                config.baseUrl, userCode, playlistId, spotifyId
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("apikey", config.apiKey);
+        headers.set("Authorization", "Bearer " + config.apiKey);
+        headers.set("Accept", "application/json");
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
+        return response.getStatusCode().is2xxSuccessful();
+    }
+
 
     // 중복 체크: 유저, 플레이리스트, 트랙이 이미 존재하는지 확인
     public boolean checkTrackExists(String userCode, String playlistId, String spotifyId) {

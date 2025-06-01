@@ -48,6 +48,23 @@ public class PlaylistController {
         }
     }
 
+    // 플레이리스트에서 트랙 삭제
+    @DeleteMapping("/{playlistId}/tracks")
+    public ResponseEntity<String> removeTrackFromPlaylist(@PathVariable String playlistId,
+                                                          @RequestParam String spotifyId,
+                                                          @RequestParam String userCode) {
+        try {
+            playlistService.removeTrackFromPlaylist(playlistId, spotifyId, userCode);
+            return ResponseEntity.ok("곡 삭제 완료");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("곡 삭제 실패: " + e.getMessage());
+        }
+    }
+
+
     // 유저 플레이리스트 조회
     @GetMapping("/user/{userCode}")
     public ResponseEntity<List<PlaylistDto>> getUserPlaylists(@PathVariable String userCode) {
