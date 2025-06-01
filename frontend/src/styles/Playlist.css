@@ -1,43 +1,117 @@
+/* 전체 페이지 배경 및 폰트 */
 .playlist-page {
-  padding: 24px;
-  background-color: #f9f9f9;
-  height: 100%;
-  box-sizing: border-box;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Helvetica Neue', sans-serif;
 }
 
 .playlist-page h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
   text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
 }
 
-/* ✅ 그리드 사용 */
+/* 입력 폼 영역 */
+.playlist-form {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.playlist-form input {
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  outline: none;
+  min-width: 200px;
+  background-color: #fff;
+}
+
+.playlist-form input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.playlist-form button {
+  background-color: #667eea;
+  color: white;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.playlist-form button:hover {
+  background-color: #5a67d8;
+}
+
+/* 플레이리스트 카드 목록 */
 .playlist-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
+/* 개별 카드 */
 .playlist-card {
   background-color: #fff;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: background-color 0.2s ease;
 }
 
 .playlist-card:hover {
-  transform: translateY(-4px);
+  background-color: #f0f0f0;
 }
 
-.playlist-name {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 8px;
+.playlist-card h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
   color: #333;
 }
 
-.playlist-description {
-  font-size: 14px;
+.playlist-card p {
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
   color: #666;
+}
+
+.playlist-card button {
+  align-self: flex-start;
+  background-color: #e53e3e;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.playlist-card button:hover {
+  background-color: #c53030;
+}
+
+/* 링크 스타일 */
+.playlist-card a {
+  text-decoration: none;
+  color: #667eea;
+}
+
+.playlist-card a:hover {
+  text-decoration: underline;
 }

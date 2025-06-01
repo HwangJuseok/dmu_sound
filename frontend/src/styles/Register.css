@@ -1,0 +1,92 @@
+/* 전체 배경 */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+/* 회원가입 컨테이너 */
+.register-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px 40px;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 */
+.register-container h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+/* 입력 필드 */
+.register-container form input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1.5px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.register-container form input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+  outline: none;
+}
+
+/* 버튼 */
+.register-container form button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #667eea;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.register-container form button:hover {
+  background-color: #5a67d8;
+}
+
+/* 메시지 영역 */
+.register-message {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.register-message.success {
+  color: #2f855a;
+  background-color: #e6fffa;
+}
+
+.register-message.error {
+  color: #e53e3e;
+  background-color: #ffe5e5;
+}
+
+/* 로그인 링크 */
+.register-message a {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-message a:hover {
+  color: #5a67d8;
+}

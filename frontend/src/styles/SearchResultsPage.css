@@ -1,13 +1,26 @@
 .search-results-container {
+  background-color: #f8f9fa;
+  min-height: 100vh;
   padding: 20px;
+  font-family: 'Helvetica Neue', sans-serif;
 }
 
 .search-title {
-  font-size: 1.5rem;
-  margin-bottom: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 24px;
+  border-radius: 8px;
 }
 
-.loading-text {
+.loading-text,
+.error-text,
+.no-results-text {
+  text-align: center;
+  font-size: 1.1rem;
   color: #555;
 }
 
@@ -24,16 +37,24 @@
 .result-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
+  max-width: 900px;
 }
 
 .result-item {
   display: flex;
   align-items: center;
   margin-bottom: 16px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  font-size: 1.1rem;
+  background-color: #fff;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+
+.result-item:hover {
+  background-color: #f0f0f0;
 }
 
 .result-image {
@@ -42,19 +63,26 @@
   object-fit: cover;
   margin-right: 16px;
   border-radius: 8px;
+  border: 1px solid #ddd;
 }
 
 .result-details {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 텍스트 중앙 정렬 */
 }
 
 .result-name {
   font-weight: 700;
+  color: #333;
 }
 
 .result-subinfo {
   color: #666;
+  margin-top: 0.25rem;
 }
+
 .result-name-link {
   text-decoration: none;
   color: inherit;
@@ -62,6 +90,6 @@
 
 .result-name-link:hover {
   text-decoration: underline;
-  color: #0070f3; /* 원하는 하이라이트 색상 */
+  color: #667eea;
   cursor: pointer;
 }

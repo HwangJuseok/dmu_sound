@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-
+import "../styles/Login.css";
 const Login = () => {
     const [userId, setUserId] = useState('');
     const [userPw, setUserPw] = useState('');
@@ -37,13 +37,13 @@ const Login = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+        };
 
-    return (
-        <div>
+        return (
+        <div className="login-container">
             <h1>로그인</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <form onSubmit={handleSubmit}>
+            {error && <p className="login-error">{error}</p>}
+            <form className="login-form" onSubmit={handleSubmit}>
                 <input
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
@@ -63,10 +63,13 @@ const Login = () => {
                     {isLoading ? '로그인 중...' : '로그인'}
                 </button>
             </form>
-            <a href="/oauth2/authorization/google">Google로 로그인</a><br />
-            <a href="/auth/register">회원가입 하기</a>
+            <div className="login-links">
+                <a href="/oauth2/authorization/google">Google로 로그인</a><br />
+                <a href="/auth/register">회원가입 하기</a>
+            </div>
         </div>
     );
+
 };
 
 export default Login;

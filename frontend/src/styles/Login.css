@@ -1,0 +1,96 @@
+/* 로그인 전체 배경 */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+/* 로그인 컨테이너 */
+.login-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px 40px;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 */
+.login-container h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+/* 에러 메시지 */
+.login-error {
+  color: #e53e3e;
+  background-color: #ffe5e5;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* 입력 폼 */
+.login-form input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1.5px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.login-form input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+  outline: none;
+}
+
+/* 로그인 버튼 */
+.login-form button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #667eea;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-form button:hover:not(:disabled) {
+  background-color: #5a67d8;
+}
+
+.login-form button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* 하단 링크 */
+.login-links {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.login-links a {
+  color: #667eea;
+  text-decoration: none;
+  margin: 0 8px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.login-links a:hover {
+  color: #5a67d8;
+}
