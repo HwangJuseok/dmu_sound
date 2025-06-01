@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 function MusicInfo() {
     const { id } = useParams();
     const { user } = useAuth();
-    const userCode = user?.usercode || "guest";
+    const userCode = user?.usercode;
     const location = useLocation();
     const [trackData, setTrackData] = useState(null);
     const [playlists, setPlaylists] = useState([]);
@@ -15,8 +15,8 @@ function MusicInfo() {
     const [error, setError] = useState(null);
     const [showPlaylistModal, setShowPlaylistModal] = useState(false);
 
-    // 임시 userCode - 실제로는 로그인 시스템에서 가져와야 함
-    // const userCode = "user123";
+    // API 기본 URL 설정
+    const API_BASE_URL = 'http://localhost:8080';
 
     // URL 파라미터에서 전달받은 데이터
     const { title, artist, album, cover } = location.state || {};
@@ -25,13 +25,17 @@ function MusicInfo() {
         if (id) {
             fetchTrackDetail(id);
         }
-        fetchUserPlaylists();
-    }, [id]);
+        if (user && userCode) {
+            fetchUserPlaylists();
+        }
+    }, [id, user, userCode]);
 
     const fetchTrackDetail = async (trackId) => {
         try {
             setLoading(true);
-            const response = await fetch(`/api/track/${trackId}`);
+            const response = await fetch(`${API_BASE_URL}/api/track/${trackId}`, {
+                credentials: 'include'
+            });
             if (!response.ok) {
                 throw new Error('Failed to fetch track details');
             }
@@ -46,20 +50,37 @@ function MusicInfo() {
 
     const fetchUserPlaylists = async () => {
         try {
-            const response = await fetch(`/api/playlists/user/${userCode}`);
+            console.log('Fetching playlists for userCode:', userCode);
+
+            const response = await fetch(`${API_BASE_URL}/api/playlists/user/${userCode}`, {
+                credentials: 'include'
+            });
+
             if (!response.ok) {
+                if (response.status === 404) {
+                    setPlaylists([]);
+                    return;
+                }
                 throw new Error('플레이리스트 조회 실패');
             }
+
             const data = await response.json();
-            setPlaylists(data);
+            console.log('Playlists fetched for music info:', data);
+            setPlaylists(Array.isArray(data) ? data : []);
         } catch (err) {
             console.error('플레이리스트 조회 실패:', err);
+            setPlaylists([]);
         }
     };
 
     const handleAddToPlaylist = async () => {
         if (!selectedPlaylistId) {
             alert("플레이리스트를 선택해주세요.");
+            return;
+        }
+
+        if (!user || !userCode) {
+            alert("로그인이 필요합니다.");
             return;
         }
 
@@ -73,11 +94,14 @@ function MusicInfo() {
                 image_url: track?.imageUrl || cover || ""
             };
 
-            const response = await fetch(`/api/playlists/${selectedPlaylistId}/tracks`, {
+            console.log('Adding track to playlist:', trackToAdd);
+
+            const response = await fetch(`${API_BASE_URL}/api/playlists/${selectedPlaylistId}/tracks`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: 'include',
                 body: JSON.stringify(trackToAdd),
             });
 
@@ -86,10 +110,14 @@ function MusicInfo() {
                 throw new Error(errorText);
             }
 
+            const result = await response.text();
+            console.log('Track added to playlist:', result);
+
             alert("✅ 플레이리스트에 추가되었습니다!");
             setShowPlaylistModal(false);
             setSelectedPlaylistId("");
         } catch (err) {
+            console.error('플레이리스트 추가 오류:', err);
             if (err.message.includes("이미 추가된 곡")) {
                 alert("❌ 이미 해당 플레이리스트에 추가된 곡입니다.");
             } else {
@@ -99,6 +127,11 @@ function MusicInfo() {
     };
 
     const openPlaylistModal = () => {
+        if (!user) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
         if (playlists.length === 0) {
             alert("플레이리스트가 없습니다. 먼저 플레이리스트를 생성해주세요.");
             return;
@@ -118,6 +151,7 @@ function MusicInfo() {
         return (
             <div className="music-container">
                 <div className="error">오류가 발생했습니다: {error}</div>
+                <Link to="/" className="back-link">← 홈으로</Link>
             </div>
         );
     }
@@ -129,19 +163,25 @@ function MusicInfo() {
 
     return (
         <div className="music-container">
+            <div className="navigation">
+                <Link to="/" className="back-link">← 홈으로</Link>
+            </div>
+
             <div className="main-content">
                 {/* 앨범 커버 + 정보 */}
                 <div className="album-section">
                     <section className="track-info">
-                        <button className="add-to-playlist-button" onClick={openPlaylistModal}>
-                            ➕ 플레이리스트에 추가
-                        </button>
+                        {user && (
+                            <button className="add-to-playlist-button" onClick={openPlaylistModal}>
+                                ➕ 플레이리스트에 추가
+                            </button>
+                        )}
 
                         <h2>
                             {track?.trackName || title || "노래제목"} - {track?.artistName || artist || "가수"}
                         </h2>
                         <img
-                            src={track?.imageUrl || cover}
+                            src={track?.imageUrl || cover || '/default-album.jpg'}
                             alt={track?.trackName || title || "노래제목"}
                             className="track-image"
                             width="300"
@@ -230,6 +270,13 @@ function MusicInfo() {
                         <li>{track?.artistName || artist || "가수"} - 다른 히트곡 모음</li>
                     </ul>
                 </div>
+
+                {!user && (
+                    <div className="login-prompt">
+                        <p>플레이리스트 기능을 사용하려면 로그인이 필요합니다.</p>
+                        <Link to="/auth/login" className="login-btn">로그인</Link>
+                    </div>
+                )}
             </div>
 
             {/* 플레이리스트 선택 모달 */}
@@ -252,10 +299,17 @@ function MusicInfo() {
                             </select>
                         </div>
                         <div className="modal-buttons">
-                            <button onClick={handleAddToPlaylist} disabled={!selectedPlaylistId}>
+                            <button
+                                onClick={handleAddToPlaylist}
+                                disabled={!selectedPlaylistId}
+                                className="add-btn"
+                            >
                                 추가
                             </button>
-                            <button onClick={() => setShowPlaylistModal(false)}>
+                            <button
+                                onClick={() => setShowPlaylistModal(false)}
+                                className="cancel-btn"
+                            >
                                 취소
                             </button>
                         </div>

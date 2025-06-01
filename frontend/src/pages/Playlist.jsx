@@ -4,40 +4,107 @@ import "../styles/Playlist.css";
 import { useAuth } from "../contexts/AuthContext";
 
 function Playlist() {
-  const { user } = useAuth();
-  const userCode = user?.usercode || "guest";
+  const { user, loading, checkAuthStatus } = useAuth();
+  const userCode = user?.usercode;
   const [playlists, setPlaylists] = useState([]);
   const [newName, setNewName] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 임시 userCode - 실제로는 로그인 시스템에서 가져와야 함
-  // const userCode = "user123"; // 또는 localStorage, context 등에서 가져오기
+  // API 기본 URL 설정
+  const API_BASE_URL = 'http://localhost:8080';
+
+  // 디버깅용 - 인증 상태 로그
+  useEffect(() => {
+    console.log('🎵 Playlist Component - Auth State:');
+    console.log('- User:', user);
+    console.log('- User ID:', user?.userId);
+    console.log('- User Code:', userCode);
+    console.log('- Auth Loading:', loading);
+    console.log('- Is User Valid:', !!(user && user.userId && userCode));
+
+    if (checkAuthStatus) {
+      checkAuthStatus();
+    }
+  }, [user, loading, userCode, checkAuthStatus]);
 
   // 컴포넌트 마운트 시 플레이리스트 목록 로드
   useEffect(() => {
-    fetchPlaylists();
-  }, []);
+    if (loading) {
+      console.log('⏳ Waiting for auth to complete...');
+      return;
+    }
+
+    if (user && user.userId && userCode) {
+      console.log('✅ User authenticated, fetching playlists...');
+      fetchPlaylists();
+    } else {
+      console.log('❌ User not authenticated:', { user, userCode });
+      setDataLoading(false);
+    }
+  }, [user, userCode, loading]);
 
   const fetchPlaylists = async () => {
     try {
-      setLoading(true);
-      const response = await fetch(`/api/playlists/user/${userCode}`);
+      setDataLoading(true);
+      setError(null);
+
+      console.log('📡 Fetching playlists for userCode:', userCode);
+
+      const response = await fetch(`${API_BASE_URL}/api/playlists/user/${userCode}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
       if (!response.ok) {
-        throw new Error('플레이리스트 조회 실패');
+        if (response.status === 404) {
+          // 플레이리스트가 없는 경우
+          console.log('📝 No playlists found for user');
+          setPlaylists([]);
+          return;
+        }
+        throw new Error(`플레이리스트 조회 실패: ${response.status}`);
       }
+
       const data = await response.json();
-      setPlaylists(data);
+      console.log('✅ Playlists fetched:', data);
+      setPlaylists(Array.isArray(data) ? data : []);
     } catch (err) {
+      console.error('❌ 플레이리스트 조회 오류:', err);
       setError(err.message);
+      setPlaylists([]);
     } finally {
-      setLoading(false);
+      setDataLoading(false);
     }
   };
 
   const handleAdd = async () => {
+    console.log('➕ Adding playlist - User state:', { user, userCode });
+
     if (!newName.trim()) {
       alert("플레이리스트 이름을 입력해주세요.");
+      return;
+    }
+
+    // 더 자세한 사용자 인증 체크
+    if (!user) {
+      console.log('❌ No user object');
+      alert("로그인이 필요합니다. (사용자 정보 없음)");
+      return;
+    }
+
+    if (!user.userId) {
+      console.log('❌ No userId in user object:', user);
+      alert("로그인이 필요합니다. (사용자 ID 없음)");
+      return;
+    }
+
+    if (!userCode) {
+      console.log('❌ No userCode:', user);
+      alert("로그인이 필요합니다. (사용자 코드 없음)");
       return;
     }
 
@@ -47,11 +114,14 @@ function Playlist() {
         user_code: userCode
       };
 
-      const response = await fetch('/api/playlists', {
+      console.log('📝 Creating playlist:', playlistData);
+
+      const response = await fetch(`${API_BASE_URL}/api/playlists`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(playlistData),
       });
 
@@ -60,11 +130,16 @@ function Playlist() {
         throw new Error(errorText);
       }
 
+      const result = await response.text(); // 백엔드에서 문자열로 반환
+      console.log('✅ Playlist created:', result);
+
       alert("✅ 플레이리스트가 생성되었습니다!");
       setNewName("");
+
       // 플레이리스트 목록 새로고침
-      fetchPlaylists();
+      await fetchPlaylists();
     } catch (err) {
+      console.error('❌ 플레이리스트 생성 오류:', err);
       alert("❌ 플레이리스트 생성 실패: " + err.message);
     }
   };
@@ -76,18 +151,59 @@ function Playlist() {
 
     try {
       // 백엔드에 삭제 API가 없어서 임시로 프론트엔드에서만 제거
-      // 실제로는 DELETE /api/playlists/{playlistId} API가 필요함
+      // TODO: DELETE /api/playlists/{playlistId} API 구현 필요
       setPlaylists(playlists.filter((p) => p.playlist_id !== playlistId));
-      alert("플레이리스트가 삭제되었습니다.");
+      alert("플레이리스트가 삭제되었습니다. (임시 삭제 - 새로고침시 복구됨)");
     } catch (err) {
       alert("❌ 삭제 실패: " + err.message);
     }
   };
 
+  // 인증 로딩 중
   if (loading) {
     return (
         <div className="playlist-page">
-          <div className="loading">로딩 중...</div>
+          <h1>🎵 내 플레이리스트</h1>
+          <div className="loading">인증 상태 확인 중...</div>
+        </div>
+    );
+  }
+
+  // 로그인하지 않은 경우
+  if (!user || !user.userId || !userCode) {
+    console.log('🚫 Rendering login required - User state:', { user, userCode });
+    return (
+        <div className="playlist-page">
+          <h1>🎵 내 플레이리스트</h1>
+          <div className="auth-required">
+            <p>플레이리스트 기능을 사용하려면 로그인이 필요합니다.</p>
+            <div className="debug-info" style={{
+              background: '#f0f0f0',
+              padding: '10px',
+              margin: '10px 0',
+              fontSize: '12px',
+              fontFamily: 'monospace'
+            }}>
+              <div>디버그 정보:</div>
+              <div>- User: {user ? 'exists' : 'null'}</div>
+              <div>- UserId: {user?.userId || 'null'}</div>
+              <div>- UserCode: {userCode || 'null'}</div>
+              <div>- Loading: {loading ? 'true' : 'false'}</div>
+            </div>
+            <div className="auth-buttons">
+              <Link to="/auth/login" className="login-btn">로그인</Link>
+              <Link to="/auth/register" className="register-btn">회원가입</Link>
+            </div>
+          </div>
+        </div>
+    );
+  }
+
+  if (dataLoading) {
+    return (
+        <div className="playlist-page">
+          <h1>🎵 내 플레이리스트</h1>
+          <div className="loading">플레이리스트 로딩 중...</div>
         </div>
     );
   }
@@ -95,8 +211,11 @@ function Playlist() {
   if (error) {
     return (
         <div className="playlist-page">
-          <div className="error">오류가 발생했습니다: {error}</div>
-          <button onClick={fetchPlaylists}>다시 시도</button>
+          <h1>🎵 내 플레이리스트</h1>
+          <div className="error">
+            <p>오류가 발생했습니다: {error}</p>
+            <button onClick={fetchPlaylists} className="retry-btn">다시 시도</button>
+          </div>
         </div>
     );
   }
@@ -104,6 +223,20 @@ function Playlist() {
   return (
       <div className="playlist-page">
         <h1>🎵 내 플레이리스트</h1>
+
+        <div className="user-info">
+          <p>사용자: {user.userId} (코드: {userCode})</p>
+          <div className="debug-info" style={{
+            background: '#e8f5e8',
+            padding: '8px',
+            margin: '8px 0',
+            fontSize: '11px',
+            fontFamily: 'monospace',
+            border: '1px solid #ccc'
+          }}>
+            인증 상태: ✅ 로그인됨
+          </div>
+        </div>
 
         <div className="playlist-form">
           <input
@@ -113,23 +246,38 @@ function Playlist() {
               onChange={(e) => setNewName(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleAdd()}
           />
-          <button onClick={handleAdd}>추가</button>
+          <button onClick={handleAdd} disabled={!newName.trim()}>
+            추가
+          </button>
         </div>
 
         <div className="playlist-list">
           {playlists.length === 0 ? (
-              <p>플레이리스트가 없습니다. 새로운 플레이리스트를 만들어보세요!</p>
+              <div className="empty-state">
+                <p>플레이리스트가 없습니다. 새로운 플레이리스트를 만들어보세요!</p>
+              </div>
           ) : (
               playlists.map((playlist) => (
                   <div key={playlist.playlist_id} className="playlist-card">
-                    <Link to={`/playlist/${playlist.playlist_id}`}>
+                    <Link to={`/playlist/${playlist.playlist_id}`} className="playlist-link">
                       <h2>{playlist.playlist_name}</h2>
+                      <p>생성일: {playlist.added_at ? new Date(playlist.added_at).toLocaleDateString() : '알 수 없음'}</p>
                     </Link>
-                    <p>생성일: {new Date(playlist.added_at).toLocaleDateString()}</p>
-                    <button onClick={() => handleDelete(playlist.playlist_id)}>삭제</button>
+                    <div className="playlist-actions">
+                      <button
+                          onClick={() => handleDelete(playlist.playlist_id)}
+                          className="delete-btn"
+                      >
+                        삭제
+                      </button>
+                    </div>
                   </div>
               ))
           )}
+        </div>
+
+        <div className="back-to-home">
+          <Link to="/" className="home-link">← 홈으로</Link>
         </div>
       </div>
   );

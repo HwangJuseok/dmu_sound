@@ -6,48 +6,99 @@ import { useAuth } from "../contexts/AuthContext";
 function PlaylistDetailPage() {
     const { id } = useParams();
     const { user } = useAuth();
-    const userCode = user?.usercode || "guest";
+    const userCode = user?.usercode;
     const [playlist, setPlaylist] = useState(null);
     const [tracks, setTracks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // 임시 userCode - 실제로는 로그인 시스템에서 가져와야 함
-    // const userCode = "user123";
+    // API 기본 URL 설정
+    const API_BASE_URL = 'http://localhost:8080';
+
+    // 총 재생시간 계산 함수
+    const getTotalDuration = () => {
+        if (!tracks || tracks.length === 0) return "0분";
+
+        const totalMs = tracks.reduce((total, track) => {
+            return total + (track.duration_ms || 0);
+        }, 0);
+
+        const minutes = Math.floor(totalMs / 60000);
+        const hours = Math.floor(minutes / 60);
+
+        if (hours > 0) {
+            return `약 ${hours}시간 ${minutes % 60}분`;
+        }
+        return `약 ${minutes}분`;
+    };
+
+    // 개별 트랙 재생시간 포맷팅 함수
+    const formatDuration = (durationMs) => {
+        if (!durationMs) return "0:00";
+
+        const totalSeconds = Math.floor(durationMs / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
 
     useEffect(() => {
-        if (id) {
+        if (id && user && userCode) {
             fetchPlaylistData();
+        } else if (!user) {
+            setError('로그인이 필요합니다.');
+            setLoading(false);
         }
-    }, [id]);
+    }, [id, user, userCode]);
 
     const fetchPlaylistData = async () => {
         try {
             setLoading(true);
+            setError(null);
+
+            console.log('Fetching playlist data for:', { id, userCode });
 
             // 플레이리스트 기본 정보 조회 (유저의 플레이리스트 목록에서 찾기)
-            const playlistResponse = await fetch(`/api/playlists/user/${userCode}`);
+            const playlistResponse = await fetch(`${API_BASE_URL}/api/playlists/user/${userCode}`, {
+                credentials: 'include'
+            });
+
             if (!playlistResponse.ok) {
                 throw new Error('플레이리스트 조회 실패');
             }
+
             const playlists = await playlistResponse.json();
+            console.log('User playlists:', playlists);
+
             const currentPlaylist = playlists.find(p => p.playlist_id === id);
 
             if (!currentPlaylist) {
-                throw new Error('존재하지 않는 플레이리스트입니다.');
+                throw new Error('존재하지 않는 플레이리스트이거나 접근 권한이 없습니다.');
             }
 
             setPlaylist(currentPlaylist);
 
             // 플레이리스트 트랙 목록 조회
-            const tracksResponse = await fetch(`/api/playlists/${id}/tracks`);
+            const tracksResponse = await fetch(`${API_BASE_URL}/api/playlists/${id}/tracks`, {
+                credentials: 'include'
+            });
+
             if (!tracksResponse.ok) {
+                if (tracksResponse.status === 404) {
+                    // 트랙이 없는 경우
+                    setTracks([]);
+                    return;
+                }
                 throw new Error('트랙 목록 조회 실패');
             }
+
             const tracksData = await tracksResponse.json();
-            setTracks(tracksData);
+            console.log('Playlist tracks:', tracksData);
+            setTracks(Array.isArray(tracksData) ? tracksData : []);
 
         } catch (err) {
+            console.error('플레이리스트 데이터 조회 오류:', err);
             setError(err.message);
         } finally {
             setLoading(false);
@@ -61,13 +112,28 @@ function PlaylistDetailPage() {
 
         try {
             // 백엔드에 트랙 삭제 API가 없어서 임시로 프론트엔드에서만 제거
-            // 실제로는 DELETE /api/playlists/{playlistId}/tracks/{spotifyId} API가 필요함
+            // TODO: DELETE /api/playlists/{playlistId}/tracks/{spotifyId} API 구현 필요
             setTracks(tracks.filter(track => track.spotify_id !== spotifyId));
-            alert("곡이 제거되었습니다.");
+            alert("곡이 제거되었습니다. (임시 제거 - 새로고침시 복구됨)");
         } catch (err) {
             alert("❌ 제거 실패: " + err.message);
         }
     };
+
+    if (!user) {
+        return (
+            <div className="playlist-detail-page">
+                <div className="auth-required">
+                    <h2>로그인 필요</h2>
+                    <p>플레이리스트를 보려면 로그인이 필요합니다.</p>
+                    <div className="auth-buttons">
+                        <Link to="/auth/login" className="login-btn">로그인</Link>
+                        <Link to="/playlist" className="back-link">← 플레이리스트 목록</Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (loading) {
         return (
@@ -80,8 +146,14 @@ function PlaylistDetailPage() {
     if (error) {
         return (
             <div className="playlist-detail-page">
-                <div className="error">오류가 발생했습니다: {error}</div>
-                <Link to="/playlist">플레이리스트 목록으로 돌아가기</Link>
+                <div className="error">
+                    <h2>오류가 발생했습니다</h2>
+                    <p>{error}</p>
+                    <div className="error-actions">
+                        <button onClick={fetchPlaylistData} className="retry-btn">다시 시도</button>
+                        <Link to="/playlist" className="back-link">← 플레이리스트 목록</Link>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -89,70 +161,163 @@ function PlaylistDetailPage() {
     if (!playlist) {
         return (
             <div className="playlist-detail-page">
-                <div>존재하지 않는 플레이리스트입니다.</div>
-                <Link to="/playlist">플레이리스트 목록으로 돌아가기</Link>
+                <div className="not-found">
+                    <h2>플레이리스트를 찾을 수 없습니다</h2>
+                    <Link to="/playlist" className="back-link">← 플레이리스트 목록</Link>
+                </div>
             </div>
         );
     }
 
     return (
         <div className="playlist-detail-page">
+            {/* 헤더 섹션 */}
             <div className="playlist-header">
-                <Link to="/playlist" className="back-link">← 플레이리스트 목록</Link>
-                <h1>{playlist.playlist_name}</h1>
-                <p>생성일: {new Date(playlist.added_at).toLocaleDateString()}</p>
-                <p>총 {tracks.length}곡</p>
+                <div className="navigation">
+                    <Link to="/playlist" className="back-link">
+                        ← 플레이리스트 목록
+                    </Link>
+                </div>
+
+                <div className="playlist-info">
+                    <div className="playlist-cover">
+                        <div className="cover-placeholder">
+                            🎵
+                        </div>
+                    </div>
+
+                    <div className="playlist-meta">
+                        <span className="playlist-type">플레이리스트</span>
+                        <h1 className="playlist-title">{playlist.playlist_name}</h1>
+
+                        <div className="playlist-stats">
+                            <span className="owner">🎧 {user.userId}</span>
+                            <span className="separator">•</span>
+                            <span className="track-count">{tracks.length}곡</span>
+                            {tracks.length > 0 && (
+                                <>
+                                    <span className="separator">•</span>
+                                    <span className="duration">{getTotalDuration()}</span>
+                                </>
+                            )}
+                        </div>
+
+                        <p className="created-date">
+                            📅 생성일: {new Date(playlist.added_at).toLocaleDateString('ko-KR', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        })}
+                        </p>
+                    </div>
+                </div>
             </div>
 
+            {/* 트랙 목록 섹션 */}
             <div className="tracks-section">
                 {tracks.length > 0 ? (
-                    <div className="tracks-list">
-                        {tracks.map((track, index) => (
-                            <div key={`${track.spotify_id}-${index}`} className="track-card">
-                                <div className="track-number">{index + 1}</div>
-                                <img
-                                    src={track.image_url || '/default-album-cover.png'}
-                                    alt={track.track_name}
-                                    className="track-image"
-                                    width={60}
-                                    height={60}
-                                />
-                                <div className="track-info">
-                                    <h3>{track.track_name}</h3>
-                                    <p>{track.artist_name}</p>
-                                    <p className="added-date">
-                                        추가일: {new Date(track.added_at).toLocaleDateString()}
-                                    </p>
-                                </div>
-                                <div className="track-actions">
-                                    <Link
-                                        to={`/music/${track.spotify_id}`}
-                                        state={{
-                                            title: track.track_name,
-                                            artist: track.artist_name,
-                                            cover: track.image_url
-                                        }}
-                                        className="view-detail-btn"
-                                    >
-                                        상세보기
-                                    </Link>
-                                    <button
-                                        onClick={() => handleRemoveTrack(track.spotify_id)}
-                                        className="remove-btn"
-                                    >
-                                        제거
-                                    </button>
-                                </div>
+                    <>
+                        <div className="tracks-header">
+                            <div className="track-list-title">
+                                <h2>트랙 목록</h2>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+
+                        <div className="tracks-table">
+                            <div className="table-header">
+                                <div className="col-number">#</div>
+                                <div className="col-title">제목</div>
+                                <div className="col-artist">아티스트</div>
+                                <div className="col-added">추가일</div>
+                                <div className="col-duration">재생시간</div>
+                                <div className="col-actions">작업</div>
+                            </div>
+
+                            <div className="tracks-list">
+                                {tracks.map((track, index) => (
+                                    <div key={`${track.spotify_id}-${index}`} className="track-row">
+                                        <div className="col-number">
+                                            <span className="track-number">{index + 1}</span>
+                                        </div>
+
+                                        <div className="col-title">
+                                            <div className="track-info">
+                                                <img
+                                                    src={track.image_url || '/default-album-cover.png'}
+                                                    alt={track.track_name}
+                                                    className="track-image"
+                                                    onError={(e) => {
+                                                        e.target.src = '/default-album-cover.png';
+                                                    }}
+                                                />
+                                                <div className="track-details">
+                                                    <h3 className="track-name">{track.track_name}</h3>
+                                                    <p className="album-name">{track.album_name || '알 수 없음'}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-artist">
+                                            <span className="artist-name">{track.artist_name}</span>
+                                        </div>
+
+                                        <div className="col-added">
+                                            <span className="added-date">
+                                                {new Date(track.added_at).toLocaleDateString('ko-KR')}
+                                            </span>
+                                        </div>
+
+                                        <div className="col-duration">
+                                            <span className="duration">
+                                                {formatDuration(track.duration_ms)}
+                                            </span>
+                                        </div>
+
+                                        <div className="col-actions">
+                                            <div className="track-actions">
+                                                <Link
+                                                    to={`/music/${track.spotify_id}`}
+                                                    state={{
+                                                        title: track.track_name,
+                                                        artist: track.artist_name,
+                                                        cover: track.image_url
+                                                    }}
+                                                    className="action-btn view-btn"
+                                                    title="상세보기"
+                                                >
+                                                    👁️
+                                                </Link>
+                                                <button
+                                                    onClick={() => handleRemoveTrack(track.spotify_id)}
+                                                    className="action-btn remove-btn"
+                                                    title="제거"
+                                                >
+                                                    🗑️
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </>
                 ) : (
                     <div className="empty-playlist">
-                        <p>플레이리스트에 곡이 없습니다.</p>
-                        <p>음악 검색에서 곡을 추가해보세요!</p>
-                        <Link to="/search" className="search-link">음악 검색하러 가기</Link>
+                        <div className="empty-icon">🎵</div>
+                        <h3>플레이리스트가 비어있습니다</h3>
+                        <p>음악을 검색해서 이 플레이리스트에 곡을 추가해보세요!</p>
+                        <Link to="/search" className="search-link">
+                            🔍 음악 검색하러 가기
+                        </Link>
                     </div>
                 )}
+            </div>
+
+            {/* 푸터 */}
+            <div className="playlist-footer">
+                <Link to="/playlist" className="footer-link">
+                    ← 내 플레이리스트로 돌아가기
+                </Link>
             </div>
         </div>
     );

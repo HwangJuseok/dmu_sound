@@ -23,4 +23,6 @@ public class UserDto {
 
     @JsonProperty("user_code")  // ✅ 여기가 핵심
     private String userCode;
+
+
 }
