@@ -21,6 +21,6 @@ public class UserDto {
     @JsonProperty("kakao_key")
     private String kakaoKey;
 
-    @JsonProperty("user_code")  // ✅ 여기가 핵심
-    private String userCode;
+    @JsonProperty("user_code")
+    private int userCode;
 }

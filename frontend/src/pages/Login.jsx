@@ -63,7 +63,7 @@ const Login = () => {
                     {isLoading ? '로그인 중...' : '로그인'}
                 </button>
             </form>
-            <a href="/oauth2/authorization/google">Google로 로그인</a><br />
+            <a href="http://localhost:8080/oauth2/authorization/google">Google로 로그인</a><br/>
             <a href="/auth/register">회원가입 하기</a>
         </div>
     );
