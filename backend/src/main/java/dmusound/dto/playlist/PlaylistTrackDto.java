@@ -16,8 +16,8 @@ public class PlaylistTrackDto {
     @JsonProperty("playlist_id")
     private String playlistId;
 
-    @JsonProperty("spotify_id")
-    private String spotifyId;
+    @JsonProperty("track_id")
+    private String trackId;
 
     @JsonProperty("added_at")
     private String addedAt;
