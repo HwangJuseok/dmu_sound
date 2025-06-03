@@ -28,7 +28,13 @@ public class PlaylistTrackDto {
     @JsonProperty("artist_name")
     private String artistName;
 
+    @JsonProperty("album_name")  // 추가 필드
+    private String albumName;
+
     @JsonProperty("image_url")
     private String imageUrl;
+
+    @JsonProperty("spotify_id")  // 추가 필드 - Spotify ID (track_id와 동일하지만 명확성을 위해)
+    private String spotifyId; // 우선 넣어 보고 지움
 
 }

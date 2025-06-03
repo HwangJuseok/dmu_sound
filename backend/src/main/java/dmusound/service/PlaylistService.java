@@ -60,6 +60,28 @@ public class PlaylistService {
         }
     }
 
+    // 플레이리스트 삭제 - 새로 추가
+    public void deletePlaylist(String playlistId, String userCode) {
+        if (playlistId == null || playlistId.isEmpty()) {
+            throw new IllegalArgumentException("플레이리스트 ID는 필수입니다.");
+        }
+        if (userCode == null || userCode.isEmpty()) {
+            throw new IllegalArgumentException("사용자 코드는 필수입니다.");
+        }
+
+        // 먼저 플레이리스트의 모든 트랙 삭제
+        boolean tracksDeleted = supabaseClient.deleteAllTracksFromPlaylist(userCode, playlistId);
+        if (!tracksDeleted) {
+            throw new RuntimeException("플레이리스트 트랙 삭제 실패");
+        }
+
+        // 플레이리스트 삭제
+        boolean playlistDeleted = supabaseClient.deletePlaylist(userCode, playlistId);
+        if (!playlistDeleted) {
+            throw new RuntimeException("플레이리스트 삭제 실패");
+        }
+    }
+
     // 유저의 플레이리스트 목록 조회
     public List<PlaylistDto> getPlaylistsByUser(String userCode) {
         try {

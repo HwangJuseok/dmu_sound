@@ -71,9 +71,12 @@ function PlaylistDetailPage() {
             const playlists = await playlistResponse.json();
             console.log('User playlists:', playlists);
 
-            const currentPlaylist = playlists.find(p => p.playlist_id === id);
+            // 🔧 수정: String 타입으로 비교 (타입 변환 추가)
+            const currentPlaylist = playlists.find(p => String(p.playlist_id) === String(id));
 
             if (!currentPlaylist) {
+                console.log('Available playlist IDs:', playlists.map(p => p.playlist_id));
+                console.log('Looking for ID:', id);
                 throw new Error('존재하지 않는 플레이리스트이거나 접근 권한이 없습니다.');
             }
 
@@ -105,17 +108,31 @@ function PlaylistDetailPage() {
         }
     };
 
+    // 🔧 수정: 실제 API를 호출하도록 변경
     const handleRemoveTrack = async (spotifyId) => {
         if (!window.confirm("이 곡을 플레이리스트에서 제거하시겠습니까?")) {
             return;
         }
 
         try {
-            // 백엔드에 트랙 삭제 API가 없어서 임시로 프론트엔드에서만 제거
-            // TODO: DELETE /api/playlists/{playlistId}/tracks/{spotifyId} API 구현 필요
-            setTracks(tracks.filter(track => track.spotify_id !== spotifyId));
-            alert("곡이 제거되었습니다. (임시 제거 - 새로고침시 복구됨)");
+            const response = await fetch(
+                `${API_BASE_URL}/api/playlists/${id}/tracks/${spotifyId}?userCode=${userCode}`,
+                {
+                    method: 'DELETE',
+                    credentials: 'include'
+                }
+            );
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+
+            // 성공시 UI에서 제거
+            setTracks(tracks.filter(track => track.spotify_id !== spotifyId && track.track_id !== spotifyId));
+            alert("✅ 곡이 제거되었습니다.");
         } catch (err) {
+            console.error('Track removal error:', err);
             alert("❌ 제거 실패: " + err.message);
         }
     };
@@ -276,7 +293,7 @@ function PlaylistDetailPage() {
                                         <div className="col-actions">
                                             <div className="track-actions">
                                                 <Link
-                                                    to={`/music/${track.spotify_id}`}
+                                                    to={`/music/${track.spotify_id || track.track_id}`}
                                                     state={{
                                                         title: track.track_name,
                                                         artist: track.artist_name,
@@ -288,7 +305,7 @@ function PlaylistDetailPage() {
                                                     👁️
                                                 </Link>
                                                 <button
-                                                    onClick={() => handleRemoveTrack(track.spotify_id)}
+                                                    onClick={() => handleRemoveTrack(track.spotify_id || track.track_id)}
                                                     className="action-btn remove-btn"
                                                     title="제거"
                                                 >

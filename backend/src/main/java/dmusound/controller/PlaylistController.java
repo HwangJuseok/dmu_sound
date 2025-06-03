@@ -64,6 +64,21 @@ public class PlaylistController {
         }
     }
 
+    // 플레이리스트 삭제
+    @DeleteMapping("/{playlistId}")
+    public ResponseEntity<String> deletePlaylist(@PathVariable String playlistId,
+                                                 @RequestParam String userCode) {
+        try {
+            playlistService.deletePlaylist(playlistId, userCode);
+            return ResponseEntity.ok("플레이리스트 삭제 완료");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("플레이리스트 삭제 실패: " + e.getMessage());
+        }
+    }
+
 
     // 유저 플레이리스트 조회
     @GetMapping("/user/{userCode}")

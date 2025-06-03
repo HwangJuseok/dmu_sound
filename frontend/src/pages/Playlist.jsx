@@ -11,6 +11,7 @@ function Playlist() {
   const [newName, setNewName] = useState("");
   const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   // API 기본 URL 설정
   const API_BASE_URL = 'http://localhost:8080';
@@ -45,6 +46,7 @@ function Playlist() {
     }
   }, [user, userCode, loading]);
 
+  // 플레이리스트 목록 조회
   const fetchPlaylists = async () => {
     try {
       setDataLoading(true);

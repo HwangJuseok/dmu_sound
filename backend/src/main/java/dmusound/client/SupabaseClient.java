@@ -149,6 +149,42 @@ public class SupabaseClient {
         return response.getStatusCode().is2xxSuccessful();
     }
 
+    // 플레이리스트의 모든 트랙 삭제 (새로 추가)
+    public boolean deleteAllTracksFromPlaylist(String userCode, String playlistId) {
+        String url = String.format(
+                "%s/playlist_track?user_code=eq.%s&playlist_id=eq.%s",
+                config.baseUrl, userCode, playlistId
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("apikey", config.apiKey);
+        headers.set("Authorization", "Bearer " + config.apiKey);
+        headers.set("Accept", "application/json");
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
+        return response.getStatusCode().is2xxSuccessful();
+    }
+
+    // 플레이리스트 삭제 (새로 추가)
+    public boolean deletePlaylist(String userCode, String playlistId) {
+        String url = String.format(
+                "%s/playlist?user_code=eq.%s&playlist_id=eq.%s",
+                config.baseUrl, userCode, playlistId
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("apikey", config.apiKey);
+        headers.set("Authorization", "Bearer " + config.apiKey);
+        headers.set("Accept", "application/json");
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
+        return response.getStatusCode().is2xxSuccessful();
+    }
+
 
     // 중복 체크: 유저, 플레이리스트, 트랙이 이미 존재하는지 확인
     public boolean checkTrackExists(String userCode, String playlistId, String trackId) {
