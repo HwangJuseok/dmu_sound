@@ -141,17 +141,17 @@ function MusicInfo() {
 
     if (loading) {
         return (
-            <div className="music-container">
-                <div className="loading">로딩 중...</div>
+            <div className="music-info-container">
+                <div className="music-info-loading">로딩 중...</div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="music-container">
-                <div className="error">오류가 발생했습니다: {error}</div>
-                <Link to="/" className="back-link">← 홈으로</Link>
+            <div className="music-info-container">
+                <div className="music-info-error">오류가 발생했습니다: {error}</div>
+                <Link to="/" className="music-info-back-link">← 홈으로</Link>
             </div>
         );
     }
@@ -162,17 +162,17 @@ function MusicInfo() {
     const coverVideos = trackData?.coverVideos || [];
 
     return (
-        <div className="music-container">
-            <div className="navigation">
-                <Link to="/" className="back-link">← 홈으로</Link>
+        <div className="music-info-container">
+            <div className="music-info-navigation">
+                <Link to="/" className="music-info-back-link">← 홈으로</Link>
             </div>
 
-            <div className="main-content">
+            <div className="music-info-main-content">
                 {/* 앨범 커버 + 정보 */}
-                <div className="album-section">
-                    <section className="track-info">
+                <div className="music-info-album-section">
+                    <section className="music-info-track-info">
                         {user && (
-                            <button className="add-to-playlist-button" onClick={openPlaylistModal}>
+                            <button className="music-info-add-to-playlist-button" onClick={openPlaylistModal}>
                                 ➕ 플레이리스트에 추가
                             </button>
                         )}
@@ -183,7 +183,7 @@ function MusicInfo() {
                         <img
                             src={track?.imageUrl || cover || '/default-album.jpg'}
                             alt={track?.trackName || title || "노래제목"}
-                            className="track-image"
+                            className="music-info-track-image"
                             width="300"
                         />
                         <p>Album: {track?.albumName || album || "앨범명"}</p>
@@ -194,7 +194,7 @@ function MusicInfo() {
                             </a>
                         </p>
                         {track?.previewUrl && (
-                            <div className="preview-section">
+                            <div className="music-info-preview-section">
                                 <h4>미리듣기</h4>
                                 <audio controls>
                                     <source src={track.previewUrl} type="audio/mpeg" />
@@ -206,10 +206,10 @@ function MusicInfo() {
                 </div>
 
                 {/* Video Section */}
-                <div className="video-section">
+                <div className="music-info-video-section">
                     <h3>🎬 뮤직비디오</h3>
                     {musicVideo ? (
-                        <div className="video-container">
+                        <div className="music-info-video-container">
                             <iframe
                                 width="560"
                                 height="315"
@@ -221,11 +221,11 @@ function MusicInfo() {
                             ></iframe>
                         </div>
                     ) : (
-                        <div className="video-grid">
+                        <div className="music-info-video-grid">
                             {["뮤비 1", "뮤비 2"].map((text, i) => (
-                                <div key={i} className="video-thumbnail">
+                                <div key={i} className="music-info-video-thumbnail">
                                     {text}
-                                    <button className="play-button">▶</button>
+                                    <button className="music-info-play-button">▶</button>
                                 </div>
                             ))}
                         </div>
@@ -233,9 +233,9 @@ function MusicInfo() {
 
                     <h3>🎥 커버 영상</h3>
                     {coverVideos.length > 0 ? (
-                        <div className="video-grid">
+                        <div className="music-info-video-grid">
                             {coverVideos.map((video, index) => (
-                                <div key={index} className="video-item">
+                                <div key={index} className="music-info-video-item">
                                     <iframe
                                         width="280"
                                         height="157"
@@ -245,16 +245,16 @@ function MusicInfo() {
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
                                     ></iframe>
-                                    <p className="video-title">{video.title}</p>
+                                    <p className="music-info-video-title">{video.title}</p>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="video-grid">
+                        <div className="music-info-video-grid">
                             {["커버 1", "커버 2"].map((text, i) => (
-                                <div key={i} className="video-thumbnail">
+                                <div key={i} className="music-info-video-thumbnail">
                                     {text}
-                                    <button className="play-button">▶</button>
+                                    <button className="music-info-play-button">▶</button>
                                 </div>
                             ))}
                         </div>
@@ -262,7 +262,7 @@ function MusicInfo() {
                 </div>
 
                 {/* Related Videos */}
-                <div className="related-section">
+                <div className="music-info-related-section">
                     <h3>📺 관련 영상</h3>
                     <ul>
                         <li>인터뷰: {track?.artistName || artist || "가수"}의 비하인드 스토리</li>
@@ -272,23 +272,23 @@ function MusicInfo() {
                 </div>
 
                 {!user && (
-                    <div className="login-prompt">
+                    <div className="music-info-login-prompt">
                         <p>플레이리스트 기능을 사용하려면 로그인이 필요합니다.</p>
-                        <Link to="/auth/login" className="login-btn">로그인</Link>
+                        <Link to="/auth/login" className="music-info-login-btn">로그인</Link>
                     </div>
                 )}
             </div>
 
             {/* 플레이리스트 선택 모달 */}
             {showPlaylistModal && (
-                <div className="modal-overlay" onClick={() => setShowPlaylistModal(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <div className="music-info-modal-overlay" onClick={() => setShowPlaylistModal(false)}>
+                    <div className="music-info-modal-content" onClick={(e) => e.stopPropagation()}>
                         <h3>플레이리스트 선택</h3>
                         <div className="playlist-selection">
                             <select
                                 value={selectedPlaylistId}
                                 onChange={(e) => setSelectedPlaylistId(e.target.value)}
-                                className="playlist-select"
+                                className="music-info-playlist-select"
                             >
                                 <option value="">플레이리스트를 선택하세요</option>
                                 {playlists.map((playlist) => (
@@ -298,22 +298,22 @@ function MusicInfo() {
                                 ))}
                             </select>
                         </div>
-                        <div className="modal-buttons">
+                        <div className="music-info-modal-buttons">
                             <button
                                 onClick={handleAddToPlaylist}
                                 disabled={!selectedPlaylistId}
-                                className="add-btn"
+                                className="music-info-add-btn"
                             >
                                 추가
                             </button>
                             <button
                                 onClick={() => setShowPlaylistModal(false)}
-                                className="cancel-btn"
+                                className="music-info-cancel-btn"
                             >
                                 취소
                             </button>
                         </div>
-                        <div className="create-playlist-link">
+                        <div className="music-info-create-playlist-link">
                             <Link to="/playlist" onClick={() => setShowPlaylistModal(false)}>
                                 새 플레이리스트 만들기
                             </Link>

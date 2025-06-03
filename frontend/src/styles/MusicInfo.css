@@ -1,115 +1,325 @@
-.music-container {
-    display: flex;
-    font-family: sans-serif;
-    height: 100vh;
+/* MusicInfo.css - 접두사 추가로 충돌 방지 */
+
+/* 전체 컨테이너 */
+.music-info-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #222;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.main-content {
-    flex: 1;
-    display: flex;
+/* 내비게이션 */
+.music-info-navigation {
+  margin-bottom: 1rem;
+}
+
+.music-info-back-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+.music-info-back-link:hover {
+  color: #764ba2;
+}
+
+/* 메인 콘텐츠 레이아웃 */
+.music-info-main-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+/* 앨범 및 트랙 정보 섹션 */
+.music-info-album-section {
+  flex: 1 1 300px;
+  min-width: 280px;
+  max-width: 320px;
+  text-align: center;
+}
+
+.music-info-track-info h2 {
+  font-size: 1.8rem;
+  margin: 1rem 0 0.5rem 0;
+  color: #4a4a4a;
+}
+
+.music-info-track-info p {
+  margin: 0.3rem 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+.music-info-track-image {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+}
+
+/* 플레이리스트 추가 버튼 */
+.music-info-add-to-playlist-button {
+  background-color: #6b46c1;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.music-info-add-to-playlist-button:hover {
+  background-color: #553c9a;
+}
+
+/* 미리듣기 영역 */
+.music-info-preview-section {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.music-info-preview-section h4 {
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+/* 비디오 섹션 */
+.music-info-video-section {
+  flex: 2 1 560px;
+  min-width: 300px;
+}
+
+.music-info-video-section h3 {
+  color: #5a4d7d;
+  margin-bottom: 0.8rem;
+}
+
+/* 뮤직비디오 및 커버 영상 컨테이너 */
+.music-info-video-container iframe,
+.music-info-video-item iframe {
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  width: 100%;
+  height: auto;
+}
+
+/* 그리드 형태로 영상들 배치 */
+.music-info-video-grid {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.music-info-video-item {
+  flex: 1 1 280px;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.music-info-video-title {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: #444;
+  text-align: center;
+}
+
+/* 영상 썸네일 플레이 버튼 (임시) */
+.music-info-video-thumbnail {
+  background-color: #eaeaea;
+  border-radius: 8px;
+  padding: 2rem;
+  position: relative;
+  flex: 1 1 280px;
+  max-width: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  color: #999;
+  cursor: pointer;
+  user-select: none;
+}
+
+.music-info-play-button {
+  position: absolute;
+  font-size: 1.8rem;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border: none;
+  cursor: pointer;
+}
+
+/* 관련 영상 */
+.music-info-related-section {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.music-info-related-section h3 {
+  margin-bottom: 1rem;
+  color: #5a4d7d;
+}
+
+.music-info-related-section ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  color: #555;
+  font-size: 1rem;
+}
+
+/* 로그인 안내 */
+.music-info-login-prompt {
+  margin-top: 2rem;
+  text-align: center;
+  color: #777;
+}
+
+.music-info-login-btn {
+  background-color: #4299e1;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.music-info-login-btn:hover {
+  background-color: #2b6cb0;
+}
+
+/* 로딩 및 에러 메시지 */
+.music-info-loading, .music-info-error {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 4rem;
+}
+
+/* 모달 오버레이 */
+.music-info-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 모달 콘텐츠 */
+.music-info-modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+/* 플레이리스트 선택 셀렉트 박스 */
+.music-info-playlist-select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 1.2rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.music-info-playlist-select:focus {
+  border-color: #6b46c1;
+}
+
+/* 모달 버튼 */
+.music-info-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.music-info-add-btn,
+.music-info-cancel-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.music-info-add-btn {
+  background-color: #6b46c1;
+  color: white;
+}
+
+.music-info-add-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.music-info-add-btn:not(:disabled):hover {
+  background-color: #553c9a;
+}
+
+.music-info-cancel-btn {
+  background-color: #eee;
+  color: #555;
+}
+
+.music-info-cancel-btn:hover {
+  background-color: #ddd;
+}
+
+/* 새 플레이리스트 만들기 링크 */
+.music-info-create-playlist-link {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.music-info-create-playlist-link a {
+  color: #6b46c1;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.music-info-create-playlist-link a:hover {
+  color: #764ba2;
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+  .music-info-main-content {
     flex-direction: column;
-    padding: 30px;
-    background-color: #f0f4fb;
-    overflow-y: auto;
-}
-
-.search-section {
-    margin-bottom: 30px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-}
-
-.album-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.album-cover {
-    width: 250px;
-    height: 250px;
-    background-size: cover;
-    background-position: center;
-    background-color: #ccc;
-    border-radius: 10px;
-}
-
-.album-info h2 {
-    font-size: 24px;
-    margin-bottom: 8px;
-}
-
-.album-info p {
-    font-size: 16px;
-    margin-bottom: 4px;
-    color: #555;
-}
-
-.video-section {
-    margin-top: 50px;
-}
-
-.video-section h3 {
-    font-size: 18px;
-    margin-bottom: 15px;
-}
-
-.video-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-top: 15px;
-}
-
-.video-thumbnail {
-    flex: 1 1 300px;
-    min-width: 250px;
-    aspect-ratio: 16 / 9;
-    background-color: #888;
-    color: #fff;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    font-size: 18px;
-    position: relative;
-    overflow: hidden;
-}
+  }
 
-.play-button {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: #fff;
-    border: none;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.related-section {
-    margin-top: 40px;
-}
-
-.related-section h3 {
-    font-size: 18px;
-    margin-bottom: 15px;
-}
-
-.related-section ul {
-    padding-left: 20px;
-}
-
-.related-section li {
-    margin-bottom: 8px;
+  .music-info-video-section, .music-info-album-section {
+    max-width: 100%;
+  }
 }

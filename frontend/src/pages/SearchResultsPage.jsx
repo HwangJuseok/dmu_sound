@@ -1,7 +1,8 @@
-import {Link, useLocation} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "../styles/SearchResultsPage.css";  // CSS 분리해서 import
+import SearchBar from "../components/SearchBar";
+import "../styles/SearchResultsPage.css";
 
 const SearchResultsPage = () => {
   const location = useLocation();
@@ -18,16 +19,15 @@ const SearchResultsPage = () => {
 
       try {
         setLoading(true);
-
         const response = await axios.get(
-            `http://localhost:8080/api/search?query=${encodeURIComponent(searchQuery)}`,
-            {
-              withCredentials: true,
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-              }
-            }
+          `http://localhost:8080/api/search?query=${encodeURIComponent(searchQuery)}`,
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
         );
 
         if (Array.isArray(response.data)) {
@@ -49,34 +49,51 @@ const SearchResultsPage = () => {
 
   return (
     <div className="search-results-container">
-      <h2 className="search-title">검색 결과: "{searchQuery}"</h2>
+      <header className="search-header">
+        <h2 className="search-title">검색 결과: "{searchQuery}"</h2>
+        <div className="chart-search-wrapper">
+          <SearchBar
+            placeholder="아티스트, 곡명, 앨범을 검색하세요..."
+            onSearch={(query) => {
+              window.location.href = `/search?q=${encodeURIComponent(query)}`;
+            }}
+          />
+        </div>
+      </header>
+
+      
 
       {loading && <p className="loading-text">로딩 중...</p>}
       {error && <p className="error-text">{error}</p>}
-      {!loading && results.length === 0 && <p className="no-results-text">검색 결과가 없습니다.</p>}
+      {!loading && results.length === 0 && (
+        <p className="no-results-text">검색 결과가 없습니다.</p>
+      )}
 
-     <ul className="result-list">
-        {results.length > 0 ? (
-          results.map((item) => (
-            <li key={item.id} className="result-item">
-              <img src={item.imageUrl} alt={item.name} className="result-image" />
-              <div className="result-details">
-                {/* 제목에 링크 걸기 */}
-                <Link to={`/music/${item.id}`} className="result-name-link">
-                  <strong className="result-name">{item.name}</strong>
+      <ul className="result-list">
+        {results.map((item) => (
+          <li key={item.id} className="result-item">
+            <img
+              src={item.imageUrl}
+              alt={item.name}
+              className="result-image"
+            />
+            <div className="result-details">
+              <Link to={`/music/${item.id}`} className="result-name-link">
+                <strong className="result-name">{item.name}</strong>
+              </Link>
+              <br />
+              {item.subInfo && (
+                <span className="result-subinfo">{item.subInfo}</span>
+              )}
+              <br />
+              {item.isTrack && (
+                <Link to={`/detail/${item.id}`} className="detail-link">
+                  트랙 상세보기
                 </Link>
-                <br />
-                {item.subInfo && <span className="result-subinfo">{item.subInfo}</span>}
-                <br />
-                {item.isTrack && (
-                    <Link to={`/detail/${item.id}`} className="detail-link">
-                      트랙 상세보기
-                    </Link>
-                )}
-              </div>
-            </li>
-          ))
-        ) : null}
+              )}
+            </div>
+          </li>
+        ))}
       </ul>
     </div>
   );

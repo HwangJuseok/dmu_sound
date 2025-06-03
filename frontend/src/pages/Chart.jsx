@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SearchBar from "../components/SearchBar"; 
 import "../styles/Chart.css";
 
 function Chart() {
@@ -44,7 +45,18 @@ function Chart() {
 
   return (
     <div className="chart-page">
-      <h1>📊 실시간 차트</h1>
+      <header className="chart-header">
+        <h1>📊 실시간 차트</h1>
+        <div className="chart-search-wrapper">
+          <SearchBar
+            placeholder="아티스트, 곡명, 앨범을 검색하세요..."
+            onSearch={(query) => {
+              window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            }}
+          />
+        </div>
+      </header>
+
       <ul className="chart-list">
         {videos.map((video, index) => (
           <li key={index} className="chart-item">

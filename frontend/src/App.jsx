@@ -51,13 +51,6 @@ function AppContent() {
             )}
 
             <main className={`main-page ${isAuthPage ? 'auth-page' : ''}`}>
-                {/* 메인 페이지가 아니고 인증 페이지가 아닐 때만 검색바 표시 */}
-                {location.pathname !== '/' && !isAuthPage && (
-                    <header className="search-bar-wrapper">
-                        <SearchBar />
-                    </header>
-                )}
-
                 <Routes>
                     <Route path="/" element={
                         <MainPage user={user} logout={logout} loading={loading} />

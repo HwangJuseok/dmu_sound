@@ -7,14 +7,17 @@
 }
 
 /* 보라색 헤더 */
-.chart-page > h1 {
+.chart-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
   padding: 2rem 0;
   text-align: center;
+  color: white;
+}
+
+.chart-header h1 {
   font-size: 2rem;
-  margin: 0;
   font-weight: bold;
+  margin: 0 0 1rem 0;
 }
 
 /* 로딩/에러 텍스트 스타일 */

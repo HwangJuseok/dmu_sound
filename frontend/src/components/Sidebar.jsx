@@ -58,8 +58,8 @@ function Sidebar({ onToggle, user, logout, loading }) {
                 <div className="login-required">
                     <p>로그인 시 플레이리스트가 표시됩니다.</p>
                     <div className="sidebar-auth-buttons">
-                        <Link to="/auth/login" className="sidebar-login-btn">로그인</Link>
-                        <Link to="/auth/register" className="sidebar-register-btn">회원가입</Link>
+                        <Link to="/auth/login" className="sidebar-login-btn">로그인</Link> | 
+                        <Link to="/auth/register" className="sidebar-register-btn"> 회원가입</Link>
                     </div>
                 </div>
             )}

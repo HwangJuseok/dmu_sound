@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Playlist.css";
 import { useAuth } from "../contexts/AuthContext";
+import SearchBar from "../components/SearchBar"; 
 
 function Playlist() {
   const { user, loading, checkAuthStatus } = useAuth();
@@ -198,88 +199,130 @@ function Playlist() {
         </div>
     );
   }
-
   if (dataLoading) {
     return (
-        <div className="playlist-page">
+      <div className="playlist-page">
+        <header className="playlist-header">
           <h1>🎵 내 플레이리스트</h1>
+          <div className="chart-search-wrapper">
+            <SearchBar
+              placeholder="아티스트, 곡명, 앨범을 검색하세요..."
+              onSearch={(query) => {
+                window.location.href = `/search?query=${encodeURIComponent(query)}`;
+              }}
+            />
+          </div>
           <div className="loading">플레이리스트 로딩 중...</div>
-        </div>
+        </header>
+      </div>
     );
   }
 
   if (error) {
     return (
-        <div className="playlist-page">
+      <div className="playlist-page">
+        <header className="playlist-header">
           <h1>🎵 내 플레이리스트</h1>
+           <div className="chart-search-wrapper">
+          <SearchBar
+            placeholder="아티스트, 곡명, 앨범을 검색하세요..."
+            onSearch={(query) => {
+              window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            }}
+          />
+        </div>
           <div className="error">
             <p>오류가 발생했습니다: {error}</p>
             <button onClick={fetchPlaylists} className="retry-btn">다시 시도</button>
           </div>
-        </div>
+       </header>
+      </div>
     );
   }
 
   return (
-      <div className="playlist-page">
+    <div className="playlist-page">
+      <header className="playlist-header">
         <h1>🎵 내 플레이리스트</h1>
-
-        <div className="user-info">
-          <p>사용자: {user.userId} (코드: {userCode})</p>
-          <div className="debug-info" style={{
-            background: '#e8f5e8',
-            padding: '8px',
-            margin: '8px 0',
-            fontSize: '11px',
-            fontFamily: 'monospace',
-            border: '1px solid #ccc'
-          }}>
-            인증 상태: ✅ 로그인됨
-          </div>
-        </div>
-
-        <div className="playlist-form">
-          <input
-              type="text"
-              placeholder="플레이리스트 이름"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleAdd()}
+         <div className="chart-search-wrapper">
+          <SearchBar
+            placeholder="아티스트, 곡명, 앨범을 검색하세요..."
+            onSearch={(query) => {
+              window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            }}
           />
-          <button onClick={handleAdd} disabled={!newName.trim()}>
-            추가
-          </button>
         </div>
+      </header>
 
-        <div className="playlist-list">
-          {playlists.length === 0 ? (
-              <div className="empty-state">
-                <p>플레이리스트가 없습니다. 새로운 플레이리스트를 만들어보세요!</p>
-              </div>
-          ) : (
-              playlists.map((playlist) => (
-                  <div key={playlist.playlist_id} className="playlist-card">
-                    <Link to={`/playlist/${playlist.playlist_id}`} className="playlist-link">
-                      <h2>{playlist.playlist_name}</h2>
-                      <p>생성일: {playlist.added_at ? new Date(playlist.added_at).toLocaleDateString() : '알 수 없음'}</p>
-                    </Link>
-                    <div className="playlist-actions">
-                      <button
-                          onClick={() => handleDelete(playlist.playlist_id)}
-                          className="delete-btn"
-                      >
-                        삭제
-                      </button>
-                    </div>
-                  </div>
-              ))
-          )}
-        </div>
-
-        <div className="back-to-home">
-          <Link to="/" className="home-link">← 홈으로</Link>
+      <div className="user-info">
+        <p>사용자: {user.userId} (코드: {userCode})</p>
+        <div
+          className="debug-info"
+          style={{
+            background: "#e8f5e8",
+            padding: "8px",
+            margin: "8px 0",
+            fontSize: "11px",
+            fontFamily: "monospace",
+            border: "1px solid #ccc",
+          }}
+        >
+          인증 상태: ✅ 로그인됨
         </div>
       </div>
+
+      <div className="playlist-form">
+        <input
+          type="text"
+          placeholder="플레이리스트 이름"
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleAdd()}
+        />
+        <button onClick={handleAdd} disabled={!newName.trim()}>
+          추가
+        </button>
+      </div>
+
+      <div className="playlist-list">
+        {playlists.length === 0 ? (
+          <div className="empty-state">
+            <p>플레이리스트가 없습니다. 새로운 플레이리스트를 만들어보세요!</p>
+          </div>
+        ) : (
+          playlists.map((playlist) => (
+            <div key={playlist.playlist_id} className="playlist-card">
+              <Link
+                to={`/playlist/${playlist.playlist_id}`}
+                className="playlist-link"
+              >
+                <h2>{playlist.playlist_name}</h2>
+                <p>
+                  생성일:{" "}
+                  {playlist.added_at
+                    ? new Date(playlist.added_at).toLocaleDateString()
+                    : "알 수 없음"}
+                </p>
+              </Link>
+              <div className="playlist-actions">
+                <button
+                  onClick={() => handleDelete(playlist.playlist_id)}
+                  className="delete-btn"
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="back-to-home">
+        <Link to="/" className="home-link">
+          ← 홈으로
+        </Link>
+      </div>
+    </div>
   );
 }
 
