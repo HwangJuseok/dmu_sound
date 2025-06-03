@@ -115,8 +115,9 @@ function PlaylistDetailPage() {
         }
 
         try {
+            // ✅ 올바른 API 경로로 수정
             const response = await fetch(
-                `${API_BASE_URL}/api/playlists/${id}/tracks/${spotifyId}?userCode=${userCode}`,
+                `${API_BASE_URL}/api/playlists/${id}/tracks?trackId=${spotifyId}&userCode=${userCode}`,
                 {
                     method: 'DELETE',
                     credentials: 'include'
