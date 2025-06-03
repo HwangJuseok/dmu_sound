@@ -31,12 +31,12 @@ public class PlaylistService {
 
     // 플레이리스트에 곡 추가
     public void addTrackToPlaylist(String playlistId, PlaylistTrackDto dto) {
-        if (dto.getSpotifyId() == null || dto.getSpotifyId().isEmpty()) {
+        if (dto.getTrackId() == null || dto.getTrackId().isEmpty()) {
             throw new IllegalArgumentException("곡 ID(spotifyId)는 필수입니다.");
         }
 
         // 중복 체크
-        boolean exists = supabaseClient.checkTrackExists(dto.getUserCode(), playlistId, dto.getSpotifyId());
+        boolean exists = supabaseClient.checkTrackExists(dto.getUserCode(), playlistId, dto.getTrackId());
         if (exists) {
             throw new RuntimeException("이미 추가된 곡입니다.");
         }
@@ -49,12 +49,12 @@ public class PlaylistService {
     }
 
     // 플레이리스트에서 곡 삭제
-    public void removeTrackFromPlaylist(String playlistId, String spotifyId, String userCode) {
-        if (spotifyId == null || spotifyId.isEmpty()) {
-            throw new IllegalArgumentException("곡 ID(spotifyId)는 필수입니다.");
+    public void removeTrackFromPlaylist(String playlistId, String trackId, String userCode) {
+        if (trackId == null || trackId.isEmpty()) {
+            throw new IllegalArgumentException("곡 ID(trackId)는 필수입니다.");
         }
 
-        boolean success = supabaseClient.deleteTrackFromPlaylist(userCode, playlistId, spotifyId);
+        boolean success = supabaseClient.deleteTrackFromPlaylist(userCode, playlistId, trackId);
         if (!success) {
             throw new RuntimeException("곡 삭제 실패");
         }

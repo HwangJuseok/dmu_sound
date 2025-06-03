@@ -51,10 +51,10 @@ public class PlaylistController {
     // 플레이리스트에서 트랙 삭제
     @DeleteMapping("/{playlistId}/tracks")
     public ResponseEntity<String> removeTrackFromPlaylist(@PathVariable String playlistId,
-                                                          @RequestParam String spotifyId,
+                                                          @RequestParam String trackId,
                                                           @RequestParam String userCode) {
         try {
-            playlistService.removeTrackFromPlaylist(playlistId, spotifyId, userCode);
+            playlistService.removeTrackFromPlaylist(playlistId, trackId, userCode);
             return ResponseEntity.ok("곡 삭제 완료");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
