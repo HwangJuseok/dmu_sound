@@ -63,11 +63,12 @@ function Chart() {
             <span className="rank">{index + 1}</span>
             <a href={video.videoUrl} target="_blank" rel="noopener noreferrer">
               <img src={video.thumbnailUrl} alt={video.title} />
-            </a>
+            
             <div className="info">
               <span className="title">{video.title}</span>
               <span className="artist">{video.channel}</span>
             </div>
+            </a>
           </li>
         ))}
       </ul>
