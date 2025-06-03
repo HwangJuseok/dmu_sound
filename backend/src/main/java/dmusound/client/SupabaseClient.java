@@ -68,7 +68,7 @@ public class SupabaseClient {
         {
             "user_code": "%s",
             "playlist_id": "%s",
-            "spotify_id": "%s",
+            "track_id": "%s",
             "added_at": "%s",
             "track_name": "%s",
             "artist_name": "%s",
@@ -77,7 +77,7 @@ public class SupabaseClient {
         """,
                 dto.getUserCode(),
                 dto.getPlaylistId(),
-                dto.getSpotifyId(),
+                dto.getTrackId(),
                 dto.getAddedAt() != null ? dto.getAddedAt() : java.time.OffsetDateTime.now().toString(),
                 dto.getTrackName() != null ? dto.getTrackName() : "",
                 dto.getArtistName() != null ? dto.getArtistName() : "",
@@ -89,10 +89,10 @@ public class SupabaseClient {
     }
 
     // 특정 곡 삭제
-    public boolean deleteTrackFromPlaylist(String userCode, String playlistId, String spotifyId) {
+    public boolean deleteTrackFromPlaylist(String userCode, String playlistId, String trackId) {
         String url = String.format(
-                "%s/playlist_track?user_code=eq.%s&playlist_id=eq.%s&spotify_id=eq.%s",
-                config.baseUrl, userCode, playlistId, spotifyId
+                "%s/playlist_track?user_code=eq.%s&playlist_id=eq.%s&track_id=eq.%s",
+                config.baseUrl, userCode, playlistId, trackId
         );
 
         HttpHeaders headers = new HttpHeaders();
@@ -108,9 +108,9 @@ public class SupabaseClient {
 
 
     // 중복 체크: 유저, 플레이리스트, 트랙이 이미 존재하는지 확인
-    public boolean checkTrackExists(String userCode, String playlistId, String spotifyId) {
-        String url = String.format("%s/playlist_track?user_code=eq.%s&playlist_id=eq.%s&spotify_id=eq.%s",
-                config.baseUrl, userCode, playlistId, spotifyId);
+    public boolean checkTrackExists(String userCode, String playlistId, String trackId) {
+        String url = String.format("%s/playlist_track?user_code=eq.%s&playlist_id=eq.%s&track_id=eq.%s",
+                config.baseUrl, userCode, playlistId, trackId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("apikey", config.apiKey);
