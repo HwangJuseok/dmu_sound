@@ -8,6 +8,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 @Component
 public class SupabaseClient {
 
@@ -50,17 +52,58 @@ public class SupabaseClient {
     }
 
     // 플레이리스트 생성
+    // SupabaseClient.java 안의 기존 insertPlaylist()를 아래처럼 수정
     public boolean insertPlaylist(PlaylistDto dto) {
-        String json = String.format("""
-            {
-                "user_code": "%s",
-                "playlist_name": "%s"
-            }
-            """, dto.getUserCode(), dto.getPlaylistName());
+        int maxAttempts = 5;
+        long randomId = 0L;
 
-        ResponseEntity<String> response = insertData("playlist", json);
-        return response.getStatusCode() == HttpStatus.CREATED;
+        for (int attempt = 0; attempt < maxAttempts; attempt++) {
+            randomId = ThreadLocalRandom.current().nextLong(100_000_000L, 1_000_000_000L);
+
+            if (!isPlaylistIdExists(randomId)) {
+                dto.setPlaylistId(randomId);
+
+                String json = String.format("""
+                {
+                    "playlist_id": %d,
+                    "user_code": "%s",
+                    "playlist_name": "%s"
+                }
+                """, dto.getPlaylistId(), dto.getUserCode(), dto.getPlaylistName());
+
+                ResponseEntity<String> response = insertData("playlist", json);
+                return response.getStatusCode() == HttpStatus.CREATED;
+            }
+        }
+
+        // 모든 시도 실패
+        throw new RuntimeException("중복되지 않는 playlist_id 생성 실패");
     }
+
+
+    // SupabaseClient.java 안에 추가
+    public boolean isPlaylistIdExists(long playlistId) {
+        String filter = "playlist_id=eq." + playlistId;
+        ResponseEntity<String> response = getData("playlist", filter);
+
+        return response.getStatusCode() == HttpStatus.OK
+                && response.getBody() != null
+                && !response.getBody().equals("[]");
+    }
+
+    public ResponseEntity<String> getData(String tableName, String filter) {
+        String url = String.format("%s/%s?%s", config.baseUrl, tableName, filter);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("apikey", config.apiKey);
+        headers.set("Authorization", "Bearer " + config.apiKey);
+        headers.set("Accept", "application/json");
+
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        return restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+    }
+
 
     // 플레이리스트 트랙 추가
     public boolean insertPlaylistTrack(PlaylistTrackDto dto) {
