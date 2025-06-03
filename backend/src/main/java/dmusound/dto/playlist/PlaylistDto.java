@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PlaylistDto {
     @JsonProperty("playlist_id")
-    private String playlistId;  // String → Long
+    private Long playlistId;  // String → Long
 
     @JsonProperty("user_code")
     private String userCode;

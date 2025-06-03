@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Playlist.css";
 import { useAuth } from "../contexts/AuthContext";
-import SearchBar from "../components/SearchBar"; 
+import SearchBar from "../components/SearchBar";
 
 function Playlist() {
   const { user, loading, checkAuthStatus } = useAuth();
@@ -12,6 +12,7 @@ function Playlist() {
   const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [deletingId, setDeletingId] = useState(null); // 삭제 중인 플레이리스트 ID
 
   // API 기본 URL 설정
   const API_BASE_URL = 'http://localhost:8080';
@@ -111,7 +112,10 @@ function Playlist() {
       return;
     }
 
+    if (isCreating) return; // 중복 생성 방지
+
     try {
+      setIsCreating(true);
       const playlistData = {
         playlist_name: newName,
         user_code: userCode
@@ -144,21 +148,46 @@ function Playlist() {
     } catch (err) {
       console.error('❌ 플레이리스트 생성 오류:', err);
       alert("❌ 플레이리스트 생성 실패: " + err.message);
+    } finally {
+      setIsCreating(false);
     }
   };
 
-  const handleDelete = async (playlistId) => {
-    if (!window.confirm("정말로 이 플레이리스트를 삭제하시겠습니까?")) {
+  // 실제 API를 호출하는 삭제 함수
+  const handleDelete = async (playlistId, playlistName) => {
+    if (!window.confirm(`정말로 "${playlistName}" 플레이리스트를 삭제하시겠습니까?`)) {
       return;
     }
 
     try {
-      // 백엔드에 삭제 API가 없어서 임시로 프론트엔드에서만 제거
-      // TODO: DELETE /api/playlists/{playlistId} API 구현 필요
-      setPlaylists(playlists.filter((p) => p.playlist_id !== playlistId));
-      alert("플레이리스트가 삭제되었습니다. (임시 삭제 - 새로고침시 복구됨)");
+      setDeletingId(playlistId);
+      console.log('🗑️ Deleting playlist:', playlistId);
+
+      const response = await fetch(`${API_BASE_URL}/api/playlists/${playlistId}?userCode=${userCode}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `삭제 실패: ${response.status}`);
+      }
+
+      const result = await response.text();
+      console.log('✅ Playlist deleted:', result);
+
+      alert("✅ 플레이리스트가 삭제되었습니다!");
+
+      // 플레이리스트 목록 새로고침
+      await fetchPlaylists();
     } catch (err) {
+      console.error('❌ 플레이리스트 삭제 오류:', err);
       alert("❌ 삭제 실패: " + err.message);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -201,130 +230,136 @@ function Playlist() {
         </div>
     );
   }
+
   if (dataLoading) {
     return (
-      <div className="playlist-page">
-        <header className="playlist-header">
-          <h1>🎵 내 플레이리스트</h1>
-          <div className="chart-search-wrapper">
-            <SearchBar
-              placeholder="아티스트, 곡명, 앨범을 검색하세요..."
-              onSearch={(query) => {
-                window.location.href = `/search?query=${encodeURIComponent(query)}`;
-              }}
-            />
-          </div>
-          <div className="loading">플레이리스트 로딩 중...</div>
-        </header>
-      </div>
+        <div className="playlist-page">
+          <header className="playlist-header">
+            <h1>🎵 내 플레이리스트</h1>
+            <div className="chart-search-wrapper">
+              <SearchBar
+                  placeholder="아티스트, 곡명, 앨범을 검색하세요..."
+                  onSearch={(query) => {
+                    window.location.href = `/search?query=${encodeURIComponent(query)}`;
+                  }}
+              />
+            </div>
+            <div className="loading">플레이리스트 로딩 중...</div>
+          </header>
+        </div>
     );
   }
 
   if (error) {
     return (
-      <div className="playlist-page">
-        <header className="playlist-header">
-          <h1>🎵 내 플레이리스트</h1>
-           <div className="chart-search-wrapper">
-          <SearchBar
-            placeholder="아티스트, 곡명, 앨범을 검색하세요..."
-            onSearch={(query) => {
-              window.location.href = `/search?query=${encodeURIComponent(query)}`;
-            }}
-          />
+        <div className="playlist-page">
+          <header className="playlist-header">
+            <h1>🎵 내 플레이리스트</h1>
+            <div className="chart-search-wrapper">
+              <SearchBar
+                  placeholder="아티스트, 곡명, 앨범을 검색하세요..."
+                  onSearch={(query) => {
+                    window.location.href = `/search?query=${encodeURIComponent(query)}`;
+                  }}
+              />
+            </div>
+            <div className="error">
+              <p>오류가 발생했습니다: {error}</p>
+              <button onClick={fetchPlaylists} className="retry-btn">다시 시도</button>
+            </div>
+          </header>
         </div>
-          <div className="error">
-            <p>오류가 발생했습니다: {error}</p>
-            <button onClick={fetchPlaylists} className="retry-btn">다시 시도</button>
-          </div>
-       </header>
-      </div>
     );
   }
 
   return (
-    <div className="playlist-page">
-      <header className="playlist-header">
-        <h1>🎵 내 플레이리스트</h1>
-         <div className="chart-search-wrapper">
-          <SearchBar
-            placeholder="아티스트, 곡명, 앨범을 검색하세요..."
-            onSearch={(query) => {
-              window.location.href = `/search?query=${encodeURIComponent(query)}`;
-            }}
-          />
-        </div>
-      </header>
-
-      <div className="user-info">
-        <p>사용자: {user.userId} (코드: {userCode})</p>
-        <div
-          className="debug-info"
-          style={{
-            background: "#e8f5e8",
-            padding: "8px",
-            margin: "8px 0",
-            fontSize: "11px",
-            fontFamily: "monospace",
-            border: "1px solid #ccc",
-          }}
-        >
-          인증 상태: ✅ 로그인됨
-        </div>
-      </div>
-
-      <div className="playlist-form">
-        <input
-          type="text"
-          placeholder="플레이리스트 이름"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && handleAdd()}
-        />
-        <button onClick={handleAdd} disabled={!newName.trim()}>
-          추가
-        </button>
-      </div>
-
-      <div className="playlist-list">
-        {playlists.length === 0 ? (
-          <div className="empty-state">
-            <p>플레이리스트가 없습니다. 새로운 플레이리스트를 만들어보세요!</p>
+      <div className="playlist-page">
+        <header className="playlist-header">
+          <h1>🎵 내 플레이리스트</h1>
+          <div className="chart-search-wrapper">
+            <SearchBar
+                placeholder="아티스트, 곡명, 앨범을 검색하세요..."
+                onSearch={(query) => {
+                  window.location.href = `/search?query=${encodeURIComponent(query)}`;
+                }}
+            />
           </div>
-        ) : (
-          playlists.map((playlist) => (
-            <div key={playlist.playlist_id} className="playlist-card">
-              <Link
-                to={`/playlist/${playlist.playlist_id}`}
-                className="playlist-link"
-              >
-                <h2>{playlist.playlist_name}</h2>
-                <p>
-                  생성일:{" "}
-                  {playlist.added_at
-                    ? new Date(playlist.added_at).toLocaleDateString()
-                    : "알 수 없음"}
-                </p>
-              </Link>
-              <div className="playlist-actions">
-                <button
-                  onClick={() => handleDelete(playlist.playlist_id)}
-                  className="delete-btn"
-                >
-                  삭제
-                </button>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+        </header>
 
-      <div className="back-to-home">
-        <Link to="/" className="home-link">
-          ← 홈으로
-        </Link>
+        <div className="user-info">
+          <p>사용자: {user.userId} (코드: {userCode})</p>
+          <div
+              className="debug-info"
+              style={{
+                background: "#e8f5e8",
+                padding: "8px",
+                margin: "8px 0",
+                fontSize: "11px",
+                fontFamily: "monospace",
+                border: "1px solid #ccc",
+              }}
+          >
+            인증 상태: ✅ 로그인됨
+          </div>
+        </div>
+
+        <div className="playlist-form">
+          <input
+              type="text"
+              placeholder="플레이리스트 이름"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleAdd()}
+              disabled={isCreating}
+          />
+          <button
+              onClick={handleAdd}
+              disabled={!newName.trim() || isCreating}
+          >
+            {isCreating ? "생성 중..." : "추가"}
+          </button>
+        </div>
+
+        <div className="playlist-list">
+          {playlists.length === 0 ? (
+              <div className="empty-state">
+                <p>플레이리스트가 없습니다. 새로운 플레이리스트를 만들어보세요!</p>
+              </div>
+          ) : (
+              playlists.map((playlist) => (
+                  <div key={playlist.playlist_id} className="playlist-card">
+                    <Link
+                        to={`/playlist/${playlist.playlist_id}`}
+                        className="playlist-link"
+                    >
+                      <h2>{playlist.playlist_name}</h2>
+                      <p>
+                        생성일:{" "}
+                        {playlist.added_at
+                            ? new Date(playlist.added_at).toLocaleDateString()
+                            : "알 수 없음"}
+                      </p>
+                    </Link>
+                    <div className="playlist-actions">
+                      <button
+                          onClick={() => handleDelete(playlist.playlist_id, playlist.playlist_name)}
+                          className="delete-btn"
+                          disabled={deletingId === playlist.playlist_id}
+                      >
+                        {deletingId === playlist.playlist_id ? "삭제 중..." : "삭제"}
+                      </button>
+                    </div>
+                  </div>
+              ))
+          )}
+        </div>
+
+        <div className="back-to-home">
+          <Link to="/" className="home-link">
+            ← 홈으로
+          </Link>
+        </div>
       </div>
-    </div>
   );
 }
 
