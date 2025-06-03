@@ -88,7 +88,7 @@ function MusicInfo() {
             const track = trackData?.track;
             const trackToAdd = {
                 user_code: userCode,
-                spotify_id: track?.trackId || id,
+                track_id: track?.id || id,
                 track_name: track?.trackName || title || "노래제목",
                 artist_name: track?.artistName || artist || "가수",
                 image_url: track?.imageUrl || cover || ""

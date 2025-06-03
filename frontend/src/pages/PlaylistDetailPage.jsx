@@ -235,7 +235,7 @@ function PlaylistDetailPage() {
 
                             <div className="tracks-list">
                                 {tracks.map((track, index) => (
-                                    <div key={`${track.spotify_id}-${index}`} className="track-row">
+                                    <div key={`${track.track_id}-${index}`} className="track-row">
                                         <div className="col-number">
                                             <span className="track-number">{index + 1}</span>
                                         </div>
