@@ -1,65 +1,430 @@
 /* PlaylistDetailPage.css */
 
 .playlist-detail-page {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 0 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Helvetica Neue', sans-serif;
 }
 
-.playlist-detail-page h1 {
-  font-size: 2.5rem;
-  margin-bottom: 8px;
-  border-bottom: 2px solid #0077ff;
-  padding-bottom: 6px;
+/* 플레이리스트 헤더 */
+.playlist-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 0;
+  color: white;
 }
 
-.playlist-detail-page p {
-  font-size: 1.1rem;
-  margin-bottom: 24px;
-  color: #666;
+.navigation {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  margin-bottom: 1rem;
 }
 
-.track-card {
+.back-link {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: white;
+}
+
+.playlist-info {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
-  padding: 12px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 1px 5px rgb(0 0 0 / 0.1);
-  transition: box-shadow 0.3s ease;
+  gap: 2rem;
 }
 
-.track-card:hover {
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
-}
-
-.track-card img {
-  border-radius: 4px;
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
+.playlist-cover {
   flex-shrink: 0;
 }
 
-.track-card div h3 {
-  margin: 0 0 6px;
-  font-size: 1.2rem;
-  color: #0077ff;
+.cover-placeholder {
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  backdrop-filter: blur(10px);
 }
 
-.track-card div p {
-  margin: 2px 0;
-  font-size: 1rem;
-  color: #444;
+.playlist-meta {
+  flex: 1;
 }
 
-.track-card audio {
-  margin-top: 8px;
+.playlist-type {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.playlist-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+}
+
+.playlist-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.separator {
+  opacity: 0.6;
+}
+
+.created-date {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* 트랙 섹션 */
+.tracks-section {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
   width: 100%;
-  outline: none;
-  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.tracks-header {
+  margin-bottom: 1.5rem;
+}
+
+.track-list-title h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+/* 테이블 헤더 */
+.table-header {
+  display: grid;
+  grid-template-columns: 40px 1fr 200px 120px 80px 80px;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 트랙 리스트 */
+.tracks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.track-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 200px 120px 80px 80px;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease;
+  border: 1px solid #eee;
+  align-items: center;
+}
+
+.track-row:hover {
+  background-color: #f0f0f0;
+}
+
+.col-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.track-number {
+  font-weight: 600;
+  color: #667eea;
+}
+
+.col-title {
+  display: flex;
+  align-items: center;
+}
+
+.track-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.track-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.track-details {
+  overflow: hidden;
+}
+
+.track-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.album-name {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.col-artist, .col-added, .col-duration {
+  display: flex;
+  align-items: center;
+}
+
+.artist-name, .added-date, .duration {
+  font-size: 0.9rem;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.col-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.track-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  background-color: rgba(102, 126, 234, 0.1);
+}
+
+/* 빈 플레이리스트 */
+.empty-playlist {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #666;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-playlist h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-playlist p {
+  font-size: 1rem;
+  margin: 0 0 2rem 0;
+}
+
+.search-link {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.search-link:hover {
+  transform: translateY(-2px);
+}
+
+/* 푸터 */
+.playlist-footer {
+  padding: 2rem;
+  text-align: center;
+  border-top: 1px solid #eee;
+  background-color: white;
+}
+
+.footer-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #764ba2;
+}
+
+/* 로딩/에러 상태 */
+.loading, .error, .not-found, .auth-required {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.loading {
+  font-size: 1.2rem;
+  color: #667eea;
+}
+
+.error h2, .not-found h2, .auth-required h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.error p, .not-found p, .auth-required p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 2rem 0;
+}
+
+.error-actions, .auth-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.retry-btn, .login-btn {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.retry-btn:hover, .login-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .playlist-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .cover-placeholder {
+    width: 100px;
+    height: 100px;
+    font-size: 2.5rem;
+  }
+  
+  .playlist-title {
+    font-size: 2rem;
+  }
+  
+  .tracks-section {
+    padding: 1rem;
+  }
+  
+  .table-header {
+    display: none;
+  }
+  
+  .track-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .col-number {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+  
+  .col-title {
+    grid-row: 1;
+  }
+  
+  .col-artist {
+    grid-row: 2;
+    font-size: 0.85rem;
+    color: #666;
+  }
+  
+  .col-added, .col-duration {
+    grid-row: 3;
+    font-size: 0.8rem;
+    color: #999;
+  }
+  
+  .col-actions {
+    grid-row: 4;
+    justify-content: flex-start;
+    margin-top: 0.5rem;
+  }
+  
+  .track-info {
+    gap: 1rem;
+  }
+  
+  .track-image {
+    width: 60px;
+    height: 60px;
+  }
 }

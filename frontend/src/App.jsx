@@ -10,7 +10,7 @@ import DetailPage from "./pages/DetailPage";
 import LyricsPage from "./pages/LyricsPage";
 import MusicInfo from './pages/MusicInfo';
 import SearchResultsPage from './pages/SearchResultsPage';
-import SearchBar from './components/SearchBar';
+import MyPageRecommendations from './pages/MyPageRecommendations';
 import PlaylistDetailPage from './pages/PlaylistDetailPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -66,6 +66,7 @@ function AppContent() {
                     <Route path="/auth/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/auth/register" element={<Register />} />
+                    <Route path="mypagerecommendations" element={<MyPageRecommendations/>} />
                 </Routes>
             </main>
         </div>

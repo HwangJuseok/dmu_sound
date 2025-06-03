@@ -33,6 +33,7 @@ function Sidebar({ onToggle, user, logout, loading }) {
                 <p><Link to="/">🏠 홈</Link></p>
                 <p><Link to="/chart">📊 차트</Link></p>
                 {user && <p><Link to="/playlist">🎵 플레이리스트</Link></p>}
+                 {user && <p><Link to="/MyPageRecommendations">⭐ 앱 연동</Link></p>}
             </nav>
 
             <hr />
