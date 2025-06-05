@@ -318,7 +318,7 @@ const MainPage = ({ user, logout, loading }) => {
                                             <div className="coming-soon-features">
                                                 <div className="feature-preview">
                                                 <span className="feature-icon">🎵</span>
-                                                    <span>개인 플레이리스트 (준비중)</span>
+                                                    {user && <p><Link to="/playlist">🎵 플레이리스트</Link></p>}
                                                 </div>
                                                 <div className="feature-preview">
                                                     <span className="feature-icon">🕒</span>
