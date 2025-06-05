@@ -64,7 +64,7 @@ const Login = () => {
                 </button>
             </form>
             <div className="login-links">
-                <a href="/oauth2/authorization/google">Google로 로그인</a><br />
+              
                 <a href="/auth/register">회원가입 하기</a>
             </div>
         </div>
