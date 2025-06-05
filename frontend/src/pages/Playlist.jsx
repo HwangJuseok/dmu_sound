@@ -216,11 +216,11 @@ function Playlist() {
               fontSize: '12px',
               fontFamily: 'monospace'
             }}>
-              <div>디버그 정보:</div>
-              <div>- User: {user ? 'exists' : 'null'}</div>
-              <div>- UserId: {user?.userId || 'null'}</div>
-              <div>- UserCode: {userCode || 'null'}</div>
-              <div>- Loading: {loading ? 'true' : 'false'}</div>
+              {/*<div>디버그 정보:</div>*/}
+              {/*<div>- User: {user ? 'exists' : 'null'}</div>*/}
+              {/*<div>- UserId: {user?.userId || 'null'}</div>*/}
+              {/*<div>- UserCode: {userCode || 'null'}</div>*/}
+              {/*<div>- Loading: {loading ? 'true' : 'false'}</div>*/}
             </div>
             <div className="auth-buttons">
               <Link to="/auth/login" className="login-btn">로그인</Link>
@@ -286,22 +286,22 @@ function Playlist() {
           </div>
         </header>
 
-        <div className="user-info">
-          <p>사용자: {user.userId} (코드: {userCode})</p>
-          <div
-              className="debug-info"
-              style={{
-                background: "#e8f5e8",
-                padding: "8px",
-                margin: "8px 0",
-                fontSize: "11px",
-                fontFamily: "monospace",
-                border: "1px solid #ccc",
-              }}
-          >
-            인증 상태: ✅ 로그인됨
-          </div>
-        </div>
+        {/*<div className="user-info">*/}
+        {/*  /!*<p>사용자: {user.userId} (코드: {userCode})</p>*!/*/}
+        {/*  <div*/}
+        {/*      className="debug-info"*/}
+        {/*      style={{*/}
+        {/*        background: "#e8f5e8",*/}
+        {/*        padding: "8px",*/}
+        {/*        margin: "8px 0",*/}
+        {/*        fontSize: "11px",*/}
+        {/*        fontFamily: "monospace",*/}
+        {/*        border: "1px solid #ccc",*/}
+        {/*      }}*/}
+        {/*  >*/}
+        {/*    /!*인증 상태: ✅ 로그인됨*!/*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
         <div className="playlist-form">
           <input
