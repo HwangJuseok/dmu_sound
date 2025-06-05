@@ -262,14 +262,14 @@ function MusicInfo() {
                 </div>
 
                 {/* Related Videos */}
-                <div className="music-info-related-section">
-                    <h3>📺 관련 영상</h3>
-                    <ul>
-                        <li>인터뷰: {track?.artistName || artist || "가수"}의 비하인드 스토리</li>
-                        <li>{track?.trackName || title || "노래"}의 라이브 무대 영상</li>
-                        <li>{track?.artistName || artist || "가수"} - 다른 히트곡 모음</li>
-                    </ul>
-                </div>
+                {/*<div className="music-info-related-section">*/}
+                {/*    <h3>📺 관련 영상</h3>*/}
+                {/*    <ul>*/}
+                {/*        <li>인터뷰: {track?.artistName || artist || "가수"}의 비하인드 스토리</li>*/}
+                {/*        <li>{track?.trackName || title || "노래"}의 라이브 무대 영상</li>*/}
+                {/*        <li>{track?.artistName || artist || "가수"} - 다른 히트곡 모음</li>*/}
+                {/*    </ul>*/}
+                {/*</div>*/}
 
                 {!user && (
                     <div className="music-info-login-prompt">

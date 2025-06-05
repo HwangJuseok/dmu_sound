@@ -33,7 +33,7 @@ function DetailPage() {
     };
 
     const handleTrackClick = (trackId) => {
-        navigate(`/track/${trackId}`);
+        navigate(`/music/${trackId}`);
     };
 
     const handleBackClick = () => {
