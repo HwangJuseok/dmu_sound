@@ -5,22 +5,58 @@ import "../styles/components/Sidebar.css";
 
 function Sidebar({ onToggle, user, logout, loading }) {
     const [playlists, setPlaylists] = useState([]);
+    const [playlistLoading, setPlaylistLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    // API 기본 URL 설정
+    const API_BASE_URL = 'http://localhost:8080';
+
+    // 플레이리스트 가져오기 함수
+    const fetchPlaylists = async (userCode) => {
+        try {
+            setPlaylistLoading(true);
+            setError(null);
+
+            console.log('📡 Sidebar - Fetching playlists for userCode:', userCode);
+
+            const response = await fetch(`${API_BASE_URL}/api/playlists/user/${userCode}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    // 플레이리스트가 없는 경우
+                    console.log('📝 Sidebar - No playlists found for user');
+                    setPlaylists([]);
+                    return;
+                }
+                throw new Error(`플레이리스트 조회 실패: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('✅ Sidebar - Playlists fetched:', data);
+            setPlaylists(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error('❌ Sidebar - 플레이리스트 조회 오류:', err);
+            setError(err.message);
+            setPlaylists([]);
+        } finally {
+            setPlaylistLoading(false);
+        }
+    };
 
     useEffect(() => {
-        if (user) {
-            // 사용자가 로그인했을 때 플레이리스트 불러오기
-            const stored = localStorage.getItem("myPlaylists");
-            if (stored) {
-                try {
-                    setPlaylists(JSON.parse(stored));
-                } catch (error) {
-                    console.error("플레이리스트 로드 오류:", error);
-                    setPlaylists([]);
-                }
-            }
+        if (user && user.usercode) {
+            // 사용자가 로그인했을 때 API에서 플레이리스트 불러오기
+            fetchPlaylists(user.usercode);
         } else {
             // 사용자가 로그아웃했을 때 플레이리스트 초기화
             setPlaylists([]);
+            setError(null);
         }
     }, [user]);
 
@@ -33,7 +69,7 @@ function Sidebar({ onToggle, user, logout, loading }) {
                 <p><Link to="/">🏠 홈</Link></p>
                 <p><Link to="/chart">📊 차트</Link></p>
                 {user && <p><Link to="/playlist">🎵 플레이리스트</Link></p>}
-                 {user && <p><Link to="/MyPageRecommendations">⭐ 앱 연동</Link></p>}
+                {user && <p><Link to="/MyPageRecommendations">⭐ 앱 연동</Link></p>}
             </nav>
 
             <hr />
@@ -45,12 +81,28 @@ function Sidebar({ onToggle, user, logout, loading }) {
             ) : user ? (
                 <div className="user-playlists">
                     <h4>내 플레이리스트</h4>
-                    {playlists.length > 0 ? (
-                        playlists.map((playlist) => (
-                            <p key={playlist.id}>
-                                <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>
-                            </p>
-                        ))
+                    {playlistLoading ? (
+                        <p>플레이리스트 로딩 중...</p>
+                    ) : error ? (
+                        <div className="error-section">
+                            <p>오류: {error}</p>
+                            <button 
+                                onClick={() => fetchPlaylists(user.usercode)}
+                                className="retry-btn"
+                            >
+                                재시도
+                            </button>
+                        </div>
+                    ) : playlists.length > 0 ? (
+                        <div className="playlist-list">
+                            {playlists.map((playlist) => (
+                                <p key={playlist.playlist_id}>
+                                    <Link to={`/playlist/${playlist.playlist_id}`}>
+                                        {playlist.playlist_name}
+                                    </Link>
+                                </p>
+                            ))}
+                        </div>
                     ) : (
                         <p>저장된 플레이리스트 없음</p>
                     )}

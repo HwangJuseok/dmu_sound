@@ -1,0 +1,513 @@
+/* MyPage Recommendations 페이지 전용 스타일 */
+.mypage-recommendations {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+/* 보라색 헤더 (Chart.css와 동일한 그라데이션) */
+.mypage-recommendations-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 0;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mypage-recommendations-header-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mypage-recommendations-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mypage-recommendations-header-icon {
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.mypage-recommendations-icon-circle {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.mypage-recommendations-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+}
+
+.mypage-recommendations-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0.25rem 0 0 0;
+  font-size: 1rem;
+}
+
+/* 버튼 스타일 */
+.mypage-recommendations-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.mypage-recommendations-btn-primary {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.mypage-recommendations-btn-primary:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.mypage-recommendations-btn-secondary {
+  background-color: white;
+  color: #667eea;
+}
+
+.mypage-recommendations-btn-secondary:hover {
+  background-color: #f8f9ff;
+}
+
+.mypage-recommendations-btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 메인 컨테이너 */
+.mypage-recommendations-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 90%;
+}
+
+/* 사용자 정보 */
+.mypage-recommendations-user-info {
+  background-color: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+.mypage-recommendations-user-info-text {
+  font-size: 0.875rem;
+  color: #667eea;
+  font-weight: 500;
+  margin: 0;
+}
+
+.mypage-recommendations-auth-status {
+  font-size: 0.75rem;
+  color: #059669;
+  margin-top: 0.25rem;
+}
+
+/* 로딩 상태 */
+.mypage-recommendations-loading-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+}
+
+.mypage-recommendations-loading-text {
+  color: #6b7280;
+  font-size: 1.2rem;
+}
+
+.mypage-recommendations-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid #e5e7eb;
+  border-bottom: 2px solid #667eea;
+  border-radius: 50%;
+  animation: mypage-recommendations-spin 1s linear infinite;
+  margin-right: 0.75rem;
+}
+
+@keyframes mypage-recommendations-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 에러 상태 */
+.mypage-recommendations-error-box {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.mypage-recommendations-error-title {
+  color: #991b1b;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.mypage-recommendations-error-message {
+  color: #b91c1c;
+  margin: 0.5rem 0;
+}
+
+.mypage-recommendations-error-retry {
+  margin-top: 1rem;
+  color: #dc2626;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.mypage-recommendations-error-retry:hover {
+  color: #991b1b;
+}
+
+/* 로그인 필요 섹션 */
+.mypage-recommendations-login-required {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.mypage-recommendations-login-content {
+  margin-bottom: 2rem;
+}
+
+.mypage-recommendations-login-icon-wrapper {
+  margin-bottom: 2rem;
+}
+
+.mypage-recommendations-login-icon {
+  width: 5rem;
+  height: 5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mypage-recommendations-user-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: white;
+}
+
+.mypage-recommendations-login-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 1rem 0;
+}
+
+.mypage-recommendations-login-description {
+  color: #6b7280;
+  margin: 0 0 2rem 0;
+  font-size: 1.1rem;
+}
+
+.mypage-recommendations-debug-info {
+  background-color: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin: 0 auto 2rem;
+  font-size: 0.875rem;
+  text-align: left;
+  max-width: 28rem;
+  border: 1px solid #e5e7eb;
+}
+
+.mypage-recommendations-debug-title {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #374151;
+}
+
+.mypage-recommendations-login-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* 트랙 섹션 */
+.mypage-recommendations-tracks-section {
+  margin-bottom: 2rem;
+}
+
+.mypage-recommendations-tracks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #667eea;
+  padding-left: 1rem;
+}
+
+.mypage-recommendations-tracks-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.mypage-recommendations-tracks-container {
+  background-color: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
+
+.mypage-recommendations-track-item {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.2s ease;
+}
+
+.mypage-recommendations-track-item:last-child {
+  border-bottom: none;
+}
+
+.mypage-recommendations-track-item:hover {
+  background-color: #f9fafb;
+}
+
+/* 앨범 이미지 */
+.mypage-recommendations-album-image {
+  width: 4rem;
+  height: 4rem;
+  background-color: #e5e7eb;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.mypage-recommendations-album-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.mypage-recommendations-album-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mypage-recommendations-music-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: #9ca3af;
+}
+
+/* 트랙 정보 */
+.mypage-recommendations-track-info {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.mypage-recommendations-track-name {
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1rem;
+}
+
+.mypage-recommendations-track-artist {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0 0 0.25rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mypage-recommendations-track-album {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 트랙 컨트롤 */
+.mypage-recommendations-track-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.mypage-recommendations-track-duration {
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.mypage-recommendations-play-btn {
+  padding: 0.5rem 1rem;
+  color: #667eea;
+  background: none;
+  border: 1px solid #667eea;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.mypage-recommendations-play-btn:hover {
+  background-color: #667eea;
+  color: white;
+}
+
+/* 빈 상태 */
+.mypage-recommendations-empty-state {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.mypage-recommendations-empty-icon {
+  width: 5rem;
+  height: 5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mypage-recommendations-empty-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 1rem 0;
+}
+
+.mypage-recommendations-empty-description {
+  color: #6b7280;
+  margin: 0 0 2rem 0;
+  font-size: 1.1rem;
+}
+
+.mypage-recommendations-empty-retry {
+  color: #667eea;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.mypage-recommendations-empty-retry:hover {
+  color: #5a6fd8;
+}
+
+/* 홈으로 돌아가기 */
+.mypage-recommendations-back-to-home {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.mypage-recommendations-home-link {
+  color: #667eea;
+  text-decoration: underline;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.mypage-recommendations-home-link:hover {
+  color: #5a6fd8;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .mypage-recommendations-header-content {
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .mypage-recommendations-container {
+    padding: 1rem;
+    width: 95%;
+  }
+
+  .mypage-recommendations-title {
+    font-size: 1.5rem;
+  }
+
+  .mypage-recommendations-track-item {
+    padding: 1rem;
+  }
+
+  .mypage-recommendations-album-image {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .mypage-recommendations-login-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .mypage-recommendations-track-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .mypage-recommendations-track-info {
+    order: 1;
+  }
+
+  .mypage-recommendations-track-controls {
+    order: 2;
+    justify-content: center;
+  }
+
+  .mypage-recommendations-album-image {
+    order: 0;
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}
