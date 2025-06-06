@@ -40,6 +40,7 @@
   display: flex;
   align-items: center;
   gap: 2rem;
+  color: white;
 }
 
 .playlist-cover {
@@ -95,6 +96,7 @@
   font-size: 0.9rem;
   opacity: 0.8;
   margin: 0;
+  color: white;
 }
 
 /* 트랙 섹션 */
@@ -217,7 +219,7 @@
 
 .artist-name, .added-date, .duration {
   font-size: 0.9rem;
-  color: #666;
+  color: white;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
