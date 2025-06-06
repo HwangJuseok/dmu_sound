@@ -114,8 +114,8 @@ const MyPageRecommendations = () => {
                 <div className="mypage-recommendations-icon-circle"></div>
               </div>
               <div>
-                <h1 className="mypage-recommendations-title">나의 추천 트랙</h1>
-                <p className="mypage-recommendations-subtitle">ACR 기반 개인화된 음악 추천</p>
+                <h1 className="mypage-recommendations-title">모바일 음악 검색 기록</h1>
+                <p className="mypage-recommendations-subtitle">ACR 연동 모바일 음악 검색 기록</p>
               </div>
             </div>
           </div>
@@ -142,8 +142,8 @@ const MyPageRecommendations = () => {
                 <div className="mypage-recommendations-icon-circle"></div>
               </div>
               <div>
-                <h1 className="mypage-recommendations-title">나의 추천 트랙</h1>
-                <p className="mypage-recommendations-subtitle">ACR 기반 개인화된 음악 추천</p>
+                <h1 className="mypage-recommendations-title">모바일 음악 검색 기록</h1>
+                <p className="mypage-recommendations-subtitle">ACR 연동 모바일 음악 검색 기록</p>
               </div>
             </div>
           </div>
@@ -202,8 +202,8 @@ const MyPageRecommendations = () => {
               <div className="mypage-recommendations-icon-circle"></div>
             </div>
             <div>
-              <h1 className="mypage-recommendations-title">나의 추천 트랙</h1>
-              <p className="mypage-recommendations-subtitle">ACR 기반 개인화된 음악 추천</p>
+              <h1 className="mypage-recommendations-title">모바일 음악 검색 기록</h1>
+              <p className="mypage-recommendations-subtitle">ACR 연동 모바일 음악 검색 기록</p>
             </div>
           </div>
           
@@ -232,7 +232,7 @@ const MyPageRecommendations = () => {
         {dataLoading && (
           <div className="mypage-recommendations-loading-center">
             <div className="mypage-recommendations-spinner"></div>
-            <span className="mypage-recommendations-loading-text">추천 트랙을 불러오는 중...</span>
+            <span className="mypage-recommendations-loading-text">검색기록을 불러오는 중...</span>
           </div>
         )}
 
@@ -255,7 +255,7 @@ const MyPageRecommendations = () => {
           <div className="mypage-recommendations-tracks-section">
             <div className="mypage-recommendations-tracks-header">
               <h2 className="mypage-recommendations-tracks-title">
-                추천 트랙 ({tracks.length}개)
+                모바일 검색 기록 ({tracks.length}개)
               </h2>
             </div>
             
@@ -330,10 +330,10 @@ const MyPageRecommendations = () => {
               </svg>
             </div>
             <h3 className="mypage-recommendations-empty-title">
-              추천 트랙이 없습니다
+              검색기록이 없습니다
             </h3>
             <p className="mypage-recommendations-empty-description">
-              ACR 데이터를 기반으로 한 추천 트랙이 아직 없습니다.
+              ACR 검색 기록이 없습니다.
             </p>
             <button
               onClick={handleRefresh}
