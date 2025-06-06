@@ -2,7 +2,7 @@
 
 /* 전체 컨테이너 */
 .music-info-container {
-  max-width: 900px;
+  max-width: 1200px; /* 더 넓게 조정 */
   margin: 2rem auto;
   padding: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -27,19 +27,26 @@
   color: #764ba2;
 }
 
-/* 메인 콘텐츠 레이아웃 */
+/* 메인 콘텐츠 레이아웃 - 상단에 곡 정보와 뮤직비디오, 하단에 커버영상 */
 .music-info-main-content {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* 상단 섹션 - 곡 정보와 뮤직비디오를 나란히 배치 */
+.music-info-top-section {
+  display: flex;
   gap: 2rem;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 /* 앨범 및 트랙 정보 섹션 */
 .music-info-album-section {
   flex: 1 1 300px;
   min-width: 280px;
-  max-width: 320px;
+  max-width: 400px;
   text-align: center;
 }
 
@@ -91,31 +98,49 @@
   color: #333;
 }
 
-/* 비디오 섹션 */
-.music-info-video-section {
-  flex: 2 1 560px;
-  min-width: 300px;
+/* 뮤직비디오 섹션 - 상단에서 곡 정보 옆에 배치 */
+.music-info-music-video-section {
+  flex: 1 1 500px;
+  min-width: 400px;
+  max-width: 700px;
 }
 
-.music-info-video-section h3 {
+.music-info-music-video-section h3 {
   color: #5a4d7d;
   margin-bottom: 0.8rem;
 }
 
-/* 뮤직비디오 및 커버 영상 컨테이너 */
-.music-info-video-container iframe,
-.music-info-video-item iframe {
-  border-radius: 8px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+/* 뮤직비디오 컨테이너 - 크기 증가 */
+.music-info-video-container {
   width: 100%;
-  height: auto;
+  max-width: 700px;
 }
 
-/* 그리드 형태로 영상들 배치 */
+.music-info-video-container iframe {
+  width: 100% !important; /*!important = 강제 적용*/
+  height: 400px !important; /* 높이 증가 */
+  max-width: 700px !important; /* 최대 너비 설정 */
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+/* 커버영상 섹션 - 별도 줄에 배치 */
+.music-info-cover-section {
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.music-info-cover-section h3 {
+  color: #5a4d7d;
+  margin-bottom: 0.8rem;
+}
+
+/* 그리드 형태로 커버영상들 배치 */
 .music-info-video-grid {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .music-info-video-item {
@@ -124,6 +149,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.music-info-video-item iframe {
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  width: 100%;
+  height: auto;
 }
 
 .music-info-video-title {
@@ -313,13 +345,38 @@
 }
 
 /* 반응형 조정 */
+@media (max-width: 1024px) {
+  .music-info-top-section {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .music-info-music-video-section {
+    max-width: 100%;
+  }
+  
+  .music-info-video-container iframe {
+    height: 300px !important;
+  }
+}
+
 @media (max-width: 768px) {
-  .music-info-main-content {
+  .music-info-container {
+    max-width: 100%;
+    margin: 1rem;
+    padding: 1rem;
+  }
+  
+  .music-info-top-section {
     flex-direction: column;
     align-items: center;
   }
 
-  .music-info-video-section, .music-info-album-section {
+  .music-info-music-video-section, .music-info-album-section {
     max-width: 100%;
+  }
+  
+  .music-info-video-container iframe {
+    height: 250px !important;
   }
 }

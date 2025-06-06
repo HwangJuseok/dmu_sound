@@ -219,14 +219,14 @@ const MyPageRecommendations = () => {
 
       <div className="mypage-recommendations-container">
         {/* 사용자 정보 표시 */}
-        <div className="mypage-recommendations-user-info">
+        {/* <div className="mypage-recommendations-user-info">
           <span className="mypage-recommendations-user-info-text">
             사용자: {user.userId} (코드: {userCode})
           </span>
           <div className="mypage-recommendations-auth-status">
             인증 상태: ✅ 로그인됨
           </div>
-        </div>
+        </div> */}
 
         {/* 로딩 상태 */}
         {dataLoading && (

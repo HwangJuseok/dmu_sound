@@ -168,69 +168,75 @@ function MusicInfo() {
             </div>
 
             <div className="music-info-main-content">
-                {/* 앨범 커버 + 정보 */}
-                <div className="music-info-album-section">
-                    <section className="music-info-track-info">
-                        {user && (
-                            <button className="music-info-add-to-playlist-button" onClick={openPlaylistModal}>
-                                ➕ 플레이리스트에 추가
-                            </button>
-                        )}
+                {/* 상단 섹션: 곡 정보 + 뮤직비디오 */}
+                <div className="music-info-top-section">
+                    {/* 앨범 커버 + 정보 */}
+                    <div className="music-info-album-section">
+                        <section className="music-info-track-info">
+                            {user && (
+                                <button className="music-info-add-to-playlist-button" onClick={openPlaylistModal}>
+                                    ➕ 플레이리스트에 추가
+                                </button>
+                            )}
 
-                        <h2>
-                            {track?.trackName || title || "노래제목"} - {track?.artistName || artist || "가수"}
-                        </h2>
-                        <img
-                            src={track?.imageUrl || cover || '/default-album.jpg'}
-                            alt={track?.trackName || title || "노래제목"}
-                            className="music-info-track-image"
-                            width="300"
-                        />
-                        <p>Album: {track?.albumName || album || "앨범명"}</p>
-                        <p>
-                            Artist:{" "}
-                            <a href={`/detail/${track?.artistId}`} className="artist-link">
-                                {track?.artistName || artist || "가수"}
-                            </a>
-                        </p>
-                        {track?.previewUrl && (
-                            <div className="music-info-preview-section">
-                                <h4>미리듣기</h4>
-                                <audio controls>
-                                    <source src={track.previewUrl} type="audio/mpeg" />
-                                    Your browser does not support the audio element.
-                                </audio>
+                            <h2>
+                                {track?.trackName || title || "노래제목"} - {track?.artistName || artist || "가수"}
+                            </h2>
+                            <img
+                                src={track?.imageUrl || cover || '/default-album.jpg'}
+                                alt={track?.trackName || title || "노래제목"}
+                                className="music-info-track-image"
+                                width="300"
+                            />
+                            <p>Album: {track?.albumName || album || "앨범명"}</p>
+                            <p>
+                                Artist:{" "}
+                                <a href={`/detail/${track?.artistId}`} className="artist-link">
+                                    {track?.artistName || artist || "가수"}
+                                </a>
+                            </p>
+                            {track?.previewUrl && (
+                                <div className="music-info-preview-section">
+                                    <h4>미리듣기</h4>
+                                    <audio controls>
+                                        <source src={track.previewUrl} type="audio/mpeg" />
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
+                            )}
+                        </section>
+                    </div>
+
+                    {/* 뮤직비디오 섹션 */}
+                    <div className="music-info-music-video-section">
+                        <h3>🎬 뮤직비디오</h3>
+                        {musicVideo ? (
+                            <div className="music-info-video-container">
+                                <iframe
+                                    width="700"
+                                    height="400"
+                                    src={musicVideo}
+                                    title="Music Video"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        ) : (
+                            <div className="music-info-video-grid">
+                                {["뮤비 1", "뮤비 2"].map((text, i) => (
+                                    <div key={i} className="music-info-video-thumbnail">
+                                        {text}
+                                        <button className="music-info-play-button">▶</button>
+                                    </div>
+                                ))}
                             </div>
                         )}
-                    </section>
+                    </div>
                 </div>
 
-                {/* Video Section */}
-                <div className="music-info-video-section">
-                    <h3>🎬 뮤직비디오</h3>
-                    {musicVideo ? (
-                        <div className="music-info-video-container">
-                            <iframe
-                                width="560"
-                                height="315"
-                                src={musicVideo}
-                                title="Music Video"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        </div>
-                    ) : (
-                        <div className="music-info-video-grid">
-                            {["뮤비 1", "뮤비 2"].map((text, i) => (
-                                <div key={i} className="music-info-video-thumbnail">
-                                    {text}
-                                    <button className="music-info-play-button">▶</button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-
+                {/* 커버영상 섹션 - 별도 줄에 배치 */}
+                <div className="music-info-cover-section">
                     <h3>🎥 커버 영상</h3>
                     {coverVideos.length > 0 ? (
                         <div className="music-info-video-grid">
