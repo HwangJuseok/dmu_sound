@@ -18,10 +18,10 @@ public class AcrService {
     private final SupabaseClient client;
     private final ObjectMapper mapper;
 
-    // ✅ 전처리 함수 - 괄호 안 내용 제거
-    private String cleanTitle(String title) {
-        if (title == null) return "";
-        return title.replaceAll("\\s*\\(.*?\\)", "").trim();
+    // ✅ 괄호 제거 전처리 함수 (제목, 아티스트 모두 사용)
+    private String cleanText(String text) {
+        if (text == null) return "";
+        return text.replaceAll("\\s*\\(.*?\\)", "").trim();
     }
 
     public List<TitleArtistPair> getAcrTitlesAndArtistsByUserCode(String userCode) {
@@ -34,12 +34,13 @@ public class AcrService {
 
             for (JsonNode node : root) {
                 String rawTitle = node.get("acr_title").asText();
-                String artist = node.get("artists").asText();
+                String rawArtist = node.get("artists").asText();
 
                 // ✅ 전처리 적용
-                String cleanedTitle = cleanTitle(rawTitle);
+                String cleanedTitle = cleanText(rawTitle);
+                String cleanedArtist = cleanText(rawArtist);
 
-                result.add(new TitleArtistPair(cleanedTitle, artist));
+                result.add(new TitleArtistPair(cleanedTitle, cleanedArtist));
             }
 
             return result;
