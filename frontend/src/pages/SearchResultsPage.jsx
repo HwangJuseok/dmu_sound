@@ -70,31 +70,39 @@ const SearchResultsPage = () => {
       )}
 
       <ul className="result-list">
-        {results.map((item) => (
-          <li key={item.id} className="result-item">
-            <img
-              src={item.imageUrl}
-              alt={item.name}
-              className="result-image"
-            />
-            <div className="result-details">
-              <Link to={`/music/${item.id}`} className="result-name-link">
-                <strong className="result-name">{item.name}</strong>
-              </Link>
-              <br />
-              {item.subInfo && (
-                <span className="result-subinfo">{item.subInfo}</span>
-              )}
-              <br />
-              {item.isTrack && (
-                <Link to={`/detail/${item.id}`} className="detail-link">
-                  트랙 상세보기
-                </Link>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+  {results.map((item) => (
+    <li key={item.id} className="result-item">
+      <img
+        src={item.imageUrl}
+        alt={item.name}
+        className="result-image"
+      />
+      <div className="result-details">
+        {/* 공통 이름 링크 처리 */}
+        {item.subInfo === 'Artist' ? (
+          <Link to={`/detail/${item.id}`} className="result-name-link">
+            <strong className="result-name">{item.name}</strong>
+          </Link>
+        ) : (
+          <Link to={`/music/${item.id}`} className="result-name-link">
+            <strong className="result-name">{item.name}</strong>
+          </Link>
+        )}
+        <br />
+        {item.subInfo && (
+          <span className="result-subinfo">{item.subInfo}</span>
+        )}
+        <br />
+        {/* 트랙일 경우에만 상세보기 링크 표시 */}
+        {item.isTrack && (
+          <Link to={`/detail/${item.id}`} className="detail-link">
+            트랙 상세보기
+          </Link>
+        )}
+      </div>
+    </li>
+  ))}
+</ul>
     </div>
   );
 };
