@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/MyPageRecommendations.css';
 
 const MyPageRecommendations = () => {
   const { user, loading, checkAuthStatus } = useAuth();
   const userCode = user?.usercode;
+  const navigate = useNavigate();
   
   const [tracks, setTracks] = useState([]);
   const [dataLoading, setDataLoading] = useState(false);
@@ -89,10 +90,32 @@ const MyPageRecommendations = () => {
     }
   };
 
-  // 트랙 재생 핸들러 (실제 구현 시 Spotify Web API 또는 다른 플레이어 연동)
+  // 트랙 재생 핸들러 - MusicInfo 페이지로 이동
   const handlePlayTrack = (track) => {
-    console.log('Playing track:', track);
-    // 실제 재생 로직 구현
+    console.log('Navigating to MusicInfo for track:', track);
+    
+    // 트랙 ID가 있는 경우 해당 ID로 이동
+    if (track.id) {
+      navigate(`/music/${track.id}`, {
+        state: {
+          title: track.trackName || track.name,
+          artist: track.artistName || (Array.isArray(track.artists) ? track.artists.join(', ') : track.artists),
+          album: track.albumName || track.album,
+          cover: track.albumImageUrl || track.imageUrl
+        }
+      });
+    } else {
+      // ID가 없는 경우 트랙명을 ID로 사용하거나 임시 ID 생성
+      const tempId = encodeURIComponent(track.trackName || track.name || 'unknown');
+      navigate(`/music/${tempId}`, {
+        state: {
+          title: track.trackName || track.name,
+          artist: track.artistName || (Array.isArray(track.artists) ? track.artists.join(', ') : track.artists),
+          album: track.albumName || track.album,
+          cover: track.albumImageUrl || track.imageUrl
+        }
+      });
+    }
   };
 
   // 밀리초를 분:초 형태로 변환
