@@ -1,0 +1,3 @@
+[submodule "app"]
+	path = app
+	url = https://github.com/20221001dy/dmu_acr2.git
