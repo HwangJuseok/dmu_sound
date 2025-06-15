@@ -1,52 +1,63 @@
 # dmu_sound 🎧
 
-**ACRCloud, YouTube API, Spotify API를 활용한 음악 검색 및 추천 웹 애플리케이션**
+![dmu_sound Banner](https://capsule-render.vercel.app/api?type=waving&color=0:89CFF0,100:FFB6C1&height=300&section=header&text=dmu_sound&fontSize=70&fontColor=FFFFFF)
+
+## 프로젝트 개요
+
+사용자의 주변 음악이나 흥얼거림을 인식하여, 해당 음악 정보를 기반으로 YouTube 영상 및 Spotify 트랙을 제공하는 웹 애플리케이션입니다.
+![프로젝트 개요](./images/1.png)
 
 ---
 
-## 📌 프로젝트 소개
-
-**dmu_sound**는 사용자가 들려주는 음악을 인식하고, 이를 기반으로 관련 유튜브 영상 및 스포티파이 정보를 제공하는 웹 애플리케이션입니다.  
-ACRCloud API를 통해 음악을 분석하고, YouTube와 Spotify API를 통해 사용자에게 음악 정보를 시각적으로 제공합니다.
+## 경쟁분석
+![경쟁분석](./images/2.png)
 
 ---
 
-## 🛠️ 주요 기능
-
-- 🎙️ **음악 인식**: ACRCloud API를 통해 주변 음악을 인식
-- 🔎 **YouTube 검색**: 인식된 음악 제목으로 관련 유튜브 영상 검색 및 재생
-- 🎵 **Spotify 검색**: 곡 정보 기반 Spotify 트랙 및 아티스트 정보 표시
-- 💡 **반응형 UI**: 다양한 화면 크기에 대응하는 직관적인 디자인
+## 프로젝트 목표
+![프로젝트 목표](./images/3.png)
 
 ---
 
-## 📂 기술 스택
+## 시스템 구성도
+![시스템 구성도](./images/5.png)
 
-| 구분       | 기술                                                  |
-|------------|-------------------------------------------------------|
-| Frontend   | HTML, CSS, JavaScript, Bootstrap (또는 React 등 사용 시 기입) |
-| Backend    | 없음 (API 연동 중심의 클라이언트 측 구현)             |
-| API        | ACRCloud API, YouTube Data API v3, Spotify Web API   |
-| 협업 도구  | GitHub, Figma (디자인), Notion (기획) 등              |
+## ERD
+![ERD 다이어그램](./images/6.png)
 
 ---
 
-## 📸 주요 화면
+## 팀 멤버 소개
 
-> 👉 여기에 주요 기능을 보여주는 스크린샷이나 Figma 시안 이미지 삽입 (예: `/images/main.png`)
-
----
-
-## 🧑‍💻 팀원 소개
-
-| 이름       | 역할                |
-|------------|---------------------|
-| 황주석     | 프론트엔드 개발 / API 연동 / UI 설계 |
-| ...        | ...                 |
+| **이름** | **역할** |
+|:--------:|:--------:|
+| 권현우 | 앱 기능, 백엔드, DB담당 |
+| 황주석 | 프론트엔드(React), UI 설계, 발표 준비 |
+| 신동욱 | 백엔드(Spring) |
+| 정지훈 | 프론트엔드(React) |
+| 김경환 | 프로젝트 기획, DB 초기 설계, 회의 진행 및 역할 분배, 기능 병합 |
 
 ---
 
-## 🗂️ 프로젝트 구조
+## 개발 환경
+
+- **Frontend**: <img src="https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white"/> <img src="https://img.shields.io/badge/CSS-1572B6?style=flat&logo=css3&logoColor=white"/> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black"/>
+- **API**: <img src="https://img.shields.io/badge/ACRCloud-000000?style=flat&logo=&logoColor=white"/> <img src="https://img.shields.io/badge/YouTube-FF0000?style=flat&logo=youtube&logoColor=white"/> <img src="https://img.shields.io/badge/Spotify-1DB954?style=flat&logo=spotify&logoColor=white"/>
+- **디자인**: <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat&logo=figma&logoColor=white"/>
+- **협업 툴**: <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white"/> <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=notion&logoColor=white"/>
+
+---
+
+## 주요 기능
+
+- 🎙️ **음악 인식**: ACRCloud API를 활용하여 주변 음악 및 사용자 흥얼거림 인식
+- 🔍 **관련영상 추천**: 음악의 뮤직비디오 및 커버곡 영상 추천
+- 🎵 **추천 트랙**: 사용자들의 이용 데이터에 기반한 맞춤형 추천 트랙 기능 제공
+- 📄 **플레이리스트**: 플레이리스트 사용자화를 통한 개인 경험 향상
+
+---
+
+## 프로젝트 구조
 
 ```plaintext
 dmu_sound/
@@ -54,9 +65,11 @@ dmu_sound/
 ├── css/
 │   └── styles.css
 ├── js/
-│   ├── main.js
 │   ├── acrcloud.js
-│   └── spotify.js
-├── images/
-│   └── ...
+│   ├── spotify.js
+│   └── youtube.js
+├── ppt_images/
+│   ├── system_diagram.png
+│   ├── erd_diagram_1.png
+│   └── erd_diagram_2.png
 └── README.md
