@@ -27,6 +27,7 @@
 
 ---
 
+## Dmu_sound 전체 아키텍처
 ![dmu_sound 전체 아키텍처](./images/7.png)
 
 ---
