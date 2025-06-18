@@ -27,7 +27,7 @@
 
 ---
 
-![dmu_sound 전체 아키텍처](./images/스크린샷 2025-06-18 오후 1.19.06.png)
+![dmu_sound 전체 아키텍처](./images/7.png)
 
 ---
 
