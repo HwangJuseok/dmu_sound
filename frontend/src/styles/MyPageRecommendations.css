@@ -511,3 +511,19 @@
     margin-bottom: 0.5rem;
   }
 }
+
+/* 아티스트 통계 섹션 */
+.mypage-recommendations-stats-section {
+  margin-top: 40px;
+  padding: 24px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.mypage-recommendations-chart-container {
+  margin-top: 20px;
+  max-width: 500px; /* 차트 최대 너비 설정 (800px -> 500px로 수정) */
+  margin-left: auto;
+  margin-right: auto;
+}

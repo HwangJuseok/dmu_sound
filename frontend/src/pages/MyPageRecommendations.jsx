@@ -1,7 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import { useAuth } from '../contexts/AuthContext';
 import '../styles/MyPageRecommendations.css';
+
+ChartJS.register(ArcElement, Title, Tooltip, Legend);
 
 const MyPageRecommendations = () => {
   const { user, loading, checkAuthStatus } = useAuth();
@@ -344,6 +354,11 @@ const MyPageRecommendations = () => {
           </div>
         )}
 
+        {/* 아티스트 통계 섹션 */}
+        {!dataLoading && !error && tracks.length > 0 && (
+          <ArtistStatsSection tracks={tracks} />
+        )}
+
         {/* 데이터 없음 상태 */}
         {!dataLoading && !error && tracks.length === 0 && (
           <div className="mypage-recommendations-empty-state">
@@ -373,6 +388,78 @@ const MyPageRecommendations = () => {
             ← 홈으로
           </Link>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const ArtistStatsSection = ({ tracks }) => {
+  const artistStats = useMemo(() => {
+    const stats = {};
+    tracks.forEach(track => {
+      let artists = [];
+      if (track.artistName) {
+        artists.push(track.artistName);
+      } else if (Array.isArray(track.artists)) {
+        artists = track.artists;
+      }
+
+      artists.forEach(artist => {
+        stats[artist] = (stats[artist] || 0) + 1;
+      });
+    });
+
+    // 곡 수에 따라 내림차순 정렬
+    return Object.entries(stats)
+      .sort(([, countA], [, countB]) => countB - countA)
+      .slice(0, 10); // 상위 10명만 표시
+  }, [tracks]);
+
+  const chartData = {
+    labels: artistStats.map(([name]) => name),
+    datasets: [
+      {
+        label: '곡 수',
+        data: artistStats.map(([, count]) => count),
+        backgroundColor: [
+          'rgba(102, 126, 234, 0.8)',
+          'rgba(118, 75, 162, 0.8)',
+          'rgba(255, 159, 64, 0.8)',
+          'rgba(255, 205, 86, 0.8)',
+          'rgba(75, 192, 192, 0.8)',
+          'rgba(54, 162, 235, 0.8)',
+          'rgba(153, 102, 255, 0.8)',
+          'rgba(255, 99, 132, 0.8)',
+          'rgba(201, 203, 207, 0.8)',
+          'rgba(25, 25, 112, 0.8)',
+        ],
+        borderColor: 'rgba(255, 255, 255, 0.7)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: '상위 아티스트 (Top 10)',
+        font: { size: 16 },
+      },
+    },
+  };
+
+  return (
+    <div className="mypage-recommendations-stats-section">
+      <div className="mypage-recommendations-tracks-header">
+        <h2 className="mypage-recommendations-tracks-title">아티스트별 통계</h2>
+      </div>
+      <div className="mypage-recommendations-chart-container" style={{ position: 'relative', height: 'auto' }}>
+        <Pie data={chartData} options={chartOptions} />
       </div>
     </div>
   );
