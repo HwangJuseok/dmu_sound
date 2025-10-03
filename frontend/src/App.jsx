@@ -25,6 +25,11 @@ function AppContent() {
     const authPaths = ['/login', '/auth/login', '/register', '/auth/register'];
     const isAuthPage = authPaths.includes(location.pathname);
 
+    const mainPageClassName = [
+        'main-page',
+        isAuthPage ? 'auth-page' : '',
+        !isAuthPage && sidebarOpen ? 'sidebar-open' : ''
+    ].filter(Boolean).join(' ');
     return (
         <div className="App">
             {/* 인증 페이지가 아닐 때만 사이드바 표시 */}
@@ -50,7 +55,7 @@ function AppContent() {
                 </>
             )}
 
-            <main className={`main-page ${isAuthPage ? 'auth-page' : ''}`}>
+            <main className={mainPageClassName}>
                 <Routes>
                     <Route path="/" element={
                         <MainPage user={user} logout={logout} loading={loading} />

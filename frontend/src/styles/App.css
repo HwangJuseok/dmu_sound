@@ -46,6 +46,7 @@
   justify-content: center; /* 중앙 정렬 */
   padding: 20px;
   box-sizing: border-box;
+  transition: margin-left 0.3s ease-in-out;
 }
 
 /* 실제 콘텐츠 너비 제한 */
@@ -53,6 +54,10 @@
   max-width: 1000px;
   width: 100%;
 }
+.main-page.sidebar-open {
+  margin-left: 250px;
+}
+
 .sidebar-toggle-button {
   position: fixed;
   top: 20px;
